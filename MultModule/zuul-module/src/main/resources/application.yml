@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: zuul-module
+server:
+  port: 8080
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9090/eureka/
+
+zuul:
+  routes:
+    eureka-client: # 使用注册中心上的服务
+      path: /hello
+      serviceId: EUREKA-CLIENT-MODULE
+    layui-client:
+      path: /login
+      serviceId: LAYUI-MODULE
+    layui-client-static: #自己配置URL地址
+      path: /global/**
+      url: http://localhost:9010/
+    zuul-client: # 转发给自身
+      path: /zuulself/**
+      url: forward:/hello
