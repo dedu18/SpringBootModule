@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: gateway-module
+#  cloud:
+#    gateway:
+#      routes:
+#      - id: first   #网关的服务路由Id
+#        uri: http://localhost:9010    # 匹配后转发的服务地址
+#        predicates:   #路由条件谓语，即匹配规则，会返回布尔值表示是否匹配，如下所示可进行多个条件同时匹配
+#        - Path=/login
+##        - Header=Token , \d+
+#        filters:    #过滤，可对后续转发新增信息
+#        - AddRequestHeader=Token, 1234533sdfvc15
+#        - AddRequestParameter=Token, 1234533sdfvc15
+server:
+  port: 8080
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9090/eureka/
