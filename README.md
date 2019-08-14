@@ -5,3 +5,5 @@
 - [x] **Zuul Module**
 
 - [x] **Gateway Module**
+
+- [x] **Eureka Module**
