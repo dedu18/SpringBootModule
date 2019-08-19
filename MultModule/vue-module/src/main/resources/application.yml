@@ -1,0 +1,13 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://111.231.193.138:3306/code006?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: ZhongFei-ca-2018
+logging:
+  level:
+    ROOT: DEBUG
