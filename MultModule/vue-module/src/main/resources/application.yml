@@ -10,4 +10,4 @@ spring:
     password: ZhongFei-ca-2018
 logging:
   level:
-    ROOT: DEBUG
+    ROOT: INFO

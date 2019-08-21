@@ -16,6 +16,8 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <mysql-connector-java.version>8.0.16</mysql-connector-java.version>
+        <alibaba.druid>1.1.13</alibaba.druid>
     </properties>
 
     <dependencies>
@@ -30,6 +32,17 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
+        <!-- SwaggerUI -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.6.1</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -40,11 +53,27 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--分页组件 Pagehelper -->
+        <!-- 驱动、连接池 -->
         <dependency>
-            <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
-            <version>1.2.5</version>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql-connector-java.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>${alibaba.druid}</version>
+        </dependency>
+        <!-- MP -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.1.1</version>
         </dependency>
     </dependencies>
 
