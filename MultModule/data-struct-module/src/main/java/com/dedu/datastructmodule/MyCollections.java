@@ -280,49 +280,11 @@ public class MyCollections {
         s[j] = tmp;
     }
 
-    public static void main(String[] args) {
-        char[] s = {'h','e','l','l','o'};
-        reverseString(s);
-    }
-
-
     public static int strStr(String haystack, String needle) {
         if (needle == null || "".equals(needle) || haystack == null || "".equals(haystack)) {
             return -1;
         }
         return haystack.indexOf(needle);
-    }
-
-    public static String longestCommonPrefix3(String[] strs) {
-        if (strs.length == 0) {
-            return "";
-        }
-        if (strs.length == 1) {
-            return strs[0];
-        }
-        String min = strs[0] ;
-        for (int i = 0; i < strs.length; i++) {
-            if (strs[i].isEmpty()) {
-                return "";
-            }
-            if (strs[0].charAt(0) != strs[i].charAt(0)) {
-                return "";
-            }
-            if (strs[i].length() <= min.length()) {
-                min = strs[i];
-            }
-        }
-        for (int i = 0; i < strs.length; i++) {
-            if (min.equals(strs[i])) {
-                continue;
-            }
-            for (int j = min.length()-1; j > 0 ; j--) {
-                if (min.charAt(j) != strs[i].charAt(j)) {
-                    min = min.substring(0, j);
-                }
-            }
-        }
-        return min;
     }
 
     public static String longestCommonPrefix(String[] strs) {
@@ -352,5 +314,141 @@ public class MyCollections {
             }
         }
         return prefix;
+    }
+
+    public static String commonString(String a, String b) {
+        int acur=0, bcur=0, offset=0;
+        List<String> lists = new LinkedList<>();
+        while (acur!=a.length() || bcur!=b.length()) {
+            if (a.charAt(acur) == b.charAt(bcur)) {
+                acur++;
+                bcur++;
+                offset++;
+            } else {
+                if (offset!=0) {
+                    lists.add(a.substring(acur-offset+1, acur));
+                }
+                acur = acur-offset+1;
+                acur = acur-offset+1;
+                offset=0;
+            }
+        }
+        if (!lists.isEmpty()) {
+            int max=0;
+            for (int i=0; i<lists.size(); i++) {
+                if (lists.get(i).length() > lists.get(max).length()) {
+                    max = i;
+                }
+            }
+            return lists.get(max);
+        } else {
+            return "";
+        }
+    }
+
+//    public String longestCommonPrefix(String[] strs) {
+//        if (strs.length == 0) return "";
+//        String prefix = strs[0];
+//        for (int i = 1; i < strs.length; i++)
+//            while (strs[i].indexOf(prefix) != 0) {
+//                prefix = prefix.substring(0, prefix.length() - 1);
+//                if (prefix.isEmpty()) return "";
+//            }
+//        return prefix;
+//    }
+
+    public static String longestCommonPrefix2(String[] strs) {
+        if (null == strs || strs.length == 0) {
+            return "";
+        }
+        String commonString = strs[0];
+        for (int i=1; i<strs.length; i++) {
+            while (strs[i].indexOf(commonString) == -1) {
+                commonString = commonString.substring(0, commonString.length() - 1);
+                if (commonString.isEmpty()) {
+                    return "";
+                }
+            }
+        }
+        return commonString;
+    }
+
+    public static int[] twoSum(int[] numbers, int target) {
+        int left = 0, right = numbers.length-1;
+        int[] result = new int[2];
+        // 因为有序，所以用两个指针移动查找，左指针右移则变大，右指针左移则变小
+        while (left < right) {
+            if (numbers[left] + numbers[right] == target) {
+                result[0] = ++left;
+                result[1] = ++right;
+                break;
+            } else if (numbers[left] + numbers[right] < target) { // 比目标小，则左标增大
+                left++;
+            } else { // 比目标大，则右标变小
+                right--;
+            }
+        }
+        return result;
+    }
+
+    public static int removeElement(int[] nums, int val) {
+        int i=0, length = nums.length-1;
+        while(i <= length) {
+            // 覆盖交换法，这样就不用频繁移动元素
+            if (nums[i] == val) {
+                nums[i] = nums[length];
+                length--;
+            } else {
+                i++;
+            }
+        }
+        return length + 1;
+    }
+
+    public static int findMaxConsecutiveOnes(int[] nums) {
+        if (null == nums || nums.length == 0) {
+            return 0;
+        }
+        int slow=0, max=0;
+        for (int quick = 0; quick<nums.length; quick++) {
+            if (nums[quick] == 1) {
+                slow++;
+            } else {
+                if (max < slow) {
+                    max = slow;
+                }
+                slow = 0;
+            }
+        }
+        if (max < slow) {
+            return slow;
+        }
+        return max;
+    }
+
+    public static int minSubArrayLen(int s, int[] nums) {
+        int result = 0;
+        if (null == nums || nums.length == 0) {
+            return result;
+        }
+        for (int i=0; i<nums.length; i++) {
+            int total = 0;
+            int j=i;
+            while (total < s && j<nums.length) {
+                total+=nums[j];
+                j++;
+            }
+            if (total < s) {
+                continue;
+            }
+            result = result < j-i  && result != 0 ? result : j-i;
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+//        int[] request = {1,4,4};
+        int[] request = {10,5,13,4,8,4,5,11,14,9,16,10,20,8};
+        System.out.println(minSubArrayLen(80, request));
     }
 }
