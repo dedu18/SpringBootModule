@@ -446,9 +446,116 @@ public class MyCollections {
         return result;
     }
 
+    public static void rotate(int[] nums, int k) {
+        if (null == nums || nums.length < 2 || k % nums.length == 0) {
+            return ;
+        }
+        k = k % nums.length; //去除重复移动
+        for (int i=0; i<k; i++) { //每次移动1步
+            int tmp = nums[nums.length-1]; //数组最后一个元素
+            for (int j = nums.length-1; j>0; j--) {
+                nums[j] = nums[j-1];
+            }
+            nums[0] = tmp;
+        }
+    }
+
+    public static void rotate2(int[] nums, int k) {
+        if (null == nums || nums.length < 2 || k % nums.length == 0) {
+            return ;
+        }
+        k = k % nums.length; //去除重复移动
+        reverse(nums, 0, nums.length-1);
+        reverse(nums, 0, k-1);
+        reverse(nums, k, nums.length-1);
+    }
+
+    public static void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
+        }
+    }
+
+    public static List<Integer> getRow(int rowIndex) {
+        List<Integer> cache = new ArrayList<>();
+        for (int i=0; i<=rowIndex; i++) {
+            Integer[] t = new Integer[i+1];
+            for (int j=0; j<t.length; j++) {
+                if (j==0 || j==t.length-1) {
+                    t[j]=1;
+                } else {
+                    t[j] = cache.get(j-1) + cache.get(j);
+                }
+            }
+            cache = Arrays.asList(t);
+        }
+        return cache;
+    }
+
+    public static String reverseWords(String s) {
+        if (null == s || Objects.equals("", s.trim())) {
+            return "";
+        }
+        String[] strArr = s.trim().split("\\s+");
+        StringBuffer sb = new StringBuffer();
+        for (int i=strArr.length-1; i>=0; i--) {
+            if (!Objects.equals("", strArr[i].trim())) {
+                sb.append(strArr[i].trim());
+                sb.append(" ");
+            }
+        }
+        return sb.toString().substring(0, sb.toString().length() - 1);
+    }
+
+    public static String reverseWords2(String s) {
+        if (null == s || Objects.equals("", s.trim())) {
+            return "";
+        }
+        String[] strArr = s.trim().split("\\s+");
+        StringBuffer sb = new StringBuffer();
+        for (int i=0; i<strArr.length; i++) {
+            sb.append(new StringBuffer(strArr[i]).reverse()).append(" ");
+        }
+        return sb.toString().trim();
+    }
+
+    public static int removeDuplicates(int[] nums) {
+        if (null == nums || nums.length == 0) {
+            return 0;
+        }
+        int slow = 0;
+        for (int quick = 1; quick < nums.length; quick++) {
+            if (nums[quick] != nums[slow]) {
+                slow++;
+                nums[slow] = nums[quick];
+            }
+        }
+        return slow+1;
+    }
+
+    public static void moveZeroes(int[] nums) {
+        if (null == nums || nums.length < 2) {
+            return;
+        }
+        int slow=0;
+        while (slow < nums.length && nums[slow] != 0) {
+            slow++;
+        }
+        for (int quick=slow+1; quick<nums.length; quick++) {
+            if (nums[quick] != 0) {
+                nums[slow] = nums[quick];
+                nums[quick] = 0;
+                slow++;
+            }
+        }
+    }
+
     public static void main(String[] args) {
-//        int[] request = {1,4,4};
-        int[] request = {10,5,13,4,8,4,5,11,14,9,16,10,20,8};
-        System.out.println(minSubArrayLen(80, request));
+        int[] request = {1, 2, 2, 2};
+        System.out.println(removeDuplicates(request));
     }
 }
