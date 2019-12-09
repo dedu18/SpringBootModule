@@ -554,8 +554,238 @@ public class MyCollections {
         }
     }
 
+    private class Node<E> {
+        E item;
+        Node next;
+        public Node(E e) {
+            this.item = e;
+        }
+    }
+
+    private Node head;
+
+    /** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */
+    public int get(int index) {
+        if (index < 0 || null == head) {
+            return -1;
+        }
+        Node<Integer> cur = head;
+        for (int i=0; i<index; i++) {
+            if (null == cur.next) {
+                return -1;
+            }
+            cur = cur.next;
+        }
+        return cur.item;
+    }
+
+    /** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */
+    public void addAtHead(int val) {
+        if (head == null) {
+            head = new Node(val);
+        } else {
+            Node h = new Node(val);
+            h.next = head;
+            head = h;
+        }
+    }
+
+    /** Append a node of value val to the last element of the linked list. */
+    public void addAtTail(int val) {
+        if (head == null) {
+            head = new Node(val);
+        } else {
+            Node cur = head;
+            while (cur.next != null) {
+                cur = cur.next;
+            }
+            Node h = new Node(val);
+            cur.next = h;
+        }
+    }
+
+    /** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */
+    public void addAtIndex(int index, int val) {
+        if (index <= 0) {
+            addAtHead(val);
+        }
+        Node<Integer> cur = head;
+        for (int i=1; i<index; i++) {
+            if (null == cur.next) {
+                return ;
+            }
+            cur = cur.next;
+        }
+        if (null == cur.next) {
+            addAtTail(val);
+            return;
+        }
+        Node newNode = new Node(val);
+        newNode.next = cur.next;
+        cur.next = newNode;
+    }
+
+    /** Delete the index-th node in the linked list, if the index is valid. */
+    public void deleteAtIndex(int index) {
+        if (index < 0 || head == null) {
+            return;
+        }
+        if (index==0) {
+            head = head.next;
+            return;
+        }
+        Node<Integer> pre = head;
+        for (int i=0; i<index-1; i++) {
+            if (null == pre.next) {
+                return ;
+            }
+            pre = pre.next;
+        }
+        Node cur = pre.next;
+        if (null == cur || null == cur.next) {
+            pre.next = null;
+            return;
+        }
+        pre.next = cur.next;
+    }
+
+    class ListNode {
+          int val;
+          ListNode next;
+          ListNode(int x) {
+              val = x;
+              next = null;
+          }
+      }
+
+    public boolean hasCycle(ListNode head) {
+        if (null == head) {
+            return false;
+        }
+        ListNode quick = head.next;
+        ListNode slow = head;
+        while (null != slow.next && null != quick.next && null != quick.next.next) {
+            if (slow == quick) {
+                return true;
+            }
+            slow = slow.next;
+            quick = quick.next.next;
+        }
+        return false;
+    }
+
+    public static ListNode detectCycle(ListNode head) {
+        if (head == null || null == head.next) {
+            return null;
+        }
+        ListNode slow = head;
+        ListNode quick = head.next;
+        while (null != slow.next && null != quick.next && null != quick.next.next) {
+            if (slow == quick) {
+                break;
+            }
+            slow = slow.next;
+            quick = quick.next.next;
+        }
+        if (slow != quick) {
+            return null;
+        }
+        slow = head;
+        quick = quick.next;
+        while (slow != quick) {
+            slow = slow.next;
+            quick = quick.next;
+        }
+        return slow;
+    }
+
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode a = headA;
+        ListNode b = headB;
+        while (a != b) {
+            if (null == a) {
+                a = headB;
+            }
+            if (null == b) {
+                b = headA;
+            }
+            a = a.next;
+            b = b.next;
+        }
+        return a;
+    }
+
+    public static ListNode removeNthFromEnd(ListNode head, int n) {
+        if (head == null || n <= 0) {
+            return null;
+        }
+        // 注意处理倒数第一个元素和倒数最后一个元素
+        ListNode slow = head;
+        ListNode quick = head;
+        for (int i=0; i<n; i++) {
+            quick = quick.next;
+        }
+        while (null != quick && null != quick.next) {
+            quick = quick.next;
+            slow = slow.next;
+        }
+        if (null == quick && n == 1) {
+            return null;
+        }  else if (null == quick) {
+            return slow.next;
+        }
+        slow.next = slow.next.next;
+        return head;
+    }
+    public static void print(ListNode head) {
+        while (head!=null) {
+            System.out.println(head.val);
+            head = head.next;
+        }
+    }
+
+    public static ListNode reverseList(ListNode head) {
+        if (null == head || null == head.next) {
+            return head;
+        }
+        ListNode result = null;
+        ListNode cur = head;
+        while (null != cur) {
+            ListNode next = removeNextItemFromList(cur);
+            addItemToList(result, next);
+        }
+        return result;
+    }
+
+    private static void addItemToList(ListNode result, ListNode next) {
+        if (next == null) {
+            return;
+        }
+        if (null == result) {
+            result = next;
+            return;
+        }
+        next.next = result;
+        result = next;
+    }
+
+    private static ListNode removeNextItemFromList(ListNode cur) {
+        ListNode next = cur.next;
+        if (next != null) {
+            cur = cur.next.next;
+        } else {
+            cur = null;
+        }
+        return next;
+    }
+
     public static void main(String[] args) {
-        int[] request = {1, 2, 2, 2};
-        System.out.println(removeDuplicates(request));
+        MyCollections m = new MyCollections();
+        ListNode list = m.new ListNode(1);
+        list.next = m.new ListNode(2);
+//        list.next.next = m.new ListNode(3);
+//        list.next.next.next = m.new ListNode(4);
+//        list.next.next.next.next = m.new ListNode(5);
+        print(reverseList(list));
     }
 }
