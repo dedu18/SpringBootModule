@@ -1,9 +1,9 @@
 package com.dedu.datastructmodule;
 
-import org.springframework.util.StringUtils;
-
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 public class MyCollections {
 
@@ -748,44 +748,105 @@ public class MyCollections {
         if (null == head || null == head.next) {
             return head;
         }
-        ListNode result = null;
+        ListNode newHead = head;
         ListNode cur = head;
+        while (cur.next != null) {
+            ListNode next = cur.next;
+            cur.next = cur.next.next;
+            next.next = newHead;
+            newHead = next;
+        }
+        return newHead;
+    }
+
+    public static ListNode removeElements(ListNode head, int val) {
+        if (null == head) {
+            return head;
+        }
+        while (null != head && head.val == val) {
+            head = head.next;
+        }
+        ListNode slow = head;
+        ListNode quick = null;
+        while (null != slow) {
+            quick = slow.next;
+            while (null != quick && quick.val == val) {
+                quick = quick.next;
+            }
+            slow.next = quick;
+            slow = quick;
+        }
+        return head;
+    }
+
+    public static ListNode oddEvenList(ListNode head) {
+        if (null == head || null == head.next) {
+            return head;
+        }
+        ListNode oddItr = head; //奇数结点游标
+        ListNode evenList = head.next; //偶数结点头结点
+        ListNode evenItr = head.next; //偶数结点游标
+        ListNode cur = evenItr.next; //从第三个结点开始遍历
+        boolean isOdd = true; //首节点是奇数结点
         while (null != cur) {
-            ListNode next = removeNextItemFromList(cur);
-            addItemToList(result, next);
+            if (isOdd) { //奇数结点
+                oddItr.next = cur;
+                oddItr = oddItr.next;
+            } else { //偶数结点
+                evenItr.next = cur;
+                evenItr = evenItr.next;
+            }
+            isOdd = !isOdd;
+            cur = cur.next;
         }
-        return result;
+        evenItr.next = null; //置空
+        oddItr.next = evenList;
+        return head;
     }
 
-    private static void addItemToList(ListNode result, ListNode next) {
-        if (next == null) {
-            return;
+    public static boolean isPalindrome(ListNode head) {
+        if (null == head || null == head.next) {
+            return true;
         }
-        if (null == result) {
-            result = next;
-            return;
+        ListNode slow = head;
+        ListNode quick = head.next;
+        while (null != quick && null != quick.next) {
+            slow = slow.next;
+            quick = quick.next.next;
         }
-        next.next = result;
-        result = next;
-    }
-
-    private static ListNode removeNextItemFromList(ListNode cur) {
-        ListNode next = cur.next;
-        if (next != null) {
-            cur = cur.next.next;
-        } else {
-            cur = null;
+//        if (null == quick) { // 奇数个肯定不是回文数
+//            return false;
+//        }
+        ListNode reverHead = slow.next;
+        slow.next = null; // 中间结点后继结点置空
+        quick = reverHead.next;
+        reverHead.next = null;
+        while (null != quick) {
+            ListNode tmp = quick.next;
+            quick.next = reverHead;
+            reverHead = quick;
+            quick = tmp;
         }
-        return next;
+        while (null != reverHead) {
+            if (head.val != reverHead.val) {
+                return false;
+            }
+            head = head.next;
+            reverHead = reverHead.next;
+        }
+        return true;
     }
 
     public static void main(String[] args) {
         MyCollections m = new MyCollections();
         ListNode list = m.new ListNode(1);
         list.next = m.new ListNode(2);
-//        list.next.next = m.new ListNode(3);
-//        list.next.next.next = m.new ListNode(4);
-//        list.next.next.next.next = m.new ListNode(5);
-        print(reverseList(list));
+        list.next.next = m.new ListNode(3);
+        list.next.next.next = m.new ListNode(3);
+        list.next.next.next.next = m.new ListNode(2);
+        list.next.next.next.next.next = m.new ListNode(1);
+//        list.next.next.next.next.next.next = m.new ListNode(7);
+        System.out.println(isPalindrome(list));
+//        print(isPalindrome(list));
     }
 }
