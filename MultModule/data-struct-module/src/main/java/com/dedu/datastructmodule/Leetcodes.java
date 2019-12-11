@@ -1,5 +1,8 @@
 package com.dedu.datastructmodule;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Leetcodes {
 
 
@@ -14,13 +17,22 @@ public class Leetcodes {
 
     public static class Node<Integer> {
 
-        public Integer val;
+        public int val;
 
-        public Node pre, next, child;
+        public Node pre, prev, next, child;
+        public Node random;
 
-        public Node(Integer e) {
-            this.val = e;
+        public Node() {}
+
+        public Node(int integer) {}
+
+        public Node(int _val,Node _prev,Node _next,Node _child) {
+            val = _val;
+            prev = _prev;
+            next = _next;
+            child = _child;
         }
+
     }
 
     private  static  Node head;
@@ -198,9 +210,101 @@ public class Leetcodes {
             return head;
         }
         Node cur = head;
-        Node next = head.next;
-        
+        while (null != cur) {
+            if (null != cur.child) {
+                Node childLast = getChildLastNode(cur.child);
+                Node next = cur.next;
+                Node child = cur.child;
+                cur.next = child;
+                child.prev = cur;
+                childLast.next = next;
+                if (null != next)
+                    next.prev = childLast;
+                cur.child = null;
+                cur = next;
+            } else {
+                cur = cur.next;
+            }
+        }
+        return head;
+    }
 
+    public static Node getChildLastNode(Node childHead) {
+        Node cur = childHead;
+        while (null != cur) {
+            if (null != cur.child) {
+                Node childLast = getChildLastNode(cur.child);
+                Node next = cur.next;
+                Node child = cur.child;
+                cur.next = child;
+                child.prev = cur;
+                childLast.next = next;
+                cur.child = null;
+                if (next != null ) {
+                    next.prev = childLast;
+                } else {
+                    return childLast;
+                }
+                cur = next;
+            } else {
+                if (null == cur.next) {
+                    return cur;
+                }
+                cur = cur.next;
+            }
+        }
+        return null;
+    }
+
+    public static Node copyRandomList(Node head) {
+        if (null == head) {
+            return null;
+        }
+        Node cur = head;
+        while (null != cur) {
+            Node tmp = new Node();
+            tmp.val = cur.val;
+            Node next = cur.next;
+            cur.next = tmp;
+            tmp.next = next;
+            cur = cur.next.next;
+        }
+        cur = head;
+        while (null != cur) {
+            Node copyNode = cur.next;
+            copyNode.random = cur.random.next;
+            cur = copyNode.next;
+        }
+        cur = head.next;
+        while (null != cur) {
+            if (null == cur.next) {
+                break;
+            }
+            cur.next = cur.next.next;
+            cur = cur.next;
+        }
+        return head.next;
+    }
+
+    public ListNode rotateRight(ListNode head, int k) {
+        if (head == null || k==0) {
+            return head;
+        }
+        ListNode cur = head;
+        ListNode tail = null;
+        int size=0;
+        while (cur != null) {
+            size++;
+            cur = cur.next;
+        }
+        tail = cur;
+        tail.next = head;
+        int offset = k % size;
+        for (int i=0; i<offset; i++) {
+            head = head.next;
+            tail = tail.next;
+        }
+        tail.next = null;
         return head;
     }
 
@@ -237,14 +341,56 @@ public class Leetcodes {
 //        list.next.next.next.next.next.next = m.new ListNode(7);
 //        print(mergeTwoLists(list, list2));
 
-        ListNode list = new ListNode(1);
-        list.next = new ListNode(8);
+//        ListNode list = new ListNode(1);
+//        list.next = new ListNode(8);
 //        list.next.next = new ListNode(3);
 
-        ListNode list2 = new ListNode(0);
+//        ListNode list2 = new ListNode(0);
 //        list2.next = new ListNode(6);
 //        list2.next.next = new ListNode(4);
-        print(addTwoNumbers(list, list2));
+//        print(addTwoNumbers(list, list2));
+
+        Node a1 = new Node();
+        Node a11 = new Node();
+        Node a111 = new Node();
+        Node a2 = new Node();
+        Node a22 = new Node();
+        Node a222 = new Node();
+
+        Node a3 = new Node();
+        Node a33 = new Node();
+        Node a333 = new Node();
+        a1.val = 1;
+        a11.val = 11;
+        a111.val = 111;
+        a2.val = 2;
+        a22.val = 22;
+        a222.val = 222;
+        a3.val = 3;
+        a33.val = 33;
+        a333.val = 333;
+
+
+        a1.next = a11;
+        a11.next = a111;
+        a111.prev = a11;
+        a11.prev = a1;
+
+        a11.child = a2;
+
+        a2.next = a22;
+        a22.next = a222;
+        a222.prev = a22;
+        a22.prev = a2;
+
+        a3.next = a33;
+        a33.next = a333;
+        a333.prev = a33;
+        a33.prev = a3;
+
+        a22.child = a3;
+
+        print(flatten(a1));
 
 
     }
