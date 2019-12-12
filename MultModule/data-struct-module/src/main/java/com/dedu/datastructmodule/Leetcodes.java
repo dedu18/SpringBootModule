@@ -1,7 +1,6 @@
 package com.dedu.datastructmodule;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Leetcodes {
 
@@ -286,69 +285,71 @@ public class Leetcodes {
         return head.next;
     }
 
-    public ListNode rotateRight(ListNode head, int k) {
+    public static ListNode rotateRight(ListNode head, int k) {
         if (head == null || k==0) {
             return head;
         }
         ListNode cur = head;
         ListNode tail = null;
         int size=0;
-        while (cur != null) {
+        while (cur.next != null) {
             size++;
             cur = cur.next;
         }
         tail = cur;
         tail.next = head;
-        int offset = k % size;
-        for (int i=0; i<offset; i++) {
+        int offset = k % (size+1);
+        for (int i=0; i<=(size - offset); i++) {
             head = head.next;
             tail = tail.next;
         }
+//        ListNode result = head.next;
         tail.next = null;
         return head;
     }
 
     public static void main(String[] args) {
-//        addAtHead(4);
-//        System.out.println(get(1));
-//        addAtHead(1);
-//        addAtHead(5);
-//        deleteAtIndex(3);
-//        addAtHead(7);
-//        System.out.println(get(3));
-//        System.out.println(get(3));
-//        System.out.println(get(3));
-//        addAtHead(1);
-//        deleteAtIndex(4);
-//        print(head);
-//        addAtHead(3);
-//        addAtHead(2);
-//        addAtHead(5);
-//        addAtTail(5);
-//        deleteAtIndex(6);
+/*        addAtHead(4);
+        System.out.println(get(1));
+        addAtHead(1);
+        addAtHead(5);
+        deleteAtIndex(3);
+        addAtHead(7);
+        System.out.println(get(3));
+        System.out.println(get(3));
+        System.out.println(get(3));
+        addAtHead(1);
+        deleteAtIndex(4);
+        print(head);
+        addAtHead(3);
+        addAtHead(2);
+        addAtHead(5);
+        addAtTail(5);
+        deleteAtIndex(6);
 
-//        Leetcodes m = new Leetcodes();
-//        ListNode list = m.new ListNode(1);
-//        list.next = m.new ListNode(2);
-//        list.next.next = m.new ListNode(3);
-//
-//        ListNode list2 = m.new ListNode(1);
-//        list2.next = m.new ListNode(2);
-//        list2.next.next = m.new ListNode(3);
-//        list.next.next.next = m.new ListNode(3);
-//        list.next.next.next.next = m.new ListNode(2);
-//        list.next.next.next.next.next = m.new ListNode(1);
-//        list.next.next.next.next.next.next = m.new ListNode(7);
-//        print(mergeTwoLists(list, list2));
+        Leetcodes m = new Leetcodes();
+        ListNode list = m.new ListNode(1);
+        list.next = m.new ListNode(2);
+        list.next.next = m.new ListNode(3);
 
-//        ListNode list = new ListNode(1);
-//        list.next = new ListNode(8);
-//        list.next.next = new ListNode(3);
+        ListNode list2 = new ListNode(1);
+        list2.next = new ListNode(2);
+        list2.next.next = new ListNode(3);
+        list2.next.next.next = new ListNode(4);
+        list2.next.next.next.next = new ListNode(5);
+        list2.next.next.next.next.next = new ListNode(1);
+        print(rotateRight(list2, 2));
+        list.next.next.next.next.next.next = m.new ListNode(7);
+        print(mergeTwoLists(list, list2));
 
-//        ListNode list2 = new ListNode(0);
-//        list2.next = new ListNode(6);
-//        list2.next.next = new ListNode(4);
-//        print(addTwoNumbers(list, list2));
+        ListNode list = new ListNode(1);
+        list.next = new ListNode(8);
+        list.next.next = new ListNode(3);
+
+        ListNode list2 = new ListNode(0);
+        list2.next = new ListNode(6);
+        list2.next.next = new ListNode(4);
+        print(addTwoNumbers(list, list2));
 
         Node a1 = new Node();
         Node a11 = new Node();
@@ -392,7 +393,12 @@ public class Leetcodes {
 
         print(flatten(a1));
 
-
+        int[] request = {2,2,1};
+        singleNumber(request);
+        int[] request = {1,2,2,1};
+        int[] request2 = {2,2};
+        intersection(request, request2); */
+        System.out.println(firstUniqChar("loveleetcode"));
     }
 
     public static void print(ListNode head) {
@@ -408,4 +414,339 @@ public class Leetcodes {
             head = head.next;
         }
     }
+
+    /********************************************************/
+    class MyHashSet {
+
+        private final int DEFAULT_SIZE = 10;
+
+        private ListNode[] items;
+
+        /** Initialize your data structure here. */
+        public MyHashSet() {
+            items = new ListNode[DEFAULT_SIZE];
+        }
+
+        public void add(int key) {
+            if (contains(key)) {
+                return;
+            }
+            int hash = hash(key);
+            ListNode item = new ListNode(key);
+            if (null == items[hash]) {
+                items[hash] = item;
+            } else {
+                ListNode cur = items[hash];
+                while (null != cur.next) {
+                    cur = cur.next;
+                }
+                cur.next = item;
+            }
+        }
+
+        public void remove(int key) {
+            int hash = hash(key);
+            if (null == items[hash]) {
+                return;
+            } else if (key == items[hash].val) {
+                items[hash] = items[hash].next;
+            } else {
+                ListNode cur = items[hash];
+                while (null != cur.next && key != cur.next.val) {
+                    cur = cur.next;
+                }
+                if (null != cur.next && key == cur.next.val) {
+                    cur.next = cur.next.next;
+                }
+            }
+        }
+
+        /** Returns true if this set contains the specified element */
+        public boolean contains(int key) {
+            int hash = hash(key);
+            if (null == items[hash]) {
+                return false;
+            } else if (key == items[hash].val) {
+                return true;
+            } else {
+                ListNode cur = items[hash];
+                while (null != cur.next && key != cur.next.val) {
+                    cur = cur.next;
+                }
+                if (null != cur.next && key == cur.next.val) {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        private int hash(int key) {
+            return Math.abs(key) % DEFAULT_SIZE;
+        }
+    }
+
+    class MyHashMap {
+
+        class Item {
+            int key;
+            int val;
+            Item next;
+            Item(int x, int y) {
+                key = x;
+                val = y;
+            }
+        }
+
+        private final int DEFAULT_SIZE = 10;
+
+        private Item[] items;
+
+        /** Initialize your data structure here. */
+        public MyHashMap() {
+            items = new Item[DEFAULT_SIZE];
+        }
+
+        /** value will always be non-negative. */
+        public void put(int key, int value) {
+            int hash = hash(key);
+            if (null == items[hash]) {
+                items[hash] = new Item(key, value);
+            } else if (key == items[hash].val) {
+                items[hash].val = value;
+            } else {
+                Item cur = items[hash];
+                while (null != cur.next && key != cur.next.key) {
+                    cur = cur.next;
+                }
+                if (null == cur.next) {
+                    cur.next = new Item(key, value);
+                }
+                cur.next.val = value;
+            }
+        }
+
+        /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+        public int get(int key) {
+            int hash = hash(key);
+            if (null == items[hash]) {
+                return -1;
+            } else if (key == items[hash].key) {
+                return items[hash].val;
+            } else {
+                Item cur = items[hash];
+                while (null != cur.next && key != cur.next.key) {
+                    cur = cur.next;
+                }
+                if (null == cur.next) {
+                    return -1;
+                }
+                return cur.next.val;
+            }
+        }
+
+        /** Removes the mapping of the specified value key if this map contains a mapping for the key */
+        public void remove(int key) {
+            int hash = hash(key);
+            if (null == items[hash]) {
+                return ;
+            } else if (key == items[hash].key) {
+                items[hash] = items[hash].next;
+            }else {
+                Item cur = items[hash];
+                while (null != cur.next && key != cur.next.key) {
+                    cur = cur.next;
+                }
+                if (null == cur.next) {
+                    return ;
+                }
+                cur.next = cur.next.next;
+            }
+        }
+
+        private int hash(int key) {
+            return Math.abs(key) % DEFAULT_SIZE;
+        }
+    }
+
+    public boolean containsDuplicate(int[] nums) {
+        if (null == nums || nums.length < 2) {
+            return false;
+        }
+        HashSet cache = new HashSet(nums.length);
+        for (int i : nums) {
+            if (cache.contains(i)) {
+                return true;
+            }
+            cache.add(i);
+        }
+        cache = null;
+        return false;
+    }
+
+    public static int singleNumber(int[] nums) {
+        Arrays.sort(nums);
+        int slow = 0, quick = 0;
+        while (quick < nums.length) {
+            while (quick < nums.length && nums[slow] == nums[quick]) {
+                quick++;
+            }
+            if (quick-slow <= 1) {
+                return nums[slow];
+            }
+            slow = quick;
+        }
+        return -1;
+    }
+
+    public static int[] intersection(int[] nums1, int[] nums2) {
+        if (null == nums1 || null == nums2) {
+            return new int[0];
+        }
+        int size = nums1.length<nums2.length?nums1.length:nums2.length;
+        HashSet cache = new HashSet();
+        for (int i=0; i<nums1.length; i++) {
+            if (!cache.contains(nums1[i])) {
+                cache.add(nums1[i]);
+            }
+        }
+        HashSet<Integer> cache2 = new HashSet<>();
+        int offset = 0;
+        int[] tmp = new int[size];
+        for (int i=0; i< nums2.length; i++) {
+            if (cache.contains(nums2[i]) && !cache2.contains(nums2[i])) {
+                tmp[offset++] = nums2[i];
+                cache2.add(nums2[i]);
+            }
+        }
+//        cache.retainAll()
+        int[] result = new int[offset];
+        for (int i=0; i<offset; i++) {
+            result[i] = tmp[i];
+        }
+        return result;
+    }
+
+    private static HashSet<Integer> cache = new HashSet<>();
+
+    public static boolean isHappy(int n) {
+        if (n == 1) {
+            return true;
+        }
+        List<Integer> nums = new LinkedList<>();
+        while (n >0) {
+            int carry = n%10;
+            n = (n-carry)/10;
+            nums.add(carry);
+        }
+        int total = 0;
+        for (Integer num :
+                nums) {
+            total += num * num;
+        }
+        if (total == 1) {
+            return true;
+        } else if (cache.contains(total)) {
+            return false;
+        } else {
+            cache.add(total);
+            return isHappy(total);
+        }
+    }
+
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> cache = new HashMap<>(nums.length);
+        for (int i=0; i<nums.length; i++) {
+            int distance = target-nums[i];
+            if (cache.containsKey(distance)) {
+                return new int[]{i, cache.get(distance)};
+            }
+            cache.put(nums[i], i);
+        }
+        return null;
+    }
+
+    /**
+     * s = "egg", t = "add"
+     * @param s
+     * @param t
+     * @return
+     */
+    public static boolean isIsomorphic(String s, String t) {
+        if (s.length() < 2) {
+            return true;
+        }
+        char[] sChars = s.toCharArray();
+        char[] tChars = t.toCharArray();
+        HashMap<Character, Character> cache = new HashMap<>(sChars.length);
+        for (int i=0; i<sChars.length; i++) {
+            char sChar = sChars[i];
+            char tChar = tChars[i];
+            if (cache.containsKey(sChar)) {
+                if (!Objects.equals(tChar, cache.get(sChar))) {
+                    return false;
+                }
+            } else {
+                if (cache.containsValue(tChar)) {
+                    return false;
+                }
+                cache.put(sChar, tChar);
+            }
+        }
+        return true;
+    }
+
+    public static String[] findRestaurant(String[] list1, String[] list2) {
+        HashMap<String, Integer> cache = new HashMap<>(list1.length > list2.length?list2.length:list1.length);
+        String[] lessList = list1.length > list2.length?list2:list1;
+        String[] moreList = list1.length > list2.length?list1:list2;
+        for (int i=0; i<lessList.length; i++) {
+            cache.put(lessList[i], i);
+        }
+        int indexTotal = moreList.length + lessList.length;
+        List<String> resultList = new ArrayList<>();
+        for (int i=0; i<moreList.length; i++) {
+            if (cache.containsKey(moreList[i])) {
+                if (indexTotal >= i + cache.get(moreList[i])) {
+                    indexTotal = i + cache.get(moreList[i]);
+                    resultList.add(moreList[i]);
+                }
+            }
+        }
+        String[] result = new String[resultList.size()];
+        for (int i=0; i<resultList.size(); i++) {
+            result[i] = resultList.get(i);
+        }
+        return result;
+    }
+
+    public static int firstUniqChar(String s) {
+        char[] chars = s.toCharArray();
+        HashMap<Character, Integer> cache = new HashMap<>(chars.length);
+        for (int i=0; i<chars.length; i++) {
+            if (cache.containsKey(chars[i])) {
+                Integer integer = cache.get(chars[i]);
+                cache.put(chars[i], ++integer);
+            } else {
+                cache.put(chars[i], 1);
+            }
+        }
+        List<Character> resultCharas = new ArrayList<>();
+        cache.forEach((c, i) -> {
+            if (i==1) {
+                resultCharas.add(c);
+            }
+        });
+        if (resultCharas.size() == 0) {
+            return -1;
+        }
+        int index = chars.length;
+        for(Character c:resultCharas) {
+            int tmp = s.indexOf(c);
+            if (index > tmp) {
+                index = tmp;
+            }
+        }
+        return index;
+    }
+
 }
