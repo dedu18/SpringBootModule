@@ -398,7 +398,12 @@ public class Leetcodes {
         int[] request = {1,2,2,1};
         int[] request2 = {2,2};
         intersection(request, request2); */
-        System.out.println(firstUniqChar("loveleetcode"));
+//        System.out.println(firstUniqChar("loveleetcode"));
+//        String[] r = {"eat","tea","tan","ate","nat","bat"};
+//        groupAnagrams(r);
+
+        char[][] r = {{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},{'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'}};
+        isValidSudoku(r);
     }
 
     public static void print(ListNode head) {
@@ -749,4 +754,115 @@ public class Leetcodes {
         return index;
     }
 
+
+    public int[] intersect(int[] nums1, int[] nums2) {
+        HashMap<Integer, Integer> cache = new HashMap<>(nums1.length);
+        List<Integer> rstList = new ArrayList<>();
+        for (int i=0; i<nums1.length; i++) {
+            if (cache.containsKey(nums1[i])) {
+                cache.put(nums1[i], cache.get(nums1[i]) + 1);
+            } else {
+                cache.put(nums1[i], 1);
+            }
+        }
+        for (int i=0; i<nums2.length; i++) {
+            if (cache.containsKey(nums2[i])) {
+                Integer number = cache.get(nums2[i]);
+                if (number - 1 == 0) {
+                    cache.remove(nums2[i]);
+                } else {
+                    cache.put(nums2[i], number - 1);
+                }
+                rstList.add(nums2[i]);
+            }
+        }
+        int[] result = new int[rstList.size()];
+        for (int i=0; i<rstList.size(); i++) {
+            result[i] = rstList.get(i);
+        }
+        return result;
+    }
+
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        if (null == nums || nums.length < 1) {
+            return false;
+        }
+        Map<Integer, List<Integer>> cache = new HashMap<>(nums.length); // K为num，V为下标列表
+        for (int i=0; i<nums.length; i++) {
+            if (cache.containsKey(nums[i])) {
+                List<Integer> indexs = cache.get(nums[i]);
+                for (Integer index :
+                        indexs) {
+                    if (Math.abs(index - i) == k) {
+                        return true;
+                    }
+                }
+                cache.get(nums[i]).add(i);
+            } else {
+                List<Integer> tmp = new ArrayList<>();
+                tmp.add(i);
+                cache.put(nums[i], tmp);
+            }
+        }
+        return false;
+    }
+
+    public static List<List<String>> groupAnagrams(String[] strs) {
+        if (null == strs || strs.length == 0) {
+            return new ArrayList<>();
+        }
+        HashMap<String, List<String>> cache = new HashMap<>();
+        for (String str:strs) {
+            char[] chars = str.toCharArray();
+            Arrays.sort(chars);
+            String charStr = new String(chars);
+            if (cache.containsKey(charStr)) {
+                cache.get(charStr).add(str);
+            } else {
+                List<String> tmp = new ArrayList<>();
+                tmp.add(str);
+                cache.put(charStr, tmp);
+            }
+        }
+        return new ArrayList<>(cache.values());
+    }
+
+    public static boolean isValidSudoku(char[][] board) {
+        HashMap<Character, Integer>[] row = new HashMap[9];
+        HashMap<Character, Integer>[] column = new HashMap[9];
+        HashMap<Character, Integer>[] gongge = new HashMap[9];
+
+        for (int i=0; i<9; i++) {
+            row[i] = new HashMap<>(9);
+            column[i] = new HashMap<>(9);
+            gongge[i] = new HashMap<>(9);
+        }
+
+        for (int i=0; i<9; i++) {
+            for (int j=0; j<9; j++) {
+                if (!Objects.equals('.', board[i][j])) {
+                    // 行检测
+                    if (row[i].containsKey(board[i][j])) {
+                        return false;
+                    } else {
+                        row[i].put(board[i][j], 1);
+                    }
+                    // 列检测
+                    if (column[j].containsKey(board[i][j])) {
+                        return false;
+                    } else {
+                        column[j].put(board[i][j], 1);
+                    }
+                    //宫格检测
+                    int gonggeindex = i/3*3+j/3;
+                    if (gongge[gonggeindex].containsKey(board[i][j])) {
+                        return false;
+                    } else {
+                        gongge[gonggeindex].put(board[i][j], 1);
+                    }
+                }
+            }
+        }
+        return true;
+    }
 }
