@@ -1,5 +1,7 @@
 package com.dedu.datastructmodule;
 
+import javafx.util.Pair;
+
 import java.util.*;
 
 public class Leetcodes {
@@ -420,8 +422,85 @@ public class Leetcodes {
 //        root3.left = root5;
 //        root5.left = root7;
 //        findDuplicateSubtrees(root1);
-          int[] nums = {-1,-1};
-          topKFrequent(nums, 1);
+//          int[] nums = {-1,-1};
+//          topKFrequent(nums, 1);
+
+//        MyCircularQueue m = new MyCircularQueue(3);
+//        m.enQueue(1);
+//        m.enQueue(2);
+//        m.enQueue(3);
+//        m.enQueue(4);
+//        m.Rear();
+//        m.isFull();
+//        m.deQueue();
+//        m.enQueue(4);
+//        m.Rear();
+
+        char[] a0 = {'1','1','1','1','1','0','1','1','1','1','1','1','1','1','1','0','1','0','1','1'
+        };
+        char[] a1 = {'0','1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','0'
+        };
+        char[] a2 = {'1','0','1','1','1','0','0','1','1','0','1','1','1','1','1','1','1','1','1','1'
+        };
+        char[] a3 = {'1','1','1','1','0','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+        };
+        char[] a4 = {'1','0','0','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+        };
+        char[] a5 = {'1','0','1','1','1','1','1','1','0','1','1','1','0','1','1','1','0','1','1','1'
+        };
+        char[] a6 = {'0','1','1','1','1','1','1','1','1','1','1','1','0','1','1','0','1','1','1','1'
+        };
+        char[] a7 = {'1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','0','1','1'
+        };
+        char[] a8 = {'1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','1','1','1','1'
+        };
+        char[] a9 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+        };
+        char[] a10 = {'0','1','1','1','1','1','1','1','0','1','1','1','1','1','1','1','1','1','1','1'
+        };
+        char[] a11 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+        };
+        char[] a12 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+        };
+        char[] a13 = {'1','1','1','1','1','0','1','1','1','1','1','1','1','0','1','1','1','1','1','1'
+        };
+        char[] a14 = {'1','0','1','1','1','1','1','0','1','1','1','0','1','1','1','1','0','1','1','1'
+        };
+        char[] a15 = {'1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','1','0'
+        };
+        char[] a16 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','0','0'
+        };
+        char[] a17 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+        };
+        char[] a18 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+        };
+        char[] a19 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+        };
+
+        char[][] grad = new char[20][20];
+        grad[0]= a0;
+        grad[1]= a1;
+        grad[2]= a2;
+        grad[3]= a3;
+        grad[4]= a4;
+        grad[5]= a5;
+        grad[6]= a6;
+        grad[7]= a7;
+        grad[8]= a8;
+        grad[9]= a9;
+        grad[10]= a10;
+        grad[11]= a11;
+        grad[12]= a12;
+        grad[13]= a13;
+        grad[14]= a14;
+        grad[15]= a15;
+        grad[16]= a16;
+        grad[17]= a17;
+        grad[18]= a18;
+        grad[19]= a19;
+
+
+        System.out.println(numIslands(grad));
     }
 
     public static void print(ListNode head) {
@@ -1057,4 +1136,128 @@ public class Leetcodes {
         }
         return cacheList.get(random);
     }
+
+    static class MyCircularQueue {
+
+        private int[] queue;
+
+        private int head, tail;
+
+        /** Initialize your data structure here. Set the size of the queue to be k. */
+        public MyCircularQueue(int k) {
+            queue = new int[k];
+            head = 0;
+            tail = 0;
+        }
+
+        /** Insert an element into the circular queue. Return true if the operation is successful. */
+        public boolean enQueue(int value) {
+            if (isFull()) {
+                return false;
+            }
+            queue[tail] = value;
+            tail = (tail + 1) % queue.length;
+            return true;
+        }
+
+        /** Delete an element from the circular queue. Return true if the operation is successful. */
+        public boolean deQueue() {
+            if (head==tail) {
+                return false;
+            }
+            head = (head + 1) % queue.length;
+            return true;
+        }
+
+        /** Get the front item from the queue. */
+        public int Front() {
+            if(isEmpty()){
+                return -1;
+            }
+            return queue[head];
+        }
+
+        /** Get the last item from the queue. */
+        public int Rear() {
+            if(isEmpty()){
+                return -1;
+            }
+            return queue[(tail-1+queue.length)%queue.length] ;
+        }
+
+        /** Checks whether the circular queue is empty or not. */
+        public boolean isEmpty() {
+            return head == tail;
+        }
+
+        /** Checks whether the circular queue is full or not. */
+        public boolean isFull() {
+            return (tail + 1) % queue.length == head;
+        }
+    }
+
+     public static class Pair<K, V> {
+        K k;
+        V v;
+
+        public Pair(K k, V v) {
+            this.k = k;
+            this.v = v;
+        }
+
+         public K getKey() {
+             return k;
+         }
+
+         public V getValue() {
+             return v;
+         }
+     }
+
+    public static int numIslands(char[][] grid) {
+        if (null == grid || grid.length == 0) {
+            return 0;
+        }
+        int row = grid.length;
+        int column = grid[0].length;
+        int numIslands = 0;
+        for (int i=0; i<row; i++) {
+            for (int j=0; j<column; j++) {
+                if (grid[i][j] == '1') {
+                    numIslands++;
+                    Queue<Pair<Integer, Integer>> queue = new LinkedList<>();
+                    Pair<Integer, Integer> curPair = new Pair<>(i, j);
+                    isLands(grid, row, column, curPair, queue);
+                    while (!queue.isEmpty()) {
+                        Pair<Integer, Integer> pair = queue.poll();
+                        isLands(grid, row, column, pair, queue);
+                    }
+                }
+            }
+        }
+        return numIslands;
+    }
+
+    public static void isLands(char[][] grid, int row, int column, Pair<Integer, Integer> pair, Queue<Pair<Integer, Integer>> queue) {
+        int i=pair.getKey();
+        int j=pair.getValue();
+        if (i-1 > -1 && grid[i-1][j] == '1') { //上
+            queue.add(new Pair<>(i-1, j));
+            grid[i-1][j] = '0';
+        }
+        if (j-1 > -1 && grid[i][j-1] == '1') { //左
+            queue.add(new Pair<>(i, j-1));
+            grid[i][j-1] = '0';
+        }
+        if (j+1 < column && grid[i][j+1] == '1') { //右
+            queue.add(new Pair<>(i, j+1));
+            grid[i][j+1] = '0';
+        }
+        if (i+1 < row && grid[i+1][j] == '1') { //下
+            queue.add(new Pair<>(i+1, j));
+            grid[i+1][j] = '0';
+        }
+        grid[i][j] = '0';
+    }
+
 }
