@@ -402,8 +402,26 @@ public class Leetcodes {
 //        String[] r = {"eat","tea","tan","ate","nat","bat"};
 //        groupAnagrams(r);
 
-        char[][] r = {{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},{'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'}};
-        isValidSudoku(r);
+//        char[][] r = {{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},{'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'}};
+//        isValidSudoku(r);
+//        Leetcodes l = new Leetcodes();
+//        TreeNode root1 = l.new TreeNode(1);
+//        TreeNode root2 = l.new TreeNode(2);
+//        TreeNode root3 = l.new TreeNode(3);
+//        TreeNode root4 = l.new TreeNode(4);
+//        TreeNode root5 = l.new TreeNode(2);
+//        TreeNode root6 = l.new TreeNode(4);
+//        TreeNode root7 = l.new TreeNode(4);
+//
+//        root1.left = root2;
+//        root2.left = root4;
+//        root1.right = root3;
+//        root3.right = root6;
+//        root3.left = root5;
+//        root5.left = root7;
+//        findDuplicateSubtrees(root1);
+          int[] nums = {-1,-1};
+          topKFrequent(nums, 1);
     }
 
     public static void print(ListNode head) {
@@ -864,5 +882,179 @@ public class Leetcodes {
             }
         }
         return true;
+    }
+
+    public class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
+        TreeNode(int x) { val = x; }
+    }
+
+    public static List<TreeNode> findDuplicateSubtrees(TreeNode root) {
+        List<TreeNode> result = new ArrayList<>();
+        if (null == root) {
+            return result;
+        }
+        Map<String, Integer> cache = new HashMap<>();
+        findSubtrees(root, cache, result);
+        return result;
+    }
+
+    public static String findSubtrees(TreeNode root, Map<String, Integer> cache, List<TreeNode> result) {
+        if (null == root) {
+            return "";
+        }
+        // 通过（根,左,右）保存子树结构
+        String subTreeStr = root.val + "," + findSubtrees(root.left, cache, result) + "," + findSubtrees(root.right, cache, result);
+        if (null != cache.get(subTreeStr) && cache.get(subTreeStr) == 1) {
+            result.add(root);
+        }
+        cache.put(subTreeStr, cache.getOrDefault(subTreeStr, 0) + 1);
+        return subTreeStr;
+    }
+
+    public int numJewelsInStones(String J, String S) {
+        if (null == J || J.trim().length() == 0) {
+            return 0;
+        }
+        HashSet<Character> npc = new HashSet<>(J.length());
+        for (Character chara : J.toCharArray()) {
+            npc.add(chara);
+        }
+        int result = 0;
+        for (Character chara : S.toCharArray()) {
+            if (npc.contains(chara)) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    //abcabcbb
+    public int lengthOfLongestSubstring(String s) {
+        if (null == s || s.length() == 0) {
+            return 0;
+        }
+        char[] chars = s.toCharArray();
+        HashSet cache = null;
+        int result = 0;
+        for (int slow = 0; slow<s.length(); slow++) {
+            cache = new HashSet();
+            int turn = 0;
+            for (int quick = slow; quick<s.length(); quick++) {
+                if (cache.contains(chars[quick])) {
+                    break;
+                }
+                turn++;
+                cache.add(chars[quick]);
+            }
+            if (turn > result) {
+                result = turn;
+            }
+        }
+        return result;
+    }
+
+    public int lengthOfLongestSubstring2(String s) {
+        Map<Character, Integer> cache = new HashMap<>();
+        int result = 0;
+        for (int start=0, end=0; end < s.length(); end++) {
+            Character curChar = s.charAt(end);
+            if (cache.containsKey(curChar)) {
+                start = Math.max(start, cache.get(curChar));
+            }
+            result = Math.max(result, end - start + 1);
+            cache.put(s.charAt(end), end + 1);
+        }
+        return result;
+    }
+
+    public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
+        int result = 0;
+        HashMap<Integer, Integer> cache = new HashMap<>();
+        for (int i=0; i<A.length; i++) { //将A和B数组中的数组合缓存起来
+            for (int j=0; j<B.length; j++) {
+                int sum = A[i] + B[j];
+                cache.put(sum, cache.getOrDefault(sum, 0) + 1);
+            }
+        }
+
+        for (int k=0; k<C.length; k++) {
+            for (int l=0; l<D.length; l++) {
+                int sum = C[k] + D[l];
+                result += cache.getOrDefault(-1 * sum, 0);
+            }
+        }
+        return result;
+    }
+
+    public static List<Integer> topKFrequent(int[] nums, int k) {
+        List<Integer> result = new ArrayList<>();
+        HashMap<Integer, Integer> cache = new HashMap<>();
+        for (Integer i :
+                nums) {
+            cache.put(i, cache.getOrDefault(i, 0) + 1);
+        }
+        HashMap<Integer, List<Integer>> statisticsMap = new HashMap<>();
+        Integer maxStatistics = 0;
+        for (Map.Entry<Integer, Integer> entry : cache.entrySet()) { //k为数字,v为次数
+            maxStatistics = maxStatistics > entry.getValue() ? maxStatistics:entry.getValue();
+            if (statisticsMap.containsKey(entry.getValue())) {
+                statisticsMap.get(entry.getValue()).add(entry.getKey());
+            } else {
+                List<Integer> t = new ArrayList<Integer>();
+                t.add(entry.getKey());
+                statisticsMap.put(entry.getValue(), t);
+            }
+        }
+        for (int t=maxStatistics; t>=0; t--) {
+            if (statisticsMap.containsKey(t)) {
+                for (Integer i:
+                statisticsMap.get(t)) {
+                    result.add(i);
+                    if (result.size() == k) {
+                        return result;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    HashMap<Integer, Integer> cacheMap = new HashMap<>();
+    List<Integer> cacheList = new ArrayList<>();
+    int size=0;
+
+    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+    public boolean insert(int val) {
+        if (cacheMap.containsKey(val)) {
+            return false;
+        } else {
+            cacheMap.put(val, size);
+            cacheList.add(size, val);
+            size++;
+            return true;
+        }
+    }
+
+    /** Removes a value from the set. Returns true if the set contained the specified element. */
+    public boolean remove(int val) {
+        if (cacheMap.containsKey(val)) {
+            Integer index = cacheMap.remove(val);
+            cacheList.add(index, Integer.MIN_VALUE);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /** Get a random element from the set. */
+    public int getRandom() {
+        int random = new Random().nextInt(size);
+        while (Integer.MIN_VALUE == cacheList.get(random)) {
+            random = new Random().nextInt(size);
+        }
+        return cacheList.get(random);
     }
 }
