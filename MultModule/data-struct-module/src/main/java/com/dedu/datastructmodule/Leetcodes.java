@@ -500,7 +500,23 @@ public class Leetcodes {
         grad[19]= a19;
 
 
-        System.out.println(numIslands(grad));
+        System.out.println(numIslandsDFS(grad));
+
+//        String[] req = {"0000"};
+//        String target = "8888";
+//        System.out.println(openLock(req, target));
+
+//        List<Integer> a = new LinkedList<>();
+//        a.add(1);
+//        a.add(0);
+//        a.add(8);
+//        a.add(1);
+//        System.out.println(a.indexOf(1));
+//        System.out.println(a.lastIndexOf(1) == a.indexOf(1));
+
+//        System.out.println(isValid("()[]{}"));
+//        String[] tokens = {"4","13","5","/","+"};
+//        int i = evalRPN(tokens);
     }
 
     public static void print(ListNode head) {
@@ -1260,4 +1276,244 @@ public class Leetcodes {
         grid[i][j] = '0';
     }
 
+    /**
+     * 深度优先遍历
+     * @param grid
+     * @return
+     */
+    public static int numIslandsDFS(char[][] grid) {
+        if (null == grid || grid.length == 0) {
+            return 0;
+        }
+        int row = grid.length;
+        int column = grid[0].length;
+        int numIslands = 0;
+        for (int i=0; i<row; i++) {
+            for (int j = 0; j < column; j++) {
+                if (grid[i][j] == '1') {
+                    numIslands++;
+                    isLandsDFS(grid, row, column, new Pair<>(i, j));
+                }
+            }
+        }
+        return numIslands;
+    }
+
+    public static void isLandsDFS(char[][] grid, int row, int column, Pair<Integer, Integer> pair) {
+        int i = pair.getKey();
+        int j = pair.getValue();
+        grid[i][j] = 0;
+        if (i-1 > -1 && grid[i-1][j] == '1') { //上
+            grid[i-1][j] = '0';
+            isLandsDFS(grid, row, column, new Pair<>(i-1, j));
+        }
+        if (j-1 > -1 && grid[i][j-1] == '1') { //左
+            grid[i][j-1] = '0';
+            isLandsDFS(grid, row, column, new Pair<>(i, j-1));
+        }
+        if (j+1 < column && grid[i][j+1] == '1') { //右
+            grid[i][j+1] = '0';
+            isLandsDFS(grid, row, column, new Pair<>(i, j+1));
+        }
+        if (i+1 < row && grid[i+1][j] == '1') { //下
+            grid[i+1][j] = '0';
+            isLandsDFS(grid, row, column, new Pair<>(i+1, j));
+        }
+    }
+
+
+    public static int openLock(String[] deadends, String target) {
+        if ("0000".equals(target)) {
+            return 1;
+        }
+        HashSet<String> deadEndsCache = new HashSet<>(Arrays.asList(deadends));
+        if (deadEndsCache.contains("0000")) {
+            return -1;
+        }
+        Queue<String> queue = new LinkedList<>();
+        queue.offer("0000");
+        int trun = 0;
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- > 0) {
+                String curStr = queue.poll();
+                if (target.equals(curStr)) {
+                    return trun;
+                }
+                for (int i=0; i<4; i++) { //一次把4个位上的下一个可拨到字符放入队列中
+                    char[] curChars = curStr.toCharArray();
+                    int curNum = curChars[i] - '0';
+                    curChars[i] = (char) ((curNum + 1) % 10 + '0'); // 当前位正向转
+                    String s1 = new String(curChars);
+                    if (!deadEndsCache.contains(s1)) {
+                        queue.offer(s1);
+                        deadEndsCache.add(s1);
+                    }
+
+                    curChars[i] = (char) ((curNum - 1 + 10) % 10 + '0'); // 当前位反向转
+                    String s2 = new String(curChars);
+                    if (!deadEndsCache.contains(s2)) {
+                        queue.offer(s2);
+                        deadEndsCache.add(s2);
+                    }
+                }
+            }
+            trun++; //每遍历一层就递增
+        }
+        return -1;
+    }
+
+    private List<Integer> stackCache = new ArrayList<>();
+
+    private final Object obj = new Object();
+
+    private TreeMap<Integer, Object> sortedCache = new TreeMap<>();
+
+    public void push(int x) {
+        stackCache.add(x);
+        sortedCache.put(x, obj);
+    }
+
+    public void pop() {
+        if (stackCache.size() > 0) {
+            Integer remove = stackCache.get(stackCache.size() - 1);
+            if (stackCache.indexOf(remove) == stackCache.lastIndexOf(remove)) {
+                sortedCache.remove(remove);
+            }
+            stackCache.remove(stackCache.size() - 1);
+        }
+    }
+
+    public int top() {
+        if (stackCache.size() > 0) {
+            return stackCache.get(stackCache.size() - 1);
+        }
+        return -1;
+    }
+
+    public int getMin() {
+        return sortedCache.firstKey();
+    }
+
+    public static boolean isValid(String s) {
+        if (null == s || s.length() % 2 == 1) {
+            return false;
+        }
+        if ("".equals(s)) {
+            return true;
+        }
+        char[] chars = s.toCharArray();
+        Stack<Character> charStack = new Stack<>();
+        for (Character chara:
+             chars) {
+            if (charStack.isEmpty()) {
+                charStack.push(chara);
+            } else {
+                if (chara.equals('(')) {
+                    if (charStack.peek().equals(')')) {
+                        charStack.pop();
+                    } else {
+                        charStack.push(chara);
+                    }
+                } else if (chara.equals(')')) {
+                    if (charStack.peek().equals('(')) {
+                        charStack.pop();
+                    } else {
+                        charStack.push(chara);
+                    }
+                } else if (chara.equals('[')) {
+                    if (charStack.peek().equals(']')) {
+                        charStack.pop();
+                    } else {
+                        charStack.push(chara);
+                    }
+                } else if (chara.equals(']')) {
+                    if (charStack.peek().equals('[')) {
+                        charStack.pop();
+                    } else {
+                        charStack.push(chara);
+                    }
+                } else if (chara.equals('{')) {
+                    if (charStack.peek().equals('}')) {
+                        charStack.pop();
+                    } else {
+                        charStack.push(chara);
+                    }
+                } else if (chara.equals('}')) {
+                    if (charStack.peek().equals('{')) {
+                        charStack.pop();
+                    } else {
+                        charStack.push(chara);
+                    }
+                }
+            }
+        }
+        return charStack.isEmpty();
+    }
+
+    /**
+     *  [73, 74, 75, 71, 69, 72, 76, 73]
+     * @param T
+     * @return
+     */
+    public static int[] dailyTemperatures(int[] T) {
+        int[] result = new int[T.length];
+        Stack<Integer> tmpStack = new Stack<>();
+        for (int i=0; i<T.length; i++) {
+            if (tmpStack.isEmpty()) {
+                tmpStack.push(i);
+            } else {
+                while (true) {
+                    if (tmpStack.isEmpty() || T[tmpStack.peek()] >= T[i]) {
+                        tmpStack.push(i);
+                        break;
+                    } else {
+                        Integer pop = tmpStack.pop();
+                        result[pop] = i - pop;
+                    }
+                }
+            }
+        }
+        while (!tmpStack.isEmpty()) {
+            Integer pop = tmpStack.pop();
+            result[pop] = 0;
+        }
+        return result;
+    }
+
+    /**
+     * 从左到右的顺序压入栈中，并且按照遇到运算符就把栈顶两个元素出栈，执行运算，得到的结果再入栈的原则来进行处理
+     * @param tokens
+     * @return
+     */
+    public static int evalRPN(String[] tokens) {
+        Stack<String> rpnStack = new Stack<>();
+        for (int i=0; i<tokens.length; i++) {
+            String tmp = tokens[i];
+            if (tmp.equals("+")) {
+                Integer pop1 = new Integer(rpnStack.pop());
+                Integer pop2 = new Integer(rpnStack.pop());
+                Integer rst = pop1 + pop2;
+                rpnStack.push(rst.toString());
+            } else if (tmp.equals("-")) {
+                Integer pop1 = new Integer(rpnStack.pop());
+                Integer pop2 = new Integer(rpnStack.pop());
+                Integer rst = pop1 - pop2;
+                rpnStack.push(rst.toString());
+            } else if (tmp.equals("*")) {
+                Integer pop1 = new Integer(rpnStack.pop());
+                Integer pop2 = new Integer(rpnStack.pop());
+                Integer rst = pop1 * pop2;
+                rpnStack.push(rst.toString());
+            } else if (tmp.equals("/")) {
+                Integer pop1 = new Integer(rpnStack.pop());
+                Integer pop2 = new Integer(rpnStack.pop());
+                Integer rst = pop1 / pop2;
+                rpnStack.push(rst.toString());
+            } else {
+                rpnStack.push(tmp);
+            }
+        }
+        return new Integer(rpnStack.pop()).intValue();
+    }
 }
