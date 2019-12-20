@@ -22,6 +22,7 @@
         <module>nacos-client-module</module>
         <module>spring-security-oath2</module>
         <module>zuul-module</module>
+        <module>vue-module</module>
     </modules>
 
 

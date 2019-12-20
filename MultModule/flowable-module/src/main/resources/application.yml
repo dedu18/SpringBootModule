@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: flowable-module
+
+  datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://111.231.193.138:3306/test?serverTimezone=UTC&characterEncoding=utf-8&useSSL=false
+      username: root
+      password: ZhongFei-ca-2018
+      # Hikari数据源配置
+      hikari:
+        maximum-pool-size: 20
+        minimum-idle: 5
+
+logging:
+  level:
+    ROOT: debug
+
+flowable:
+  #是否需要自动部署resource/processes中的流程定义
+  check-process-definitions: true
+  #db-identity-used: true
+  # 自动生成flowable相关表 第一次生成后建议关闭提高运行速度
+  database-schema-update: false
+  # 保存历史数据级别设置为full最高级别，便于历史数据的追溯
+  history-level: full

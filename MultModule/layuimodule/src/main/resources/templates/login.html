@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="icon" href="../global/img/logo.png" type="image/x-icon">
+    <title>登陆</title>
+    <link rel="stylesheet" href="../global/layui/css/layui.css">
+    <link rel="stylesheet" href="../global/css/common.css">
+    <link rel="stylesheet" href="../global/css/login.css">
+</head>
+<body>
+<div class="layui-container">
+    <div class="layui-row">
+        <div class="layui-col-md12 layui-hide-xs xs-hide"></div>
+        <div class="layui-col-md4 layui-col-md-offset4 login-main">
+            <!--<img src="../images/logo.png" class="logo">-->
+            <h1 align="center" style="color: white">LayUICMS-管理登录</h1>
+            <div class="main formbox">
+                <form action="/authentication/form" method="post" accept-charset="utf-8" class="layui-form">
+                    <div class="inputbox">
+                        <input type="text" name="username" required  lay-verify="required" placeholder="请输入账号" autocomplete="off" class="layui-input">
+                    </div>
+
+                    <div class="margin20"></div>
+                    <div class="inputbox">
+                        <input type="password" name="password" required  lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                    </div>
+
+                    <div class="margin20"></div>
+                    <!--<div class="inputbox">-->
+                        <!--<input type="text" name="verifycode" required  lay-verify="required" placeholder="请输入验证码" autocomplete="off" class="layui-input">-->
+                        <!--<img id="verifyimg" src="https://fly.layui.com/auth/imagecode?t=1545989899289" alt="点击验证码可刷新" class="vierfy-code">-->
+                    <!--</div>-->
+
+                    <!--<div class="inputbox info">-->
+                        <!--<input type="checkbox" name="checkbox" lay-skin="primary" checked />-->
+                        <!--我已阅读并同意<a href="javascript:;">用户协议</a>和<a href="javascript:;">隐私条款</a>-->
+                    <!--</div>-->
+
+                    <div class="layui-row layui-col-space20 bts">
+                        <div class="layui-col-md6">
+                            <button id="loginBtn" class="layui-btn" lay-submit lay-filter="formDemo" type="submit">登陆</button>
+                        </div>
+                        <div class="layui-col-md6">
+                            <a href="javascript:;" class="layui-btn layui-btn-normal">注册</a>
+                        </div>
+                        <!--<div class="layui-col-md12">-->
+                            <!--<a href="javascript:;" class="layui-btn layui-btn-primary">返回首页</a>-->
+                        <!--</div>-->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="../global/layui/layui.all.js"></script>
+<script>
+    // var blog ="https://gitee.com/XzcGroup/XzcBlogTemplate/blob/master/static/css/login.css#" ;
+    // var wanttoblog = "https://github.com/BrotherMa/layuiCMS";
+
+    layui.use(['layer', 'form', 'element', 'laypage', 'upload', 'tree', 'carousel', 'flow'], function(){
+        var $ = layui.jquery;
+
+        $('#verifyimg').on("click", function () {
+            $("#verify_img").attr("src","https://fly.layui.com/auth/imagecode?t=1545989899289");
+        });
+
+        // $('#loginBtn').on("click", function () {
+        //     window.location.href = "http://localhost:8080/index";
+        // });
+    });
+</script>
+</html>

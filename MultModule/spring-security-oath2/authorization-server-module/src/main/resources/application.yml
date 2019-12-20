@@ -1,0 +1,25 @@
+
+spring:
+  application:
+    name: authorization-module
+
+  datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://111.231.193.138:3306/test?serverTimezone=UTC&characterEncoding=utf-8&useSSL=false
+      username: root
+      password: ZhongFei-ca-2018
+      # Hikari数据源配置
+      hikari.maximum-pool-size: 20
+      hikari.minimum-idle: 5
+server:
+  port: 8081
+logging:
+  level=Debug
+
+#sys:
+#  authorization:
+#    clientId: clientId
+#    secretId: $2a$10$HCXuCjmd6HXHu.yJbZrGr.OZDN/DpIaEM4EvXc5mV1Vsn8ke/ZI8W
+#    authorizedGrantTypes: authorization_code
+#    scopes: app
+#    redirectUri: http://localhost:9001/hello

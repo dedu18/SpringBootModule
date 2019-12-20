@@ -7,3 +7,5 @@
 - [x] **Gateway Module**
 
 - [x] **Eureka Module**
+
+- [x] **Vue Controller Module**
