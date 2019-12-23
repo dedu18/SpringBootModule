@@ -310,215 +310,6 @@ public class Leetcodes {
         return head;
     }
 
-    public static void main(String[] args) {
-/*        addAtHead(4);
-        System.out.println(get(1));
-        addAtHead(1);
-        addAtHead(5);
-        deleteAtIndex(3);
-        addAtHead(7);
-        System.out.println(get(3));
-        System.out.println(get(3));
-        System.out.println(get(3));
-        addAtHead(1);
-        deleteAtIndex(4);
-        print(head);
-        addAtHead(3);
-        addAtHead(2);
-        addAtHead(5);
-        addAtTail(5);
-        deleteAtIndex(6);
-
-        Leetcodes m = new Leetcodes();
-        ListNode list = m.new ListNode(1);
-        list.next = m.new ListNode(2);
-        list.next.next = m.new ListNode(3);
-
-        ListNode list2 = new ListNode(1);
-        list2.next = new ListNode(2);
-        list2.next.next = new ListNode(3);
-        list2.next.next.next = new ListNode(4);
-        list2.next.next.next.next = new ListNode(5);
-        list2.next.next.next.next.next = new ListNode(1);
-        print(rotateRight(list2, 2));
-        list.next.next.next.next.next.next = m.new ListNode(7);
-        print(mergeTwoLists(list, list2));
-
-        ListNode list = new ListNode(1);
-        list.next = new ListNode(8);
-        list.next.next = new ListNode(3);
-
-        ListNode list2 = new ListNode(0);
-        list2.next = new ListNode(6);
-        list2.next.next = new ListNode(4);
-        print(addTwoNumbers(list, list2));
-
-        Node a1 = new Node();
-        Node a11 = new Node();
-        Node a111 = new Node();
-        Node a2 = new Node();
-        Node a22 = new Node();
-        Node a222 = new Node();
-
-        Node a3 = new Node();
-        Node a33 = new Node();
-        Node a333 = new Node();
-        a1.val = 1;
-        a11.val = 11;
-        a111.val = 111;
-        a2.val = 2;
-        a22.val = 22;
-        a222.val = 222;
-        a3.val = 3;
-        a33.val = 33;
-        a333.val = 333;
-
-
-        a1.next = a11;
-        a11.next = a111;
-        a111.prev = a11;
-        a11.prev = a1;
-
-        a11.child = a2;
-
-        a2.next = a22;
-        a22.next = a222;
-        a222.prev = a22;
-        a22.prev = a2;
-
-        a3.next = a33;
-        a33.next = a333;
-        a333.prev = a33;
-        a33.prev = a3;
-
-        a22.child = a3;
-
-        print(flatten(a1));
-
-        int[] request = {2,2,1};
-        singleNumber(request);
-        int[] request = {1,2,2,1};
-        int[] request2 = {2,2};
-        intersection(request, request2); */
-//        System.out.println(firstUniqChar("loveleetcode"));
-//        String[] r = {"eat","tea","tan","ate","nat","bat"};
-//        groupAnagrams(r);
-
-//        char[][] r = {{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},{'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'}};
-//        isValidSudoku(r);
-//        Leetcodes l = new Leetcodes();
-//        TreeNode root1 = l.new TreeNode(1);
-//        TreeNode root2 = l.new TreeNode(2);
-//        TreeNode root3 = l.new TreeNode(3);
-//        TreeNode root4 = l.new TreeNode(4);
-//        TreeNode root5 = l.new TreeNode(2);
-//        TreeNode root6 = l.new TreeNode(4);
-//        TreeNode root7 = l.new TreeNode(4);
-//
-//        root1.left = root2;
-//        root2.left = root4;
-//        root1.right = root3;
-//        root3.right = root6;
-//        root3.left = root5;
-//        root5.left = root7;
-//        findDuplicateSubtrees(root1);
-//          int[] nums = {-1,-1};
-//          topKFrequent(nums, 1);
-
-//        MyCircularQueue m = new MyCircularQueue(3);
-//        m.enQueue(1);
-//        m.enQueue(2);
-//        m.enQueue(3);
-//        m.enQueue(4);
-//        m.Rear();
-//        m.isFull();
-//        m.deQueue();
-//        m.enQueue(4);
-//        m.Rear();
-
-        char[] a0 = {'1','1','1','1','1','0','1','1','1','1','1','1','1','1','1','0','1','0','1','1'
-        };
-        char[] a1 = {'0','1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','0'
-        };
-        char[] a2 = {'1','0','1','1','1','0','0','1','1','0','1','1','1','1','1','1','1','1','1','1'
-        };
-        char[] a3 = {'1','1','1','1','0','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-        };
-        char[] a4 = {'1','0','0','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-        };
-        char[] a5 = {'1','0','1','1','1','1','1','1','0','1','1','1','0','1','1','1','0','1','1','1'
-        };
-        char[] a6 = {'0','1','1','1','1','1','1','1','1','1','1','1','0','1','1','0','1','1','1','1'
-        };
-        char[] a7 = {'1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','0','1','1'
-        };
-        char[] a8 = {'1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','1','1','1','1'
-        };
-        char[] a9 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-        };
-        char[] a10 = {'0','1','1','1','1','1','1','1','0','1','1','1','1','1','1','1','1','1','1','1'
-        };
-        char[] a11 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-        };
-        char[] a12 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-        };
-        char[] a13 = {'1','1','1','1','1','0','1','1','1','1','1','1','1','0','1','1','1','1','1','1'
-        };
-        char[] a14 = {'1','0','1','1','1','1','1','0','1','1','1','0','1','1','1','1','0','1','1','1'
-        };
-        char[] a15 = {'1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','1','0'
-        };
-        char[] a16 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','0','0'
-        };
-        char[] a17 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-        };
-        char[] a18 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-        };
-        char[] a19 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-        };
-
-        char[][] grad = new char[20][20];
-        grad[0]= a0;
-        grad[1]= a1;
-        grad[2]= a2;
-        grad[3]= a3;
-        grad[4]= a4;
-        grad[5]= a5;
-        grad[6]= a6;
-        grad[7]= a7;
-        grad[8]= a8;
-        grad[9]= a9;
-        grad[10]= a10;
-        grad[11]= a11;
-        grad[12]= a12;
-        grad[13]= a13;
-        grad[14]= a14;
-        grad[15]= a15;
-        grad[16]= a16;
-        grad[17]= a17;
-        grad[18]= a18;
-        grad[19]= a19;
-
-
-        System.out.println(numIslandsDFS(grad));
-
-//        String[] req = {"0000"};
-//        String target = "8888";
-//        System.out.println(openLock(req, target));
-
-//        List<Integer> a = new LinkedList<>();
-//        a.add(1);
-//        a.add(0);
-//        a.add(8);
-//        a.add(1);
-//        System.out.println(a.indexOf(1));
-//        System.out.println(a.lastIndexOf(1) == a.indexOf(1));
-
-//        System.out.println(isValid("()[]{}"));
-//        String[] tokens = {"4","13","5","/","+"};
-//        int i = evalRPN(tokens);
-    }
-
     public static void print(ListNode head) {
         while (head!=null) {
             System.out.println(head.val);
@@ -1515,5 +1306,336 @@ public class Leetcodes {
             }
         }
         return new Integer(rpnStack.pop()).intValue();
+    }
+
+    public static boolean canVisitAllRooms(List<List<Integer>> rooms) {
+        HashSet<Integer> canVisitRooms = new HashSet<>();
+        Queue<List<Integer>> keysQueue = new LinkedList<>();
+        keysQueue.offer(rooms.get(0));
+        while (!keysQueue.isEmpty()) {
+            List<Integer> keys = keysQueue.poll();
+            for (Integer key :
+                    keys) {
+                if (!canVisitRooms.contains(key)) {
+                    canVisitRooms.add(key);
+                    keysQueue.offer(rooms.get(key));
+                }
+            }
+        }
+        for (int i=1; i<rooms.size(); i++) {
+            if (!canVisitRooms.contains(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static int search(int[] nums, int target) {
+        if (null == nums) {
+            return -1;
+        }
+        int left = 0;
+        int right = nums.length - 1;
+        int mid = (left + right ) / 2;
+        while (left <= right) {
+            if (target < nums[mid]) {
+                right = mid - 1;
+                mid = (left + right ) / 2;
+            } else if (target > nums[mid]) {
+                left = mid + 1;
+                mid = (left + right ) / 2;
+            } else {
+                return mid;
+            }
+        }
+        return -1;
+    }
+
+    public static int mySqrt(int x) {
+        if (x == 0 || x == 1) {
+            return x;
+        }
+        int left = 0;
+        int right = x;
+        int mid = (left + right)/2;
+        while (left <= right) {
+            long tmp = (long) Math.pow(mid, 2);
+            if (tmp < x) {
+                if ((long) Math.pow(mid+1, 2) > x) {
+                    return mid;
+                }
+                left = mid + 1;
+                mid = (right + left) /2;
+            } else if (tmp > x) {
+                if ((long) Math.pow(mid-1, 2) < x) {
+                    return mid-1;
+                }
+                right = mid - 1;
+                mid = (right + left) /2;
+            } else {
+                return mid;
+            }
+        }
+        return left;
+    }
+
+    /**
+     * 你调用一个预先定义好的接口 guess(int num)，它会返回 3 个可能的结果（-1，1 或 0）
+     * @param n
+     */
+    public static int guessNumber(int n) {
+        int left = 1;
+        int right = n;
+        int mid = (n+1)>>1;
+        while (left <= right) {
+            int guessRst = guess(mid);
+            if (guessRst == 0) { //猜中
+                return mid;
+            } else if (guessRst == -1) {//数字较小
+                left = mid+1;
+                mid = (left+right)>>>1;
+            } else if (guessRst == 1){ //数字较大
+                right = mid-1;
+                mid = (left+right)>>>1;
+            }
+        }
+        // throw new Exception("Your GuessNumber Is Nothing!");
+        return 0;
+    }
+
+    private static int guess(long mid) {
+        if (mid == 1702766719) {
+            return 0;
+        }
+        return mid > 1702766719 ? 1 : -1;
+    }
+
+    public static void main(String[] args) {
+/*        addAtHead(4);
+        System.out.println(get(1));
+        addAtHead(1);
+        addAtHead(5);
+        deleteAtIndex(3);
+        addAtHead(7);
+        System.out.println(get(3));
+        System.out.println(get(3));
+        System.out.println(get(3));
+        addAtHead(1);
+        deleteAtIndex(4);
+        print(head);
+        addAtHead(3);
+        addAtHead(2);
+        addAtHead(5);
+        addAtTail(5);
+        deleteAtIndex(6);
+
+        Leetcodes m = new Leetcodes();
+        ListNode list = m.new ListNode(1);
+        list.next = m.new ListNode(2);
+        list.next.next = m.new ListNode(3);
+
+        ListNode list2 = new ListNode(1);
+        list2.next = new ListNode(2);
+        list2.next.next = new ListNode(3);
+        list2.next.next.next = new ListNode(4);
+        list2.next.next.next.next = new ListNode(5);
+        list2.next.next.next.next.next = new ListNode(1);
+        print(rotateRight(list2, 2));
+        list.next.next.next.next.next.next = m.new ListNode(7);
+        print(mergeTwoLists(list, list2));
+
+        ListNode list = new ListNode(1);
+        list.next = new ListNode(8);
+        list.next.next = new ListNode(3);
+
+        ListNode list2 = new ListNode(0);
+        list2.next = new ListNode(6);
+        list2.next.next = new ListNode(4);
+        print(addTwoNumbers(list, list2));
+
+        Node a1 = new Node();
+        Node a11 = new Node();
+        Node a111 = new Node();
+        Node a2 = new Node();
+        Node a22 = new Node();
+        Node a222 = new Node();
+
+        Node a3 = new Node();
+        Node a33 = new Node();
+        Node a333 = new Node();
+        a1.val = 1;
+        a11.val = 11;
+        a111.val = 111;
+        a2.val = 2;
+        a22.val = 22;
+        a222.val = 222;
+        a3.val = 3;
+        a33.val = 33;
+        a333.val = 333;
+
+
+        a1.next = a11;
+        a11.next = a111;
+        a111.prev = a11;
+        a11.prev = a1;
+
+        a11.child = a2;
+
+        a2.next = a22;
+        a22.next = a222;
+        a222.prev = a22;
+        a22.prev = a2;
+
+        a3.next = a33;
+        a33.next = a333;
+        a333.prev = a33;
+        a33.prev = a3;
+
+        a22.child = a3;
+
+        print(flatten(a1));
+
+        int[] request = {2,2,1};
+        singleNumber(request);
+        int[] request = {1,2,2,1};
+        int[] request2 = {2,2};
+        intersection(request, request2); */
+//        System.out.println(firstUniqChar("loveleetcode"));
+//        String[] r = {"eat","tea","tan","ate","nat","bat"};
+//        groupAnagrams(r);
+
+//        char[][] r = {{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},{'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'}};
+//        isValidSudoku(r);
+//        Leetcodes l = new Leetcodes();
+//        TreeNode root1 = l.new TreeNode(1);
+//        TreeNode root2 = l.new TreeNode(2);
+//        TreeNode root3 = l.new TreeNode(3);
+//        TreeNode root4 = l.new TreeNode(4);
+//        TreeNode root5 = l.new TreeNode(2);
+//        TreeNode root6 = l.new TreeNode(4);
+//        TreeNode root7 = l.new TreeNode(4);
+//
+//        root1.left = root2;
+//        root2.left = root4;
+//        root1.right = root3;
+//        root3.right = root6;
+//        root3.left = root5;
+//        root5.left = root7;
+//        findDuplicateSubtrees(root1);
+//          int[] nums = {-1,-1};
+//          topKFrequent(nums, 1);
+
+//        MyCircularQueue m = new MyCircularQueue(3);
+//        m.enQueue(1);
+//        m.enQueue(2);
+//        m.enQueue(3);
+//        m.enQueue(4);
+//        m.Rear();
+//        m.isFull();
+//        m.deQueue();
+//        m.enQueue(4);
+//        m.Rear();
+
+//        char[] a0 = {'1','1','1','1','1','0','1','1','1','1','1','1','1','1','1','0','1','0','1','1'
+//        };
+//        char[] a1 = {'0','1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','0'
+//        };
+//        char[] a2 = {'1','0','1','1','1','0','0','1','1','0','1','1','1','1','1','1','1','1','1','1'
+//        };
+//        char[] a3 = {'1','1','1','1','0','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+//        };
+//        char[] a4 = {'1','0','0','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+//        };
+//        char[] a5 = {'1','0','1','1','1','1','1','1','0','1','1','1','0','1','1','1','0','1','1','1'
+//        };
+//        char[] a6 = {'0','1','1','1','1','1','1','1','1','1','1','1','0','1','1','0','1','1','1','1'
+//        };
+//        char[] a7 = {'1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','0','1','1'
+//        };
+//        char[] a8 = {'1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','1','1','1','1'
+//        };
+//        char[] a9 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+//        };
+//        char[] a10 = {'0','1','1','1','1','1','1','1','0','1','1','1','1','1','1','1','1','1','1','1'
+//        };
+//        char[] a11 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+//        };
+//        char[] a12 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+//        };
+//        char[] a13 = {'1','1','1','1','1','0','1','1','1','1','1','1','1','0','1','1','1','1','1','1'
+//        };
+//        char[] a14 = {'1','0','1','1','1','1','1','0','1','1','1','0','1','1','1','1','0','1','1','1'
+//        };
+//        char[] a15 = {'1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','1','0'
+//        };
+//        char[] a16 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','0','0'
+//        };
+//        char[] a17 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+//        };
+//        char[] a18 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+//        };
+//        char[] a19 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
+//        };
+//
+//        char[][] grad = new char[20][20];
+//        grad[0]= a0;
+//        grad[1]= a1;
+//        grad[2]= a2;
+//        grad[3]= a3;
+//        grad[4]= a4;
+//        grad[5]= a5;
+//        grad[6]= a6;
+//        grad[7]= a7;
+//        grad[8]= a8;
+//        grad[9]= a9;
+//        grad[10]= a10;
+//        grad[11]= a11;
+//        grad[12]= a12;
+//        grad[13]= a13;
+//        grad[14]= a14;
+//        grad[15]= a15;
+//        grad[16]= a16;
+//        grad[17]= a17;
+//        grad[18]= a18;
+//        grad[19]= a19;
+//
+//
+//        System.out.println(numIslandsDFS(grad));
+
+//        String[] req = {"0000"};
+//        String target = "8888";
+//        System.out.println(openLock(req, target));
+
+//        List<Integer> a = new LinkedList<>();
+//        a.add(1);
+//        a.add(0);
+//        a.add(8);
+//        a.add(1);
+//        System.out.println(a.indexOf(1));
+//        System.out.println(a.lastIndexOf(1) == a.indexOf(1));
+
+//        System.out.println(isValid("()[]{}"));
+//        String[] tokens = {"4","13","5","/","+"};
+//        int i = evalRPN(tokens);
+
+//        List<List<Integer>> req = new ArrayList<>();
+//        List<Integer> r0 = new ArrayList<>();
+//        r0.add(1);
+//        List<Integer> r1 = new ArrayList<>();
+//        r1.add(2);
+//        List<Integer> r2 = new ArrayList<>();
+//        r2.add(3);
+//
+//        req.add(r0);
+//        req.add(r1);
+//        req.add(r2);
+//        req.add(new ArrayList<>());
+//
+//        canVisitAllRooms(req);
+
+//        int[] req = {-1,0,3,5,9,12};
+//        search(req, 9);
+//        System.out.println(mySqrt(2147395599));
+        System.out.println(guessNumber(2126753390));
     }
 }
