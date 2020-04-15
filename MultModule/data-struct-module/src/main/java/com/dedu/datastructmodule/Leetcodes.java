@@ -10,6 +10,7 @@ public class Leetcodes {
     static class ListNode {
         int val;
         ListNode next;
+
         ListNode(int x) {
             val = x;
             next = null;
@@ -23,11 +24,13 @@ public class Leetcodes {
         public Node pre, prev, next, child;
         public Node random;
 
-        public Node() {}
+        public Node() {
+        }
 
-        public Node(int integer) {}
+        public Node(int integer) {
+        }
 
-        public Node(int _val,Node _prev,Node _next,Node _child) {
+        public Node(int _val, Node _prev, Node _next, Node _child) {
             val = _val;
             prev = _prev;
             next = _next;
@@ -36,15 +39,17 @@ public class Leetcodes {
 
     }
 
-    private  static  Node head;
+    private static Node head;
 
-    /** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */
-    public static  int get(int index) {
+    /**
+     * Get the value of the index-th node in the linked list. If the index is invalid, return -1.
+     */
+    public static int get(int index) {
         if (index < 0) {
             return -1;
         }
         Node<Integer> cur = head;
-        for (int i=0; i<index; i++) {
+        for (int i = 0; i < index; i++) {
             if (null == cur) {
                 return -1;
             }
@@ -56,8 +61,10 @@ public class Leetcodes {
         return -1;
     }
 
-    /** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */
-    public static  void addAtHead(int val) {
+    /**
+     * Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list.
+     */
+    public static void addAtHead(int val) {
         if (null == head) {
             head = new Node(val);
             return;
@@ -68,8 +75,10 @@ public class Leetcodes {
         head = newHead;
     }
 
-    /** Append a node of value val to the last element of the linked list. */
-    public static  void addAtTail(int val) {
+    /**
+     * Append a node of value val to the last element of the linked list.
+     */
+    public static void addAtTail(int val) {
         if (null == head) {
             addAtHead(val);
             return;
@@ -83,14 +92,16 @@ public class Leetcodes {
         cur.next = tail;
     }
 
-    /** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */
-    public static  void addAtIndex(int index, int val) {
+    /**
+     * Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted.
+     */
+    public static void addAtIndex(int index, int val) {
         if (index <= 0) {
             addAtHead(val);
             return;
         }
         Node cur = head;
-        for (int i=0; i<index-1; i++) {
+        for (int i = 0; i < index - 1; i++) {
             if (null == cur.next) {
                 break;
             }
@@ -110,8 +121,10 @@ public class Leetcodes {
         }
     }
 
-    /** Delete the index-th node in the linked list, if the index is valid. */
-    public static  void deleteAtIndex(int index) {
+    /**
+     * Delete the index-th node in the linked list, if the index is valid.
+     */
+    public static void deleteAtIndex(int index) {
         if (null == head || index < 0) {
             return;
         }
@@ -124,7 +137,7 @@ public class Leetcodes {
             return;
         }
         Node cur = head;
-        for (int i=0; i<index; i++) {
+        for (int i = 0; i < index; i++) {
             if (null == cur.next) {
                 return;
             }
@@ -241,7 +254,7 @@ public class Leetcodes {
                 child.prev = cur;
                 childLast.next = next;
                 cur.child = null;
-                if (next != null ) {
+                if (next != null) {
                     next.prev = childLast;
                 } else {
                     return childLast;
@@ -288,20 +301,20 @@ public class Leetcodes {
     }
 
     public static ListNode rotateRight(ListNode head, int k) {
-        if (head == null || k==0) {
+        if (head == null || k == 0) {
             return head;
         }
         ListNode cur = head;
         ListNode tail = null;
-        int size=0;
+        int size = 0;
         while (cur.next != null) {
             size++;
             cur = cur.next;
         }
         tail = cur;
         tail.next = head;
-        int offset = k % (size+1);
-        for (int i=0; i<=(size - offset); i++) {
+        int offset = k % (size + 1);
+        for (int i = 0; i <= (size - offset); i++) {
             head = head.next;
             tail = tail.next;
         }
@@ -311,14 +324,14 @@ public class Leetcodes {
     }
 
     public static void print(ListNode head) {
-        while (head!=null) {
+        while (head != null) {
             System.out.println(head.val);
             head = head.next;
         }
     }
 
     public static void print(Node head) {
-        while (head!=null) {
+        while (head != null) {
             System.out.println(head.val);
             head = head.next;
         }
@@ -331,7 +344,9 @@ public class Leetcodes {
 
         private ListNode[] items;
 
-        /** Initialize your data structure here. */
+        /**
+         * Initialize your data structure here.
+         */
         public MyHashSet() {
             items = new ListNode[DEFAULT_SIZE];
         }
@@ -370,7 +385,9 @@ public class Leetcodes {
             }
         }
 
-        /** Returns true if this set contains the specified element */
+        /**
+         * Returns true if this set contains the specified element
+         */
         public boolean contains(int key) {
             int hash = hash(key);
             if (null == items[hash]) {
@@ -400,6 +417,7 @@ public class Leetcodes {
             int key;
             int val;
             Item next;
+
             Item(int x, int y) {
                 key = x;
                 val = y;
@@ -410,12 +428,16 @@ public class Leetcodes {
 
         private Item[] items;
 
-        /** Initialize your data structure here. */
+        /**
+         * Initialize your data structure here.
+         */
         public MyHashMap() {
             items = new Item[DEFAULT_SIZE];
         }
 
-        /** value will always be non-negative. */
+        /**
+         * value will always be non-negative.
+         */
         public void put(int key, int value) {
             int hash = hash(key);
             if (null == items[hash]) {
@@ -434,7 +456,9 @@ public class Leetcodes {
             }
         }
 
-        /** Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key */
+        /**
+         * Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key
+         */
         public int get(int key) {
             int hash = hash(key);
             if (null == items[hash]) {
@@ -453,20 +477,22 @@ public class Leetcodes {
             }
         }
 
-        /** Removes the mapping of the specified value key if this map contains a mapping for the key */
+        /**
+         * Removes the mapping of the specified value key if this map contains a mapping for the key
+         */
         public void remove(int key) {
             int hash = hash(key);
             if (null == items[hash]) {
-                return ;
+                return;
             } else if (key == items[hash].key) {
                 items[hash] = items[hash].next;
-            }else {
+            } else {
                 Item cur = items[hash];
                 while (null != cur.next && key != cur.next.key) {
                     cur = cur.next;
                 }
                 if (null == cur.next) {
-                    return ;
+                    return;
                 }
                 cur.next = cur.next.next;
             }
@@ -499,7 +525,7 @@ public class Leetcodes {
             while (quick < nums.length && nums[slow] == nums[quick]) {
                 quick++;
             }
-            if (quick-slow <= 1) {
+            if (quick - slow <= 1) {
                 return nums[slow];
             }
             slow = quick;
@@ -511,9 +537,9 @@ public class Leetcodes {
         if (null == nums1 || null == nums2) {
             return new int[0];
         }
-        int size = nums1.length<nums2.length?nums1.length:nums2.length;
+        int size = nums1.length < nums2.length ? nums1.length : nums2.length;
         HashSet cache = new HashSet();
-        for (int i=0; i<nums1.length; i++) {
+        for (int i = 0; i < nums1.length; i++) {
             if (!cache.contains(nums1[i])) {
                 cache.add(nums1[i]);
             }
@@ -521,7 +547,7 @@ public class Leetcodes {
         HashSet<Integer> cache2 = new HashSet<>();
         int offset = 0;
         int[] tmp = new int[size];
-        for (int i=0; i< nums2.length; i++) {
+        for (int i = 0; i < nums2.length; i++) {
             if (cache.contains(nums2[i]) && !cache2.contains(nums2[i])) {
                 tmp[offset++] = nums2[i];
                 cache2.add(nums2[i]);
@@ -529,7 +555,7 @@ public class Leetcodes {
         }
 //        cache.retainAll()
         int[] result = new int[offset];
-        for (int i=0; i<offset; i++) {
+        for (int i = 0; i < offset; i++) {
             result[i] = tmp[i];
         }
         return result;
@@ -542,9 +568,9 @@ public class Leetcodes {
             return true;
         }
         List<Integer> nums = new LinkedList<>();
-        while (n >0) {
-            int carry = n%10;
-            n = (n-carry)/10;
+        while (n > 0) {
+            int carry = n % 10;
+            n = (n - carry) / 10;
             nums.add(carry);
         }
         int total = 0;
@@ -564,8 +590,8 @@ public class Leetcodes {
 
     public int[] twoSum(int[] nums, int target) {
         Map<Integer, Integer> cache = new HashMap<>(nums.length);
-        for (int i=0; i<nums.length; i++) {
-            int distance = target-nums[i];
+        for (int i = 0; i < nums.length; i++) {
+            int distance = target - nums[i];
             if (cache.containsKey(distance)) {
                 return new int[]{i, cache.get(distance)};
             }
@@ -576,6 +602,7 @@ public class Leetcodes {
 
     /**
      * s = "egg", t = "add"
+     *
      * @param s
      * @param t
      * @return
@@ -587,7 +614,7 @@ public class Leetcodes {
         char[] sChars = s.toCharArray();
         char[] tChars = t.toCharArray();
         HashMap<Character, Character> cache = new HashMap<>(sChars.length);
-        for (int i=0; i<sChars.length; i++) {
+        for (int i = 0; i < sChars.length; i++) {
             char sChar = sChars[i];
             char tChar = tChars[i];
             if (cache.containsKey(sChar)) {
@@ -605,15 +632,15 @@ public class Leetcodes {
     }
 
     public static String[] findRestaurant(String[] list1, String[] list2) {
-        HashMap<String, Integer> cache = new HashMap<>(list1.length > list2.length?list2.length:list1.length);
-        String[] lessList = list1.length > list2.length?list2:list1;
-        String[] moreList = list1.length > list2.length?list1:list2;
-        for (int i=0; i<lessList.length; i++) {
+        HashMap<String, Integer> cache = new HashMap<>(list1.length > list2.length ? list2.length : list1.length);
+        String[] lessList = list1.length > list2.length ? list2 : list1;
+        String[] moreList = list1.length > list2.length ? list1 : list2;
+        for (int i = 0; i < lessList.length; i++) {
             cache.put(lessList[i], i);
         }
         int indexTotal = moreList.length + lessList.length;
         List<String> resultList = new ArrayList<>();
-        for (int i=0; i<moreList.length; i++) {
+        for (int i = 0; i < moreList.length; i++) {
             if (cache.containsKey(moreList[i])) {
                 if (indexTotal >= i + cache.get(moreList[i])) {
                     indexTotal = i + cache.get(moreList[i]);
@@ -622,7 +649,7 @@ public class Leetcodes {
             }
         }
         String[] result = new String[resultList.size()];
-        for (int i=0; i<resultList.size(); i++) {
+        for (int i = 0; i < resultList.size(); i++) {
             result[i] = resultList.get(i);
         }
         return result;
@@ -631,7 +658,7 @@ public class Leetcodes {
     public static int firstUniqChar(String s) {
         char[] chars = s.toCharArray();
         HashMap<Character, Integer> cache = new HashMap<>(chars.length);
-        for (int i=0; i<chars.length; i++) {
+        for (int i = 0; i < chars.length; i++) {
             if (cache.containsKey(chars[i])) {
                 Integer integer = cache.get(chars[i]);
                 cache.put(chars[i], ++integer);
@@ -641,7 +668,7 @@ public class Leetcodes {
         }
         List<Character> resultCharas = new ArrayList<>();
         cache.forEach((c, i) -> {
-            if (i==1) {
+            if (i == 1) {
                 resultCharas.add(c);
             }
         });
@@ -649,7 +676,7 @@ public class Leetcodes {
             return -1;
         }
         int index = chars.length;
-        for(Character c:resultCharas) {
+        for (Character c : resultCharas) {
             int tmp = s.indexOf(c);
             if (index > tmp) {
                 index = tmp;
@@ -662,14 +689,14 @@ public class Leetcodes {
     public int[] intersect(int[] nums1, int[] nums2) {
         HashMap<Integer, Integer> cache = new HashMap<>(nums1.length);
         List<Integer> rstList = new ArrayList<>();
-        for (int i=0; i<nums1.length; i++) {
+        for (int i = 0; i < nums1.length; i++) {
             if (cache.containsKey(nums1[i])) {
                 cache.put(nums1[i], cache.get(nums1[i]) + 1);
             } else {
                 cache.put(nums1[i], 1);
             }
         }
-        for (int i=0; i<nums2.length; i++) {
+        for (int i = 0; i < nums2.length; i++) {
             if (cache.containsKey(nums2[i])) {
                 Integer number = cache.get(nums2[i]);
                 if (number - 1 == 0) {
@@ -681,7 +708,7 @@ public class Leetcodes {
             }
         }
         int[] result = new int[rstList.size()];
-        for (int i=0; i<rstList.size(); i++) {
+        for (int i = 0; i < rstList.size(); i++) {
             result[i] = rstList.get(i);
         }
         return result;
@@ -692,7 +719,7 @@ public class Leetcodes {
             return false;
         }
         Map<Integer, List<Integer>> cache = new HashMap<>(nums.length); // K为num，V为下标列表
-        for (int i=0; i<nums.length; i++) {
+        for (int i = 0; i < nums.length; i++) {
             if (cache.containsKey(nums[i])) {
                 List<Integer> indexs = cache.get(nums[i]);
                 for (Integer index :
@@ -716,7 +743,7 @@ public class Leetcodes {
             return new ArrayList<>();
         }
         HashMap<String, List<String>> cache = new HashMap<>();
-        for (String str:strs) {
+        for (String str : strs) {
             char[] chars = str.toCharArray();
             Arrays.sort(chars);
             String charStr = new String(chars);
@@ -736,14 +763,14 @@ public class Leetcodes {
         HashMap<Character, Integer>[] column = new HashMap[9];
         HashMap<Character, Integer>[] gongge = new HashMap[9];
 
-        for (int i=0; i<9; i++) {
+        for (int i = 0; i < 9; i++) {
             row[i] = new HashMap<>(9);
             column[i] = new HashMap<>(9);
             gongge[i] = new HashMap<>(9);
         }
 
-        for (int i=0; i<9; i++) {
-            for (int j=0; j<9; j++) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
                 if (!Objects.equals('.', board[i][j])) {
                     // 行检测
                     if (row[i].containsKey(board[i][j])) {
@@ -758,7 +785,7 @@ public class Leetcodes {
                         column[j].put(board[i][j], 1);
                     }
                     //宫格检测
-                    int gonggeindex = i/3*3+j/3;
+                    int gonggeindex = i / 3 * 3 + j / 3;
                     if (gongge[gonggeindex].containsKey(board[i][j])) {
                         return false;
                     } else {
@@ -774,7 +801,10 @@ public class Leetcodes {
         int val;
         TreeNode left;
         TreeNode right;
-        TreeNode(int x) { val = x; }
+
+        TreeNode(int x) {
+            val = x;
+        }
     }
 
     public static List<TreeNode> findDuplicateSubtrees(TreeNode root) {
@@ -825,10 +855,10 @@ public class Leetcodes {
         char[] chars = s.toCharArray();
         HashSet cache = null;
         int result = 0;
-        for (int slow = 0; slow<s.length(); slow++) {
+        for (int slow = 0; slow < s.length(); slow++) {
             cache = new HashSet();
             int turn = 0;
-            for (int quick = slow; quick<s.length(); quick++) {
+            for (int quick = slow; quick < s.length(); quick++) {
                 if (cache.contains(chars[quick])) {
                     break;
                 }
@@ -845,7 +875,7 @@ public class Leetcodes {
     public int lengthOfLongestSubstring2(String s) {
         Map<Character, Integer> cache = new HashMap<>();
         int result = 0;
-        for (int start=0, end=0; end < s.length(); end++) {
+        for (int start = 0, end = 0; end < s.length(); end++) {
             Character curChar = s.charAt(end);
             if (cache.containsKey(curChar)) {
                 start = Math.max(start, cache.get(curChar));
@@ -859,15 +889,15 @@ public class Leetcodes {
     public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
         int result = 0;
         HashMap<Integer, Integer> cache = new HashMap<>();
-        for (int i=0; i<A.length; i++) { //将A和B数组中的数组合缓存起来
-            for (int j=0; j<B.length; j++) {
+        for (int i = 0; i < A.length; i++) { //将A和B数组中的数组合缓存起来
+            for (int j = 0; j < B.length; j++) {
                 int sum = A[i] + B[j];
                 cache.put(sum, cache.getOrDefault(sum, 0) + 1);
             }
         }
 
-        for (int k=0; k<C.length; k++) {
-            for (int l=0; l<D.length; l++) {
+        for (int k = 0; k < C.length; k++) {
+            for (int l = 0; l < D.length; l++) {
                 int sum = C[k] + D[l];
                 result += cache.getOrDefault(-1 * sum, 0);
             }
@@ -885,7 +915,7 @@ public class Leetcodes {
         HashMap<Integer, List<Integer>> statisticsMap = new HashMap<>();
         Integer maxStatistics = 0;
         for (Map.Entry<Integer, Integer> entry : cache.entrySet()) { //k为数字,v为次数
-            maxStatistics = maxStatistics > entry.getValue() ? maxStatistics:entry.getValue();
+            maxStatistics = maxStatistics > entry.getValue() ? maxStatistics : entry.getValue();
             if (statisticsMap.containsKey(entry.getValue())) {
                 statisticsMap.get(entry.getValue()).add(entry.getKey());
             } else {
@@ -894,10 +924,10 @@ public class Leetcodes {
                 statisticsMap.put(entry.getValue(), t);
             }
         }
-        for (int t=maxStatistics; t>=0; t--) {
+        for (int t = maxStatistics; t >= 0; t--) {
             if (statisticsMap.containsKey(t)) {
-                for (Integer i:
-                statisticsMap.get(t)) {
+                for (Integer i :
+                        statisticsMap.get(t)) {
                     result.add(i);
                     if (result.size() == k) {
                         return result;
@@ -910,9 +940,11 @@ public class Leetcodes {
 
     HashMap<Integer, Integer> cacheMap = new HashMap<>();
     List<Integer> cacheList = new ArrayList<>();
-    int size=0;
+    int size = 0;
 
-    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+    /**
+     * Inserts a value to the set. Returns true if the set did not already contain the specified element.
+     */
     public boolean insert(int val) {
         if (cacheMap.containsKey(val)) {
             return false;
@@ -924,7 +956,9 @@ public class Leetcodes {
         }
     }
 
-    /** Removes a value from the set. Returns true if the set contained the specified element. */
+    /**
+     * Removes a value from the set. Returns true if the set contained the specified element.
+     */
     public boolean remove(int val) {
         if (cacheMap.containsKey(val)) {
             Integer index = cacheMap.remove(val);
@@ -935,7 +969,9 @@ public class Leetcodes {
         }
     }
 
-    /** Get a random element from the set. */
+    /**
+     * Get a random element from the set.
+     */
     public int getRandom() {
         int random = new Random().nextInt(size);
         while (Integer.MIN_VALUE == cacheList.get(random)) {
@@ -950,14 +986,18 @@ public class Leetcodes {
 
         private int head, tail;
 
-        /** Initialize your data structure here. Set the size of the queue to be k. */
+        /**
+         * Initialize your data structure here. Set the size of the queue to be k.
+         */
         public MyCircularQueue(int k) {
             queue = new int[k];
             head = 0;
             tail = 0;
         }
 
-        /** Insert an element into the circular queue. Return true if the operation is successful. */
+        /**
+         * Insert an element into the circular queue. Return true if the operation is successful.
+         */
         public boolean enQueue(int value) {
             if (isFull()) {
                 return false;
@@ -967,43 +1007,53 @@ public class Leetcodes {
             return true;
         }
 
-        /** Delete an element from the circular queue. Return true if the operation is successful. */
+        /**
+         * Delete an element from the circular queue. Return true if the operation is successful.
+         */
         public boolean deQueue() {
-            if (head==tail) {
+            if (head == tail) {
                 return false;
             }
             head = (head + 1) % queue.length;
             return true;
         }
 
-        /** Get the front item from the queue. */
+        /**
+         * Get the front item from the queue.
+         */
         public int Front() {
-            if(isEmpty()){
+            if (isEmpty()) {
                 return -1;
             }
             return queue[head];
         }
 
-        /** Get the last item from the queue. */
+        /**
+         * Get the last item from the queue.
+         */
         public int Rear() {
-            if(isEmpty()){
+            if (isEmpty()) {
                 return -1;
             }
-            return queue[(tail-1+queue.length)%queue.length] ;
+            return queue[(tail - 1 + queue.length) % queue.length];
         }
 
-        /** Checks whether the circular queue is empty or not. */
+        /**
+         * Checks whether the circular queue is empty or not.
+         */
         public boolean isEmpty() {
             return head == tail;
         }
 
-        /** Checks whether the circular queue is full or not. */
+        /**
+         * Checks whether the circular queue is full or not.
+         */
         public boolean isFull() {
             return (tail + 1) % queue.length == head;
         }
     }
 
-     public static class Pair<K, V> {
+    public static class Pair<K, V> {
         K k;
         V v;
 
@@ -1012,14 +1062,14 @@ public class Leetcodes {
             this.v = v;
         }
 
-         public K getKey() {
-             return k;
-         }
+        public K getKey() {
+            return k;
+        }
 
-         public V getValue() {
-             return v;
-         }
-     }
+        public V getValue() {
+            return v;
+        }
+    }
 
     public static int numIslands(char[][] grid) {
         if (null == grid || grid.length == 0) {
@@ -1028,8 +1078,8 @@ public class Leetcodes {
         int row = grid.length;
         int column = grid[0].length;
         int numIslands = 0;
-        for (int i=0; i<row; i++) {
-            for (int j=0; j<column; j++) {
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
                 if (grid[i][j] == '1') {
                     numIslands++;
                     Queue<Pair<Integer, Integer>> queue = new LinkedList<>();
@@ -1046,29 +1096,30 @@ public class Leetcodes {
     }
 
     public static void isLands(char[][] grid, int row, int column, Pair<Integer, Integer> pair, Queue<Pair<Integer, Integer>> queue) {
-        int i=pair.getKey();
-        int j=pair.getValue();
-        if (i-1 > -1 && grid[i-1][j] == '1') { //上
-            queue.add(new Pair<>(i-1, j));
-            grid[i-1][j] = '0';
+        int i = pair.getKey();
+        int j = pair.getValue();
+        if (i - 1 > -1 && grid[i - 1][j] == '1') { //上
+            queue.add(new Pair<>(i - 1, j));
+            grid[i - 1][j] = '0';
         }
-        if (j-1 > -1 && grid[i][j-1] == '1') { //左
-            queue.add(new Pair<>(i, j-1));
-            grid[i][j-1] = '0';
+        if (j - 1 > -1 && grid[i][j - 1] == '1') { //左
+            queue.add(new Pair<>(i, j - 1));
+            grid[i][j - 1] = '0';
         }
-        if (j+1 < column && grid[i][j+1] == '1') { //右
-            queue.add(new Pair<>(i, j+1));
-            grid[i][j+1] = '0';
+        if (j + 1 < column && grid[i][j + 1] == '1') { //右
+            queue.add(new Pair<>(i, j + 1));
+            grid[i][j + 1] = '0';
         }
-        if (i+1 < row && grid[i+1][j] == '1') { //下
-            queue.add(new Pair<>(i+1, j));
-            grid[i+1][j] = '0';
+        if (i + 1 < row && grid[i + 1][j] == '1') { //下
+            queue.add(new Pair<>(i + 1, j));
+            grid[i + 1][j] = '0';
         }
         grid[i][j] = '0';
     }
 
     /**
      * 深度优先遍历
+     *
      * @param grid
      * @return
      */
@@ -1079,7 +1130,7 @@ public class Leetcodes {
         int row = grid.length;
         int column = grid[0].length;
         int numIslands = 0;
-        for (int i=0; i<row; i++) {
+        for (int i = 0; i < row; i++) {
             for (int j = 0; j < column; j++) {
                 if (grid[i][j] == '1') {
                     numIslands++;
@@ -1094,21 +1145,21 @@ public class Leetcodes {
         int i = pair.getKey();
         int j = pair.getValue();
         grid[i][j] = 0;
-        if (i-1 > -1 && grid[i-1][j] == '1') { //上
-            grid[i-1][j] = '0';
-            isLandsDFS(grid, row, column, new Pair<>(i-1, j));
+        if (i - 1 > -1 && grid[i - 1][j] == '1') { //上
+            grid[i - 1][j] = '0';
+            isLandsDFS(grid, row, column, new Pair<>(i - 1, j));
         }
-        if (j-1 > -1 && grid[i][j-1] == '1') { //左
-            grid[i][j-1] = '0';
-            isLandsDFS(grid, row, column, new Pair<>(i, j-1));
+        if (j - 1 > -1 && grid[i][j - 1] == '1') { //左
+            grid[i][j - 1] = '0';
+            isLandsDFS(grid, row, column, new Pair<>(i, j - 1));
         }
-        if (j+1 < column && grid[i][j+1] == '1') { //右
-            grid[i][j+1] = '0';
-            isLandsDFS(grid, row, column, new Pair<>(i, j+1));
+        if (j + 1 < column && grid[i][j + 1] == '1') { //右
+            grid[i][j + 1] = '0';
+            isLandsDFS(grid, row, column, new Pair<>(i, j + 1));
         }
-        if (i+1 < row && grid[i+1][j] == '1') { //下
-            grid[i+1][j] = '0';
-            isLandsDFS(grid, row, column, new Pair<>(i+1, j));
+        if (i + 1 < row && grid[i + 1][j] == '1') { //下
+            grid[i + 1][j] = '0';
+            isLandsDFS(grid, row, column, new Pair<>(i + 1, j));
         }
     }
 
@@ -1131,7 +1182,7 @@ public class Leetcodes {
                 if (target.equals(curStr)) {
                     return trun;
                 }
-                for (int i=0; i<4; i++) { //一次把4个位上的下一个可拨到字符放入队列中
+                for (int i = 0; i < 4; i++) { //一次把4个位上的下一个可拨到字符放入队列中
                     char[] curChars = curStr.toCharArray();
                     int curNum = curChars[i] - '0';
                     curChars[i] = (char) ((curNum + 1) % 10 + '0'); // 当前位正向转
@@ -1195,8 +1246,8 @@ public class Leetcodes {
         }
         char[] chars = s.toCharArray();
         Stack<Character> charStack = new Stack<>();
-        for (Character chara:
-             chars) {
+        for (Character chara :
+                chars) {
             if (charStack.isEmpty()) {
                 charStack.push(chara);
             } else {
@@ -1243,14 +1294,15 @@ public class Leetcodes {
     }
 
     /**
-     *  [73, 74, 75, 71, 69, 72, 76, 73]
+     * [73, 74, 75, 71, 69, 72, 76, 73]
+     *
      * @param T
      * @return
      */
     public static int[] dailyTemperatures(int[] T) {
         int[] result = new int[T.length];
         Stack<Integer> tmpStack = new Stack<>();
-        for (int i=0; i<T.length; i++) {
+        for (int i = 0; i < T.length; i++) {
             if (tmpStack.isEmpty()) {
                 tmpStack.push(i);
             } else {
@@ -1274,12 +1326,13 @@ public class Leetcodes {
 
     /**
      * 从左到右的顺序压入栈中，并且按照遇到运算符就把栈顶两个元素出栈，执行运算，得到的结果再入栈的原则来进行处理
+     *
      * @param tokens
      * @return
      */
     public static int evalRPN(String[] tokens) {
         Stack<String> rpnStack = new Stack<>();
-        for (int i=0; i<tokens.length; i++) {
+        for (int i = 0; i < tokens.length; i++) {
             String tmp = tokens[i];
             if (tmp.equals("+")) {
                 Integer pop1 = new Integer(rpnStack.pop());
@@ -1322,7 +1375,7 @@ public class Leetcodes {
                 }
             }
         }
-        for (int i=1; i<rooms.size(); i++) {
+        for (int i = 1; i < rooms.size(); i++) {
             if (!canVisitRooms.contains(i)) {
                 return false;
             }
@@ -1336,14 +1389,14 @@ public class Leetcodes {
         }
         int left = 0;
         int right = nums.length - 1;
-        int mid = (left + right ) / 2;
+        int mid = (left + right) / 2;
         while (left <= right) {
             if (target < nums[mid]) {
                 right = mid - 1;
-                mid = (left + right ) / 2;
+                mid = (left + right) / 2;
             } else if (target > nums[mid]) {
                 left = mid + 1;
-                mid = (left + right ) / 2;
+                mid = (left + right) / 2;
             } else {
                 return mid;
             }
@@ -1357,21 +1410,21 @@ public class Leetcodes {
         }
         int left = 0;
         int right = x;
-        int mid = (left + right)/2;
+        int mid = (left + right) / 2;
         while (left <= right) {
             long tmp = (long) Math.pow(mid, 2);
             if (tmp < x) {
-                if ((long) Math.pow(mid+1, 2) > x) {
+                if ((long) Math.pow(mid + 1, 2) > x) {
                     return mid;
                 }
                 left = mid + 1;
-                mid = (right + left) /2;
+                mid = (right + left) / 2;
             } else if (tmp > x) {
-                if ((long) Math.pow(mid-1, 2) < x) {
-                    return mid-1;
+                if ((long) Math.pow(mid - 1, 2) < x) {
+                    return mid - 1;
                 }
                 right = mid - 1;
-                mid = (right + left) /2;
+                mid = (right + left) / 2;
             } else {
                 return mid;
             }
@@ -1381,22 +1434,23 @@ public class Leetcodes {
 
     /**
      * 你调用一个预先定义好的接口 guess(int num)，它会返回 3 个可能的结果（-1，1 或 0）
+     *
      * @param n
      */
     public static int guessNumber(int n) {
         int left = 1;
         int right = n;
-        int mid = (n+1)>>1;
+        int mid = (n + 1) >> 1;
         while (left <= right) {
             int guessRst = guess(mid);
             if (guessRst == 0) { //猜中
                 return mid;
             } else if (guessRst == -1) {//数字较小
-                left = mid+1;
-                mid = (left+right)>>>1;
-            } else if (guessRst == 1){ //数字较大
-                right = mid-1;
-                mid = (left+right)>>>1;
+                left = mid + 1;
+                mid = (left + right) >>> 1;
+            } else if (guessRst == 1) { //数字较大
+                right = mid - 1;
+                mid = (left + right) >>> 1;
             }
         }
         // throw new Exception("Your GuessNumber Is Nothing!");
@@ -1408,6 +1462,52 @@ public class Leetcodes {
             return 0;
         }
         return mid > 1702766719 ? 1 : -1;
+    }
+
+    public static int search1(int[] nums, int target) {
+        if (isEmpty(nums)) {
+            return -1;
+        }
+        int left = 0, right = nums.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) {
+                return mid;
+            }
+            if (nums[left] <= nums[mid]) { // 左边有序
+                if (nums[mid] > target && nums[left] <= target) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            } else { // 右边有序
+                if (nums[mid] < target && nums[right] >= target) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+        }
+        return -1;
+    }
+
+    public static boolean isEmpty(int[] nums) {
+        return null == nums ? true : nums.length == 0 ? true : false;
+    }
+
+    public static int binarySearch(int[] nums, int target, int start, int end) {
+        if (start > end) {
+            return -1;
+        }
+        int middle = start + (end - start) / 2;
+        if (nums[middle] == target) {
+            return middle;
+        }
+        if (nums[start] <= target && nums[middle] >= target) { //目标值在左边
+            return binarySearch(nums, target, start, middle - 1);
+        } else {
+            return binarySearch(nums, target, middle + 1, end);
+        }
     }
 
     public static void main(String[] args) {
@@ -1636,6 +1736,66 @@ public class Leetcodes {
 //        int[] req = {-1,0,3,5,9,12};
 //        search(req, 9);
 //        System.out.println(mySqrt(2147395599));
-        System.out.println(guessNumber(2126753390));
+//        System.out.println(guessNumber(2126753390));
+        int[] nums = {1, 2};
+//        System.out.println(search1(nums, 3));
+//        System.out.println(findPeakElement(nums));
+        System.out.println(findMin(nums));
+    }
+
+    public static int findMin(int[] nums) {
+        int low = 0, high = nums.length - 1;
+        while (low < high) { // 降序或者旋转数组
+            int mid = low + ((high - low) / 2);
+            if (nums[low] <= nums[high]) { //升序数组
+                return nums[low];
+            }
+            if (nums[mid] >= nums[low]) { //mid在变化点右边
+                low = mid + 1;
+            } else { //mid在变化点或者右边
+                high = mid;
+            }
+        }
+        return nums[low];
+    }
+
+    public static int findPeakElement(int[] nums) {
+        if (nums.length == 1) {
+            return 0;
+        }
+        int low = 0, high = nums.length - 1;
+        while (low < high) {
+            int mid = low + ((high - low) >> 1);
+            if (nums[mid] > nums[mid + 1]) {
+                high = mid;
+            } else {
+                low = mid + 1;
+            }
+        }
+        return low;
+    }
+
+    public static int firstBadVersion(int n) {
+        if (n == 1) {
+            return n;
+        }
+        int low = 1, high = n;
+        while (low < high) {
+            int mid = low + (high - low + 1) / 2;
+            boolean midIsBadVersion = isBadVersion(mid);
+            if (midIsBadVersion && !isBadVersion(mid - 1)) {
+                return mid;
+            }
+            if (midIsBadVersion) {
+                high = mid;
+            } else {
+                low = mid;
+            }
+        }
+        return 1;
+    }
+
+    private static boolean isBadVersion(int mid) {
+        return mid == 2;
     }
 }

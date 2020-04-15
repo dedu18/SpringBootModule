@@ -15,6 +15,7 @@
         <module>consul-client-module</module>
         <module>consul-consumer-module</module>
         <module>crypto-signature-module</module>
+        <module>data-struct-module</module>
         <module>eureka-client-module</module>
         <module>eureka-center-module</module>
         <module>flowable-module</module>
