@@ -1737,10 +1737,90 @@ public class Leetcodes {
 //        search(req, 9);
 //        System.out.println(mySqrt(2147395599));
 //        System.out.println(guessNumber(2126753390));
-        int[] nums = {1, 2};
+        int[] nums = {1, 2, 3, 1};
 //        System.out.println(search1(nums, 3));
-//        System.out.println(findPeakElement(nums));
-        System.out.println(findMin(nums));
+        System.out.println(isPerfectSquare(808201));
+//        System.out.println(findMin(nums));
+    }
+
+    public static boolean isPerfectSquare(int num) {
+        if (num == 0 || num == 1) {
+            return true;
+        }
+        long left = 0, right = num - 1;
+        while (left <= right) {
+            long mid = left + ((right - left) >> 1);
+            long midSquare = mid * mid;
+            if (midSquare == num) {
+                return true;
+            } else if (midSquare < num) {
+                left = mid + 1;
+            } else if (midSquare > num) {
+                right = mid - 1;
+            }
+        }
+        return false;
+    }
+
+    public static double myPow(double x, int n) {
+        long turn = n;
+        double positiveX = x;
+        if (turn < 0) {
+            turn = -turn;
+            positiveX = 1 / positiveX;
+        }
+        return fastPow(positiveX, turn);
+
+//        long turn = n; //暴力循环
+//        return forcePow(x, turn);
+    }
+
+    private double forcePow(double x, long n) {
+
+        if (x == 0 || x == 1) {
+            return x;
+        }
+        if (n > 0) {
+            double result = 1;
+            for (long i = 0; i < n; i++) {
+                result = result * x;
+            }
+            return result;
+        } else {
+            double result = 1;
+            for (long i = 0; i < -n; i++) {
+                result = result / x;
+            }
+            return result;
+        }
+    }
+
+    private static double fastPow(double x, long n) {
+        if (n == 0) {
+            return 1.0;
+        }
+        double halfPow = fastPow(x, n >> 1);
+        if (n % 2 == 0) {
+            return halfPow * halfPow;
+        } else {
+            return halfPow * halfPow * x;
+        }
+    }
+
+    public static int findPeakElement2(int[] nums) {
+        if (nums.length <= 1) {
+            return 0;
+        }
+        int left = 0, right = nums.length - 1;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] > nums[mid + 1]) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+        return left;
     }
 
     public static int findMin(int[] nums) {
