@@ -8,4 +8,4 @@
 
 - [x] **Eureka Module**
 
-- [x] **Vue Controller Module**
+- [x] **Vue Module**

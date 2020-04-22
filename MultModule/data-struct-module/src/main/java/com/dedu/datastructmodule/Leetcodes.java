@@ -2,7 +2,9 @@ package com.dedu.datastructmodule;
 
 import javafx.util.Pair;
 
+import java.lang.ref.Reference;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 
 public class Leetcodes {
 
@@ -798,9 +800,9 @@ public class Leetcodes {
     }
 
     public class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
+        public int val;
+        public TreeNode left;
+        public TreeNode right;
 
         TreeNode(int x) {
             val = x;
@@ -1737,10 +1739,170 @@ public class Leetcodes {
 //        search(req, 9);
 //        System.out.println(mySqrt(2147395599));
 //        System.out.println(guessNumber(2126753390));
-        int[] nums = {1, 2, 3, 1};
+        int[] nums = {3, 1, 3, 4, 2};
+//        System.out.println(findDuplicate(nums));
+//        System.out.println(nextGreatestLetter(nums, 'c'));
 //        System.out.println(search1(nums, 3));
-        System.out.println(isPerfectSquare(808201));
+//        System.out.println(isPerfectSquare(808201));
 //        System.out.println(findMin(nums));
+        StringBuffer sb;
+        StringBuilder sbb;
+        List<List<Integer>> result = new ArrayList<>();
+        System.out.println(result.size());
+    }
+
+    public boolean isSymmetric(TreeNode root) {
+        if (null == root) {
+            return true;
+        }
+        return isSymmetricTree2(root);
+    }
+
+    private boolean isSymmetricTree2(TreeNode root) {
+        Queue<TreeNode> treeNodeQueue = new LinkedList<>();
+        treeNodeQueue.add(root);
+        treeNodeQueue.add(root);
+        while (!treeNodeQueue.isEmpty()) {
+            TreeNode leftTreeNode = treeNodeQueue.poll();
+            TreeNode rightTreeNode = treeNodeQueue.poll();
+            if (leftTreeNode == null && rightTreeNode == null) continue;
+            if (leftTreeNode == null || rightTreeNode == null) return false;
+            if (leftTreeNode.val != rightTreeNode.val) return false;
+            treeNodeQueue.add(leftTreeNode.left);
+            treeNodeQueue.add(rightTreeNode.right);
+            treeNodeQueue.add(leftTreeNode.right);
+            treeNodeQueue.add(rightTreeNode.left);
+        }
+        return true;
+    }
+
+    public boolean isSymmetricTree(TreeNode left, TreeNode right) {
+        if (null == left && null == right) {
+            return true;
+        }
+        if (null != left && null != right && Objects.equals(left.val, right.val)) {
+            boolean isSymmetricLeftTree = isSymmetricTree(left.left, right.right);
+            boolean isSymmetricRightTree = isSymmetricTree(left.right, right.left);
+            return isSymmetricLeftTree && isSymmetricRightTree;
+        }
+        return false;
+    }
+
+    private int maxDepth;
+
+    public int maxDepth(TreeNode root) {
+        findMaxDepth(root, maxDepth);
+        return maxDepth;
+    }
+
+    private void findMaxDepth(TreeNode root, int cur) {
+        if (root == null) {
+            return;
+        }
+        if (null == root.left && null == root.right) {
+            maxDepth = Math.max(cur, maxDepth);
+        }
+        findMaxDepth(root.left, cur + 1);
+        findMaxDepth(root.right, cur + 1);
+    }
+
+    private List<List<Integer>> result = new ArrayList<>();
+
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (null == root) {
+            return result;
+        }
+        Queue<TreeNode> treeNodeQueue = new LinkedList<TreeNode>();
+        treeNodeQueue.add(root);
+        int level = 0;
+        while (!treeNodeQueue.isEmpty()) {
+            result.add(new ArrayList<>());
+            int levelItemNum = treeNodeQueue.size();
+            for (int i = 0; i < levelItemNum; i++) {
+                TreeNode levelItem = treeNodeQueue.poll();
+                result.get(level).add(levelItem.val);
+                if (null != levelItem.left) {
+                    treeNodeQueue.add(levelItem.left);
+                }
+                if (null != levelItem.right) {
+                    treeNodeQueue.add(levelItem.right);
+                }
+            }
+            level++;
+        }
+        return result;
+    }
+
+    private void levelOrderTra(TreeNode root, int level) {
+        if (result.size() == level) {
+            result.add(new ArrayList<>());
+        }
+        result.get(level).add(root.val);
+        if (null != root.left) {
+            levelOrderTra(root.left, level + 1);
+        }
+        if (null != root.right) {
+            levelOrderTra(root.right, level + 1);
+        }
+    }
+
+    public static int findDuplicate(int[] nums) {
+        int low = 0, high = nums.length - 1;
+        while (low < high) {
+            int mid = low + (high - low + 1) / 2;
+            int count = 0;
+            for (int num : nums) {
+                if (num < mid) {
+                    count++;
+                }
+            }
+            if (count >= mid) {
+                high = mid - 1;
+            } else {
+                low = mid;
+            }
+        }
+        return low;
+//        int[] numsCopy = Arrays.copyOf(nums, nums.length);
+//        Arrays.sort(numsCopy);
+//        for (int i = 1; i < numsCopy.length; i++)
+//        {
+//            if (numsCopy[i - 1] == numsCopy[i]) {
+//                return numsCopy[i];
+//            }
+//        }
+//        return -1;
+    }
+
+    public static int findMin2(int[] nums) {
+        int low = 0, high = nums.length - 1;
+        while (low < high) {
+            int mid = low + (high - low) / 2;
+            if (nums[mid] < nums[high]) {
+                high = mid;
+            } else if (nums[mid] == nums[high]) {
+                high = high - 1;
+            } else if (nums[mid] > nums[high]) {
+                low = mid + 1;
+            }
+        }
+        return nums[low];
+    }
+
+    public static char nextGreatestLetter(char[] letters, char target) {
+        int low = 0, high = letters.length - 1;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (letters[mid] < target) {
+                low = mid + 1;
+            } else if (letters[mid] == target) {
+                high = mid + 1;
+            } else if (letters[mid] > target) {
+                high = mid - 1;
+            }
+        }
+        return letters[low];
     }
 
     public static boolean isPerfectSquare(int num) {
