@@ -1,6 +1,7 @@
 package com.dedu.datastructmodule;
 
 import javafx.util.Pair;
+import org.springframework.util.StringUtils;
 
 import java.lang.ref.Reference;
 import java.util.*;
@@ -23,7 +24,7 @@ public class Leetcodes {
 
         public int val;
 
-        public Node pre, prev, next, child;
+        public Node pre, prev, next, child, left, right;
         public Node random;
 
         public Node() {
@@ -799,7 +800,7 @@ public class Leetcodes {
         return true;
     }
 
-    public class TreeNode {
+    public static class TreeNode {
         public int val;
         public TreeNode left;
         public TreeNode right;
@@ -1739,16 +1740,491 @@ public class Leetcodes {
 //        search(req, 9);
 //        System.out.println(mySqrt(2147395599));
 //        System.out.println(guessNumber(2126753390));
-        int[] nums = {3, 1, 3, 4, 2};
+        int[] nums1 = {3, 9, 20, 15, 7};
+        int[] nums2 = {9, 3, 15, 20, 7};
 //        System.out.println(findDuplicate(nums));
 //        System.out.println(nextGreatestLetter(nums, 'c'));
 //        System.out.println(search1(nums, 3));
 //        System.out.println(isPerfectSquare(808201));
 //        System.out.println(findMin(nums));
-        StringBuffer sb;
-        StringBuilder sbb;
-        List<List<Integer>> result = new ArrayList<>();
-        System.out.println(result.size());
+//        System.out.println(buildTree(nums1, nums2));
+//        List<Integer> a = Arrays.asList(1);
+//        System.out.println(a.toString().substring(1, a.toString().length() - 1));
+//        System.out.println(a.toString());
+//        Stack<TreeNode> stack = new Stack<>();
+//        int a = 5;
+//        while (a != 9) {
+//            a++;
+//            if (a == 7) {
+//                break;
+//            }
+//            System.out.println(a);
+//        }
+//        System.out.println(a);
+//        TreeNode root = new TreeNode(3);
+//        root.right = new TreeNode(4);
+//        root.right.right = new TreeNode(5);
+//        root.left.left = new TreeNode(2);
+//        root.left.right = new TreeNode(4);
+//        deleteNode(root, 3);
+        int k = 3;
+        int[] arr = {4, 5, 8, 2};
+        Leetcodes a = new Leetcodes();
+        KthLargest kthLargest = a.new KthLargest(3, arr);
+        kthLargest.add(3);   // returns 4
+        kthLargest.add(5);   // returns 5
+        kthLargest.add(10);  // returns 5
+        kthLargest.add(9);   // returns 8
+        kthLargest.add(4);   // returns 8
+    }
+
+    class KthLargest {
+
+        private class BST {
+
+            private class TreeNode {
+
+                private int val;
+                // 结点的count包含自己，所以默认是1
+                private int count = 1;
+                private TreeNode left;
+                private TreeNode right;
+
+                TreeNode(int x) { val = x; }
+            }
+
+            private TreeNode root;
+
+            public void add(int val) {
+                root = add(root, val);
+            }
+
+            private TreeNode add(TreeNode node, int val) {
+                if (node == null) {
+                    return new TreeNode(val);
+                }
+                if (node.val > val) {
+                    node.left = add(node.left, val);
+                } else if (node.val < val) {
+                    node.right = add(node.right, val);
+                }
+                // 元素重复 不添加进树但是count++
+                node.count++;
+                return node;
+            }
+
+            public TreeNode search(int k) {
+                return search(root, k);
+            }
+
+            private TreeNode search(TreeNode node, int k) {
+                if (node == null) {
+                    return node;
+                }
+                int leftNodeCount = node.left != null ? node.left.count : 0;
+                int rightNodeCount = node.right != null ? node.right.count : 0;
+                int currNodeCount = node.count - leftNodeCount - rightNodeCount;
+                if (k > currNodeCount + rightNodeCount ) {
+                    // k > 当前结点数加右子树的结点数，则搜索左子树
+                    return search(node.left, k - currNodeCount - rightNodeCount);
+                } else if (k <= rightNodeCount) {
+                    // k <= 右子树的结点数，则搜索右子树
+                    return search(node.right, k);
+                } else {
+                    // k == 当前结点数加右子树的结点数，则找到第k大的结点
+                    return node;
+                }
+            }
+        }
+
+        private int k;
+        private BST bst = new BST();
+
+        public KthLargest(int k, int[] nums) {
+            this.k = k;
+            for (int n : nums) {
+                bst.add(n);
+            }
+        }
+
+        public int add(int val) {
+            bst.add(val);
+            return bst.search(k).val;
+        }
+    }
+
+    public class KthLargest1 {
+
+        private PriorityQueue<Integer> cache;
+
+        private int capacity = 0;
+
+        public KthLargest1(int k, int[] nums) {
+            cache = new PriorityQueue<>(k);
+            capacity = k;
+            for (int i = 0; i < nums.length; i++) {
+                add(nums[i]);
+            }
+        }
+
+        public int add(int val) {
+            if (cache.size() < capacity) {
+                cache.add(val);
+            } else if (val > cache.peek()) {
+                cache.poll(); //移除最小的
+                cache.add(val);
+            }
+            return cache.peek();
+        }
+    }
+
+
+    public static TreeNode deleteNode(TreeNode root, int key) {
+        if (null == root) {
+            return root;
+        }
+        TreeNode cur = root;
+        TreeNode curParent = null;
+        while (cur != null) {
+            if (cur.val == key) {
+                break;
+            }
+            curParent = cur;
+            if (cur.val > key) {
+                cur = cur.right;
+            } else {
+                cur = cur.left;
+            }
+        }
+        if (cur.left == null && cur.right == null) { //目标节点双节点都为空
+            if (curParent == null) {//根节点为目标值
+                return null;
+            } else {
+                curParent.left = curParent.left == cur ? null : curParent.left;
+                curParent.right = curParent.right == cur ? null : curParent.right;
+            }
+        } else if (cur.left == null) { //目标节点左节点为空
+            if (curParent == null) {//根节点为目标值
+                root = root.right;
+            } else {
+                curParent.left = curParent.left == cur ? cur.right : curParent.left;
+                curParent.right = curParent.right == cur ? cur.right : curParent.right;
+            }
+        } else if (cur.right == null) { //目标节点右节点为空
+            if (curParent == null) {//根节点为目标值
+                root = root.left;
+            } else {
+                curParent.left = curParent.left == cur ? cur.left : curParent.left;
+                curParent.right = curParent.right == cur ? cur.left : curParent.right;
+            }
+        } else { //目标双节点都不为空
+            TreeNode inOrderSuccessorNode = cur.right; //目标节点中序后继节点
+            TreeNode inOrderSuccessorParentNode = cur; //目标节点中序后继节点父节点
+            while (inOrderSuccessorNode.left != null) {
+                inOrderSuccessorParentNode = inOrderSuccessorNode;
+                inOrderSuccessorNode = inOrderSuccessorNode.left;
+            }
+
+            if (curParent == null) {//根节点为目标值
+                if (inOrderSuccessorParentNode == cur) {
+                    inOrderSuccessorNode.left = root.left;
+                    inOrderSuccessorNode.right = inOrderSuccessorNode.right.right;
+                    root = inOrderSuccessorNode;
+                } else {
+                    inOrderSuccessorNode.left = root.left;
+                }
+            }
+            if (inOrderSuccessorParentNode == null) {
+                inOrderSuccessorParentNode.right = null;
+            } else {
+                inOrderSuccessorParentNode.left = null;
+            }
+            cur.val = inOrderSuccessorNode.val;
+        }
+        return root;
+    }
+
+    private TreeNode searchBST2(TreeNode root, int key) {
+        if (root == null) {
+            return root;
+        }
+
+        return null;
+
+    }
+
+    public TreeNode insertIntoBST(TreeNode root, int val) {
+        if (null == root) {
+            return new TreeNode(val);
+        }
+        TreeNode cur = root;
+        while (cur != null) {
+            if (val > cur.val && null != cur.right) {
+                cur = cur.right;
+            } else if (val < cur.val && null != cur.left) {
+                cur = cur.left;
+            } else {
+                break;
+            }
+        }
+        if (val > cur.val && null == cur.right) {
+            cur.right = new TreeNode(val);
+        } else if (val < cur.val && null == cur.left) {
+            cur.left = new TreeNode(val);
+        }
+        return root;
+    }
+
+    public TreeNode searchBST(TreeNode root, int val) {
+        if (null == root) {
+            return null;
+        }
+        TreeNode cur = root;
+        while (cur != null) {
+            if (val == cur.val) {
+                return cur;
+            } else if (val < cur.val) {
+                cur = cur.left;
+            } else if (val > cur.val) {
+                cur = cur.right;
+            }
+        }
+        return null;
+    }
+
+    private List<Integer> data = new LinkedList<>();
+
+    private int idx = 0;
+
+    public void BSTIterator(TreeNode root) {
+        if (null == root) {
+            return;
+        }
+        inOrderTra(root);
+    }
+
+    public void inOrderTra(TreeNode root) {
+        if (null != root.left) {
+            inOrderTra(root.left);
+        }
+        data.add(root.val);
+        if (null != root.right) {
+            inOrderTra(root.right);
+        }
+    }
+
+    /**
+     * @return the next smallest number
+     */
+    public int next() {
+        return data.get(idx++);
+    }
+
+    /**
+     * @return whether we have a next smallest number
+     */
+    public boolean hasNext() {
+        return idx < data.size();
+    }
+
+    public boolean isValidBST(TreeNode root) {
+        if (null == root) {
+            return true;
+        }
+        List<Integer> bstList = new LinkedList<>();
+        inOrderTra(root, bstList);
+        for (int i = 0; i < bstList.size() - 1; i++) {
+            if (bstList.get(i) > bstList.get(i + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void inOrderTra(TreeNode cur, List<Integer> bstList) {
+        if (null != cur) {
+            inOrderTra(cur.left, bstList);
+            bstList.add(cur.val);
+            inOrderTra(cur.right, bstList);
+        }
+    }
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        if (root == null) {
+            return "";
+        }
+        Queue<TreeNode> treeNodeQueue = new LinkedList<>();
+        List<Integer> result = new LinkedList<>();
+        treeNodeQueue.offer(root);
+        while (!treeNodeQueue.isEmpty()) {
+            TreeNode curNode = treeNodeQueue.poll();
+            if (null != curNode) {
+                result.add(curNode.val);
+                treeNodeQueue.offer(curNode.left);
+                treeNodeQueue.offer(curNode.right);
+            } else {
+                result.add(null);
+            }
+        }
+        return result.toString();
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        if (data == null || "".equals(data)) {
+            return null;
+        }
+        String[] splitData = data.substring(1, data.length() - 1).split("\\,"); // [1,2,null,2]
+        Queue<TreeNode> treeNodeQueue = new LinkedList<>();
+        TreeNode root = new TreeNode(Integer.parseInt(splitData[0]));
+        treeNodeQueue.offer(root);
+        int curIdx = 1;
+        while (!treeNodeQueue.isEmpty()) {
+            TreeNode curNode = treeNodeQueue.poll();
+            if (!"null".equals(splitData[curIdx].trim())) {
+                curNode.left = new TreeNode(Integer.parseInt(splitData[curIdx].trim()));
+                treeNodeQueue.offer(curNode.left);
+            }
+            curIdx++; //指向右节点
+            if (!"null".equals(splitData[curIdx].trim())) {
+                curNode.right = new TreeNode(Integer.parseInt(splitData[curIdx].trim()));
+                treeNodeQueue.offer(curNode.right);
+            }
+            curIdx++;
+        }
+        return root;
+    }
+
+    public Node connect(Node root) {
+        if (null == root) {
+            return root;
+        }
+        Queue<Node> nodeQueue = new LinkedList<>();
+        nodeQueue.add(root);
+        while (!nodeQueue.isEmpty()) {
+            int nodeSize = nodeQueue.size();
+            for (int i = 0; i < nodeSize; i++) {
+                Node pollNode = nodeQueue.poll();
+                if (i < nodeSize - 1) { //最右边节点不设置，所以nodeSize - 1
+                    pollNode.next = nodeQueue.peek();
+                }
+                if (null != pollNode.left) {
+                    nodeQueue.add(pollNode.left);
+                }
+                if (null != pollNode.right) {
+                    nodeQueue.add(pollNode.right);
+                }
+            }
+        }
+        return root;
+    }
+
+    public Node connect2(Node root) {
+        Queue<Node> nodeQueue = new LinkedList<>();
+        List<List<Node>> levelNodeList = new ArrayList<>();
+        nodeQueue.add(root);
+        int level = 0;
+        while (!nodeQueue.isEmpty()) {
+            levelNodeList.add(new ArrayList<>());
+            int levelItemNum = nodeQueue.size();
+            for (int i = 0; i < levelItemNum; i++) {
+                Node curLevelNode = nodeQueue.poll();
+                levelNodeList.get(level).add(curLevelNode);
+                if (null != curLevelNode.left) {
+                    nodeQueue.add(curLevelNode.left);
+                }
+                if (null != curLevelNode.right) {
+                    nodeQueue.add(curLevelNode.right);
+                }
+            }
+            level++;
+        }
+        for (int i = 0; i < levelNodeList.size(); i++) {
+            List<Node> nodes = levelNodeList.get(i);
+            for (int j = 0; j < nodes.size(); j++) {
+                if (j + 1 < nodes.size()) {
+                    nodes.get(j).next = nodes.get(j + 1);
+                } else {
+                    nodes.get(j).next = null;
+                }
+            }
+        }
+        return root;
+    }
+
+    private static HashMap<Integer, Integer> inOrderMap = new HashMap<>();
+    private static int[] preOrder;
+
+    public static TreeNode buildTree(int[] preorder, int[] inorder) {
+        for (int i = 0; i < preorder.length; i++) {
+            inOrderMap.put(inorder[i], i);
+        }
+        preOrder = preorder;
+        return buildTreeByIdx(0, inorder.length - 1, 0, preorder.length - 1);
+    }
+
+    private static TreeNode buildTreeByIdx(int inOrderLeftIdx, int inOrderRightIdx, int preOrderLeftIdx, int preOrderRightIdx) {
+        if (inOrderRightIdx < inOrderLeftIdx || preOrderRightIdx < preOrderLeftIdx) {
+            return null;
+        }
+        int rootNum = preOrder[preOrderLeftIdx];
+        int inOrderRootIdx = inOrderMap.get(rootNum);
+        TreeNode rootNode = new TreeNode(rootNum);
+        rootNode.left = buildTreeByIdx(inOrderLeftIdx, inOrderRootIdx - 1, preOrderLeftIdx + 1, preOrderLeftIdx + inOrderRootIdx);
+        rootNode.right = buildTreeByIdx(inOrderRootIdx + 1, inOrderRightIdx, preOrderLeftIdx + inOrderRootIdx - inOrderLeftIdx + 1, preOrderRightIdx);
+        return rootNode;
+    }
+
+//    private static HashMap<Integer, Integer> inOrderCache = new HashMap<>();
+//
+//    private static int[] postOrder;
+//
+//    public static TreeNode buildTree(int[] inorder, int[] postorder) {
+//        for (int i = 0; i < inorder.length; i++) {
+//            inOrderCache.put(inorder[i], i);
+//        }
+//        postOrder = postorder;
+//        return buildTreeByIndex(0, inorder.length - 1, 0, postorder.length - 1);
+//    }
+//
+//    public static TreeNode buildTreeByIndex(int inOrderLeftIdx, int inOrderRightIdx, int postOrderLeftIdx, int postOrderRightIdx) {
+//        if (inOrderRightIdx < inOrderLeftIdx || postOrderRightIdx < postOrderLeftIdx) {
+//            return null;
+//        }
+//        int root = postOrder[postOrderRightIdx];
+//        int inOrderRootIdx = inOrderCache.get(root);
+//
+//        TreeNode rootNode = new TreeNode(root);
+//        rootNode.left = buildTreeByIndex(inOrderLeftIdx, inOrderRootIdx - 1, postOrderLeftIdx, postOrderLeftIdx + inOrderRootIdx - 1 - inOrderLeftIdx);
+//        rootNode.right = buildTreeByIndex(inOrderRootIdx + 1, inOrderRightIdx, postOrderLeftIdx + inOrderRootIdx - inOrderLeftIdx, postOrderRightIdx - 1);
+//        return rootNode;
+//    }
+
+    private int targetSum;
+
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if (null == root) {
+            return false;
+        }
+        targetSum = sum;
+        return hasSubPathSum(root, 0);
+    }
+
+    private boolean hasSubPathSum(TreeNode root, int curSum) {
+        if (null == root) {
+            return false;
+        }
+        if (null == root.left && null == root.right) {
+            return root.val + curSum == targetSum;
+        }
+        if (null == root.left) {
+            return hasSubPathSum(root.right, curSum + root.val);
+        }
+        if (null == root.right) {
+            return hasSubPathSum(root.left, curSum + root.val);
+        }
+        return false;
     }
 
     public boolean isSymmetric(TreeNode root) {

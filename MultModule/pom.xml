@@ -24,6 +24,7 @@
         <module>spring-security-oath2</module>
         <module>zuul-module</module>
         <module>vue-module</module>
+        <module>feign-client-module</module>
     </modules>
 
 
