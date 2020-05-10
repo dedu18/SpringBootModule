@@ -1,10 +1,6 @@
 package com.dedu.datastructmodule;
 
-import javafx.util.Pair;
-
-import java.lang.ref.Reference;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 
 public class Leetcodes {
 
@@ -1749,6 +1745,31 @@ public class Leetcodes {
         StringBuilder sbb;
         List<List<Integer>> result = new ArrayList<>();
         System.out.println(result.size());
+    }
+
+    public static TreeNode deleteNode(TreeNode root, int key) {
+        if (null == root) {
+            return root;
+        }
+        if (root.val > key) {
+            root.left = deleteNode(root.left, key);
+        } else if (root.val < key) {
+            root.right = deleteNode(root.right, key);
+        } else {
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            } else {
+                TreeNode minNode = root.right;
+                while (minNode.left != null) {
+                    minNode = minNode.left;
+                }
+                minNode.left = root.left;
+                return root.right;
+            }
+        }
+        return root;
     }
 
     public boolean isSymmetric(TreeNode root) {
