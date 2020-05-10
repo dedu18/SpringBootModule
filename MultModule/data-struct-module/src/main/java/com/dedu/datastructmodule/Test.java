@@ -1,5 +1,8 @@
 package com.dedu.datastructmodule;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
+
 public class Test {
     public static int pivotIndex(int[] nums) {
         if (null == nums || nums.length == 0) {
@@ -41,6 +44,10 @@ public class Test {
     }
 
     public static void main(String[] args) {
+        Executors.newFixedThreadPool(2);
+        ReentrantLock r;
+        Executors.newWorkStealingPool();
+        new Thread().start();
         int[] a = {1,7,3,6,5,9};
         plusOne(a);
     }
