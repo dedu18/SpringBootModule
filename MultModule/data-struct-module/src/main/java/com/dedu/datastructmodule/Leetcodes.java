@@ -1,14 +1,110 @@
 package com.dedu.datastructmodule;
 
-import javafx.util.Pair;
-import org.springframework.util.StringUtils;
-
-import java.lang.ref.Reference;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLongFieldUpdater;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Leetcodes {
 
+    public static void main(String[] args) {
+        lengthOfLastWord("a");
+    }
+
+    public static int lengthOfLastWord(String s) {
+        if (null == s || s.length() == 0) {
+            return 0;
+        }
+        boolean isWord = false;
+        int result = 0;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            if (s.charAt(i) == ' ' && !isWord) {
+                continue;
+            } else if (s.charAt(i) == ' ' && isWord) {
+                break;
+            } else {
+                isWord = true;
+                result++;
+            }
+        }
+        if (!isWord) {
+            return 0;
+        }
+        return result;
+    }
+
+    public static int searchInsert(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] < target) {
+                left = mid + 1;
+            } else if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] > target) {
+                right = mid - 1;
+            }
+        }
+        if (left == nums.length) {
+            return nums.length;
+        } else {
+            return left;
+        }
+    }
+
+    public int romanToInt(String s) {
+        if ("".equals(s) || null == s) {
+            return 0;
+        }
+        char[] nums = s.toCharArray();
+        int result = 0;
+        for (int i = 0; i < nums.length; ) {
+            char num = nums[i];
+            //特殊的 IV IX
+            if (num == 'I') {
+                if (i + 1 < nums.length && nums[i + 1] == 'V') {
+                    result += 4;
+                    i++;
+                } else if (i + 1 < nums.length && nums[i + 1] == 'X') {
+                    result += 9;
+                    i++;
+                } else {
+                    result += 1;
+                }
+            } else if (num == 'V') {
+                result += 5;
+            } else if (num == 'X') {
+                //XL XC
+                if (i + 1 < nums.length && nums[i + 1] == 'L') {
+                    result += 40;
+                    i++;
+                } else if (i + 1 < nums.length && nums[i + 1] == 'C') {
+                    result += 90;
+                    i++;
+                } else {
+                    result += 10;
+                }
+            } else if (num == 'L') {
+                result += 50;
+            } else if (num == 'C') {
+                //CD CM
+                if (i + 1 < nums.length && nums[i + 1] == 'D') {
+                    result += 400;
+                    i++;
+                } else if (i + 1 < nums.length && nums[i + 1] == 'M') {
+                    result += 900;
+                    i++;
+                } else {
+                    result += 100;
+                }
+            } else if (num == 'D') {
+                result += 500;
+            } else if (num == 'M') {
+                result += 1000;
+            }
+            i++;
+        }
+        return result;
+    }
 
     static class ListNode {
         int val;
@@ -26,6 +122,7 @@ public class Leetcodes {
 
         public Node pre, prev, next, child, left, right;
         public Node random;
+        public List<Node> children;
 
         public Node() {
         }
@@ -1513,269 +1610,516 @@ public class Leetcodes {
         }
     }
 
-    public static void main(String[] args) {
-/*        addAtHead(4);
-        System.out.println(get(1));
-        addAtHead(1);
-        addAtHead(5);
-        deleteAtIndex(3);
-        addAtHead(7);
-        System.out.println(get(3));
-        System.out.println(get(3));
-        System.out.println(get(3));
-        addAtHead(1);
-        deleteAtIndex(4);
-        print(head);
-        addAtHead(3);
-        addAtHead(2);
-        addAtHead(5);
-        addAtTail(5);
-        deleteAtIndex(6);
-
-        Leetcodes m = new Leetcodes();
-        ListNode list = m.new ListNode(1);
-        list.next = m.new ListNode(2);
-        list.next.next = m.new ListNode(3);
-
-        ListNode list2 = new ListNode(1);
-        list2.next = new ListNode(2);
-        list2.next.next = new ListNode(3);
-        list2.next.next.next = new ListNode(4);
-        list2.next.next.next.next = new ListNode(5);
-        list2.next.next.next.next.next = new ListNode(1);
-        print(rotateRight(list2, 2));
-        list.next.next.next.next.next.next = m.new ListNode(7);
-        print(mergeTwoLists(list, list2));
-
-        ListNode list = new ListNode(1);
-        list.next = new ListNode(8);
-        list.next.next = new ListNode(3);
-
-        ListNode list2 = new ListNode(0);
-        list2.next = new ListNode(6);
-        list2.next.next = new ListNode(4);
-        print(addTwoNumbers(list, list2));
-
-        Node a1 = new Node();
-        Node a11 = new Node();
-        Node a111 = new Node();
-        Node a2 = new Node();
-        Node a22 = new Node();
-        Node a222 = new Node();
-
-        Node a3 = new Node();
-        Node a33 = new Node();
-        Node a333 = new Node();
-        a1.val = 1;
-        a11.val = 11;
-        a111.val = 111;
-        a2.val = 2;
-        a22.val = 22;
-        a222.val = 222;
-        a3.val = 3;
-        a33.val = 33;
-        a333.val = 333;
+    public static boolean isPalindrome(int x) {
+        if (x < 0) {
+            return false;
+        }
+        int cur = x;
+        Deque<Integer> queue = new LinkedList<>();
+        while (cur != 0) {
+            int tmp = cur % 10;
+            queue.offer(tmp);
+            cur /= 10;
+        }
+        while (!queue.isEmpty()) {
+            if (queue.size() >= 2) {
+                Integer head = queue.removeFirst();
+                Integer tail = queue.removeLast();
+                if (head != tail) {
+                    return false;
+                }
+            } else {
+                break;
+            }
+        }
+        return true;
+    }
 
 
-        a1.next = a11;
-        a11.next = a111;
-        a111.prev = a11;
-        a11.prev = a1;
+    public static int reverse(int x) {
+        int result = 0;
+        while (x != 0) {
+            int next = x % 10; //每次取个位
+            x = x / 10;
+            if (result > Integer.MAX_VALUE / 10 || (result == Integer.MAX_VALUE / 10 && next > Integer.MAX_VALUE % 10)) {
+                return 0; //此时结果再乘以10就溢出最大数或者结果乘以10并加上下一位就溢出最大数
+            }
+            if (result < Integer.MIN_VALUE / 10 || (result == Integer.MIN_VALUE / 10 && next < Integer.MIN_VALUE % 10)) {
+                return 0; //此时结果再乘以10就溢出最小数 或者结果乘以10并减去下一位就溢出最小数
+            }
+            result = result * 10 + next;
+        }
+        return result;
+    }
 
-        a11.child = a2;
 
-        a2.next = a22;
-        a22.next = a222;
-        a222.prev = a22;
-        a22.prev = a2;
+    public int findMaximumXOR(int[] nums) {
+        int maxNum = nums[0];
+        for (int num : nums) { //找到最大数
+            maxNum = Math.max(num, maxNum);
+        }
+        int maxSize = Integer.toBinaryString(maxNum).length(); //得到最大的位数
+        int maxXor = 0;
+        int currXor = 0;
+        Set<Integer> prefixCache = new HashSet<>();
+        for (int i = maxSize - 1; i >= 0; i--) { //maxSize - 1代表结果的最高位，每次循环都得到目标结果的一位，顺序从高到低
+            maxXor = maxXor << 1; //每次循环都给结果新增一位
+            currXor = maxXor | 1; //先假设新增的一位为1，再去检测是都包含这样的数，是的a的前缀 ^ b的前缀 = currXor
+            prefixCache = new HashSet<>();
+            for (int num : nums) { //把每个元素的前i位前缀缓存起来以备检查
+                prefixCache.add(num >> i);
+            }
+            for (int p : prefixCache) { //检查缓存是是否包含两个数使得a的前缀 ^ b的前缀 = currXor，条件是b的前缀 ^ currXor = a的前缀
+                if (prefixCache.contains(currXor ^ p)) { //如果包含，则替换更新目标值的i位为1，否则还是为0
+                    maxXor = currXor;
+                    break;
+                }
+            }
+        }
+        return maxXor;
+    }
 
-        a3.next = a33;
-        a33.next = a333;
-        a333.prev = a33;
-        a33.prev = a3;
+    static class WordDictionary3 {
+        StringBuilder sb;
 
-        a22.child = a3;
+        public WordDictionary3() {
+            sb = new StringBuilder();
+            sb.append('#');
+        }
 
-        print(flatten(a1));
+        public void addWord(String word) {
+            sb.append(word);
+            sb.append('#');
+        }
 
-        int[] request = {2,2,1};
-        singleNumber(request);
-        int[] request = {1,2,2,1};
-        int[] request2 = {2,2};
-        intersection(request, request2); */
-//        System.out.println(firstUniqChar("loveleetcode"));
-//        String[] r = {"eat","tea","tan","ate","nat","bat"};
-//        groupAnagrams(r);
+        public boolean search(String word) {
+            Pattern p = Pattern.compile('#' + word + '#');
+            Matcher m = p.matcher(sb.toString());
+            return m.find();
+        }
+    }
 
-//        char[][] r = {{'5','3','.','.','7','.','.','.','.'},{'6','.','.','1','9','5','.','.','.'},{'.','9','8','.','.','.','.','6','.'},{'8','.','.','.','6','.','.','.','3'},{'4','.','.','8','.','3','.','.','1'},{'7','.','.','.','2','.','.','.','6'},{'.','6','.','.','.','.','2','8','.'},{'.','.','.','4','1','9','.','.','5'},{'.','.','.','.','8','.','.','7','9'}};
-//        isValidSudoku(r);
-//        Leetcodes l = new Leetcodes();
-//        TreeNode root1 = l.new TreeNode(1);
-//        TreeNode root2 = l.new TreeNode(2);
-//        TreeNode root3 = l.new TreeNode(3);
-//        TreeNode root4 = l.new TreeNode(4);
-//        TreeNode root5 = l.new TreeNode(2);
-//        TreeNode root6 = l.new TreeNode(4);
-//        TreeNode root7 = l.new TreeNode(4);
+    static class WordDictionary {
+
+        private TrieNode root;
+
+        class TrieNode {
+            boolean isWord;
+            Map<Character, TrieNode> children = new HashMap<>();
+        }
+
+        /**
+         * Initialize your data structure here.
+         */
+        public WordDictionary() {
+            root = new TrieNode();
+        }
+
+        /**
+         * Adds a word into the data structure.
+         */
+        public void addWord(String word) {
+            char[] words = word.toCharArray();
+            TrieNode cur = root;
+            for (int i = 0; i < words.length; i++) {
+                if (cur.children.containsKey(words[i])) {
+                    if (i == words.length - 1) {
+                        cur.children.get(words[i]).isWord = true;
+                    }
+                } else {
+                    TrieNode t = new TrieNode();
+                    if (i == words.length - 1) {
+                        t.isWord = true;
+                    }
+                    cur.children.put(words[i], t);
+                }
+                cur = cur.children.get(words[i]);
+            }
+        }
+
+        /**
+         * Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter.
+         */
+        public boolean search(String word) {
+            char[] words = word.toCharArray();
+            return search(words, 0, words.length, root);
+        }
+
+        public boolean search(char[] words, int start, int end, TrieNode root) {
+            TrieNode cur = root;
+            for (int i = start; i < end; i++) {
+                char w = words[i];
+                if (w == '.') {
+                    for (TrieNode tmp : cur.children.values()) {
+                        if (search(words, i + 1, words.length, tmp)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                } else {
+                    if (!cur.children.containsKey(w)) {
+                        return false;
+                    }
+                    cur = cur.children.get(w);
+                }
+            }
+            return cur.isWord;
+        }
+    }
+
+    class WordDictionary1 {
+
+        private List<String> cache;
+
+        class TrieNode {
+            boolean isWord;
+            Map<Character, TrieNode> children = new HashMap<>();
+        }
+
+        /**
+         * Initialize your data structure here.
+         */
+        public WordDictionary1() {
+            cache = new LinkedList<>();
+        }
+
+        /**
+         * Adds a word into the data structure.
+         */
+        public void addWord(String word) {
+            cache.add(word);
+        }
+
+        /**
+         * Returns if the word is in the data structure. A word could contain the dot character '.' to represent any one letter.
+         */
+        public boolean search(String word) {
+            Iterator<String> itr = cache.iterator();
+            while (itr.hasNext()) {
+                if (itr.next().matches(word)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    public static String replaceWords(List<String> dict, String sentence) {
+        String[] words = sentence.split("\\s+");
+        for (int i = 0; i < words.length; i++) {
+            for (String s : dict) {
+                if (words[i].startsWith(s)) {
+                    words[i] = s;
+                }
+            }
+        }
+        return String.join(" ", words);
+    }
+
+    class MapSum {
+
+        class TrieNode {
+            public Map<Character, TrieNode> children = new HashMap<>();
+            public boolean isWord;
+            public int value;
+
+            public TrieNode(int value) {
+                this.value = value;
+            }
+        }
+
+        public TrieNode root;
+
+        /**
+         * Initialize your data structure here.
+         */
+        public MapSum() {
+            root = new TrieNode(0);
+        }
+
+        public void insert(String key, int val) {
+            char[] keys = key.toCharArray();
+            TrieNode cur = root;
+            for (int i = 0; i < keys.length; i++) {
+                if (cur.children.containsKey(keys[i])) {
+                    if (i == keys.length - 1) {
+                        cur.children.get(keys[i]).value = val;
+                        cur.children.get(keys[i]).isWord = true;
+                    }
+                } else {
+                    if (i == keys.length - 1) {
+                        TrieNode tmp = new TrieNode(val);
+                        tmp.isWord = true;
+                        cur.children.put(keys[i], tmp);
+                    } else {
+                        cur.children.put(keys[i], new TrieNode(0));
+                    }
+                }
+                cur = cur.children.get(keys[i]);
+            }
+        }
+
+        public int sum(String prefix) {
+            char[] prefixs = prefix.toCharArray();
+            TrieNode cur = root;
+            int sum = 0;
+            for (int i = 0; i < prefixs.length; i++) {
+                if (!cur.children.containsKey(prefixs[i])) {
+                    return sum;
+                }
+                cur = cur.children.get(prefixs[i]);
+            }
+            sum += sumValueOfSubString(cur);
+            return sum;
+        }
+
+        private int sumValueOfSubString(TrieNode root) {
+            int sum = 0;
+            if (root.isWord) { //当前节点是否是单词
+                sum += root.value;
+            }
+            for (TrieNode node : root.children.values()) { //子节点是否是单词
+                sum += sumValueOfSubString(node);
+            }
+            return sum;
+        }
+    }
+
+//    classMapSum {
 //
-//        root1.left = root2;
-//        root2.left = root4;
-//        root1.right = root3;
-//        root3.right = root6;
-//        root3.left = root5;
-//        root5.left = root7;
-//        findDuplicateSubtrees(root1);
-//          int[] nums = {-1,-1};
-//          topKFrequent(nums, 1);
-
-//        MyCircularQueue m = new MyCircularQueue(3);
-//        m.enQueue(1);
-//        m.enQueue(2);
-//        m.enQueue(3);
-//        m.enQueue(4);
-//        m.Rear();
-//        m.isFull();
-//        m.deQueue();
-//        m.enQueue(4);
-//        m.Rear();
-
-//        char[] a0 = {'1','1','1','1','1','0','1','1','1','1','1','1','1','1','1','0','1','0','1','1'
-//        };
-//        char[] a1 = {'0','1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','0'
-//        };
-//        char[] a2 = {'1','0','1','1','1','0','0','1','1','0','1','1','1','1','1','1','1','1','1','1'
-//        };
-//        char[] a3 = {'1','1','1','1','0','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-//        };
-//        char[] a4 = {'1','0','0','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-//        };
-//        char[] a5 = {'1','0','1','1','1','1','1','1','0','1','1','1','0','1','1','1','0','1','1','1'
-//        };
-//        char[] a6 = {'0','1','1','1','1','1','1','1','1','1','1','1','0','1','1','0','1','1','1','1'
-//        };
-//        char[] a7 = {'1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','0','1','1'
-//        };
-//        char[] a8 = {'1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','1','1','1','1'
-//        };
-//        char[] a9 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-//        };
-//        char[] a10 = {'0','1','1','1','1','1','1','1','0','1','1','1','1','1','1','1','1','1','1','1'
-//        };
-//        char[] a11 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-//        };
-//        char[] a12 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-//        };
-//        char[] a13 = {'1','1','1','1','1','0','1','1','1','1','1','1','1','0','1','1','1','1','1','1'
-//        };
-//        char[] a14 = {'1','0','1','1','1','1','1','0','1','1','1','0','1','1','1','1','0','1','1','1'
-//        };
-//        char[] a15 = {'1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','1','1','0'
-//        };
-//        char[] a16 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','0','1','1','1','1','0','0'
-//        };
-//        char[] a17 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-//        };
-//        char[] a18 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-//        };
-//        char[] a19 = {'1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'
-//        };
+//        private Map<String, Integer> cache;
 //
-//        char[][] grad = new char[20][20];
-//        grad[0]= a0;
-//        grad[1]= a1;
-//        grad[2]= a2;
-//        grad[3]= a3;
-//        grad[4]= a4;
-//        grad[5]= a5;
-//        grad[6]= a6;
-//        grad[7]= a7;
-//        grad[8]= a8;
-//        grad[9]= a9;
-//        grad[10]= a10;
-//        grad[11]= a11;
-//        grad[12]= a12;
-//        grad[13]= a13;
-//        grad[14]= a14;
-//        grad[15]= a15;
-//        grad[16]= a16;
-//        grad[17]= a17;
-//        grad[18]= a18;
-//        grad[19]= a19;
-//
-//
-//        System.out.println(numIslandsDFS(grad));
-
-//        String[] req = {"0000"};
-//        String target = "8888";
-//        System.out.println(openLock(req, target));
-
-//        List<Integer> a = new LinkedList<>();
-//        a.add(1);
-//        a.add(0);
-//        a.add(8);
-//        a.add(1);
-//        System.out.println(a.indexOf(1));
-//        System.out.println(a.lastIndexOf(1) == a.indexOf(1));
-
-//        System.out.println(isValid("()[]{}"));
-//        String[] tokens = {"4","13","5","/","+"};
-//        int i = evalRPN(tokens);
-
-//        List<List<Integer>> req = new ArrayList<>();
-//        List<Integer> r0 = new ArrayList<>();
-//        r0.add(1);
-//        List<Integer> r1 = new ArrayList<>();
-//        r1.add(2);
-//        List<Integer> r2 = new ArrayList<>();
-//        r2.add(3);
-//
-//        req.add(r0);
-//        req.add(r1);
-//        req.add(r2);
-//        req.add(new ArrayList<>());
-//
-//        canVisitAllRooms(req);
-
-//        int[] req = {-1,0,3,5,9,12};
-//        search(req, 9);
-//        System.out.println(mySqrt(2147395599));
-//        System.out.println(guessNumber(2126753390));
-        int[] nums1 = {3, 9, 20, 15, 7};
-        int[] nums2 = {9, 3, 15, 20, 7};
-//        System.out.println(findDuplicate(nums));
-//        System.out.println(nextGreatestLetter(nums, 'c'));
-//        System.out.println(search1(nums, 3));
-//        System.out.println(isPerfectSquare(808201));
-//        System.out.println(findMin(nums));
-//        System.out.println(buildTree(nums1, nums2));
-//        List<Integer> a = Arrays.asList(1);
-//        System.out.println(a.toString().substring(1, a.toString().length() - 1));
-//        System.out.println(a.toString());
-//        Stack<TreeNode> stack = new Stack<>();
-//        int a = 5;
-//        while (a != 9) {
-//            a++;
-//            if (a == 7) {
-//                break;
-//            }
-//            System.out.println(a);
+//        /**
+//         * Initialize your data structure here.
+//         */
+//        public MapSum() {
+//            cache = new HashMap<>();
 //        }
-//        System.out.println(a);
-//        TreeNode root = new TreeNode(3);
-//        root.right = new TreeNode(4);
-//        root.right.right = new TreeNode(5);
-//        root.left.left = new TreeNode(2);
-//        root.left.right = new TreeNode(4);
-//        deleteNode(root, 3);
-        int k = 3;
-        int[] arr = {4, 5, 8, 2};
-        Leetcodes a = new Leetcodes();
-        KthLargest kthLargest = a.new KthLargest(3, arr);
-        kthLargest.add(3);   // returns 4
-        kthLargest.add(5);   // returns 5
-        kthLargest.add(10);  // returns 5
-        kthLargest.add(9);   // returns 8
-        kthLargest.add(4);   // returns 8
+//
+//        public void insert(String key, int val) {
+//            cache.put(key, val);
+//        }
+//
+//        public int sum(String prefix) {
+//            int sum = 0;
+//            for (Map.Entry<String, Integer> entry:cache.entrySet()) {
+//                if (entry.getKey().startsWith(prefix)) {
+//                    sum += entry.getValue();
+//                }
+//            }
+//            return sum;
+//        }
+//    }
+
+    static class Trie {
+
+        TrieNode root;
+
+        /**
+         * Initialize your data structure here.
+         */
+        public Trie() {
+            root = new TrieNode('0');
+        }
+
+        class TrieNode {
+            public Character value;
+            public boolean isWord;
+            public Map<Character, TrieNode> children = new HashMap<>();
+
+            public TrieNode(Character value) {
+                this.value = value;
+            }
+        }
+
+        /**
+         * Inserts a word into the trie.
+         */
+        public void insert(String word) {
+            char[] words = word.toCharArray();
+            TrieNode cur = root;
+            for (int i = 0; i < words.length; i++) {
+                TrieNode trieNode = cur.children.get(words[i]);
+                if (null == trieNode) {
+                    TrieNode tmp = new TrieNode(words[i]);
+                    if (i == words.length - 1) {
+                        tmp.isWord = true;
+                    }
+                    cur.children.put(words[i], tmp);
+                } else {
+                    if (i == words.length - 1) {
+                        trieNode.isWord = true;
+                    }
+                }
+                cur = cur.children.get(words[i]);
+            }
+        }
+
+        /**
+         * Returns if the word is in the trie.
+         */
+        public boolean search(String word) {
+            char[] words = word.toCharArray();
+            TrieNode cur = root;
+            for (int i = 0; i < words.length - 1; i++) {
+                TrieNode trieNode = cur.children.get(words[i]);
+                if (null == trieNode) {
+                    return false;
+                }
+                cur = cur.children.get(words[i]);
+            }
+//            if (null != cur.children.get(words[words.length - 1]) && cur.children.get(words[words.length - 1]).children.size() == 0) {
+//                return true;
+//            }
+            if (null != cur.children.get(words[words.length - 1]) && cur.children.get(words[words.length - 1]).isWord) {
+                return true;
+            }
+            return false;
+        }
+
+        /**
+         * Returns if there is any word in the trie that starts with the given prefix.
+         */
+        public boolean startsWith(String prefix) {
+            char[] prefixs = prefix.toCharArray();
+            TrieNode cur = root;
+            for (int i = 0; i < prefixs.length; i++) {
+                TrieNode trieNode = cur.children.get(prefixs[i]);
+                if (null == trieNode) {
+                    return false;
+                }
+                cur = cur.children.get(prefixs[i]);
+            }
+            return true;
+        }
+    }
+
+    public int maxDepth(Node root) {
+        if (null == root) {
+            return 0;
+        }
+        int maxDepth = 0;
+        if (null != root.children) {
+            List<Node> children = root.children;
+            for (int i = 0; i < children.size(); i++) {
+                Node child = children.get(i);
+                int depth = maxDepth(child);
+                maxDepth = maxDepth > depth ? maxDepth : depth;
+            }
+        }
+        return maxDepth + 1;
+    }
+
+    public List<List<Integer>> levelOrder(Node root) {
+        List<List<Integer>> result = new LinkedList<>();
+        if (null == root) {
+            return result;
+        }
+        Queue<Node> queue = new LinkedList<>();
+        queue.offer(root);
+        int level = 0;
+        while (!queue.isEmpty()) {
+            result.add(new ArrayList<>());
+            int itemSize = queue.size();
+            for (int i = 0; i < itemSize; i++) {
+                Node levelItem = queue.poll();
+                result.get(level).add(levelItem.val);
+                if (null != levelItem.children) {
+                    queue.addAll(levelItem.children);
+                }
+            }
+            level++;
+        }
+        return result;
+    }
+
+    public List<Integer> preorder(Node root) {
+        List<Integer> result = new ArrayList<>();
+        if (null == root) {
+            return result;
+        }
+        LinkedList<Node> stack = new LinkedList<>();
+        stack.offer(root);
+        while (!stack.isEmpty()) {
+            Node poll = stack.pollLast();
+            result.add(poll.val);
+            List<Node> children = poll.children;
+            if (null != children && children.size() > 0) {
+                for (int i = children.size() - 1; i >= 0; i--) {
+                    stack.offer(children.get(i));
+                }
+            }
+        }
+        return result;
+    }
+
+    public List<Integer> preorder1(Node root) {
+        List<Integer> result = new ArrayList<>();
+        if (null == root) {
+            return result;
+        }
+
+        if (null != root.children) {
+            List<Node> children = root.children;
+            for (Node node : children) {
+                List<Integer> preorder = preorder(node);
+                result.addAll(preorder);
+            }
+        }
+        result.add(root.val);
+        return result;
+    }
+
+
+    public static TreeNode sortedArrayToBST(int[] nums) {
+        if (null == nums) {
+            return null;
+        }
+        return sortedArrayToBST(nums, 0, nums.length - 1);
+    }
+
+    public static TreeNode sortedArrayToBST(int[] nums, int left, int right) {
+        if (left > right) {
+            return null;
+        }
+        int midIdx = (left + right) / 2;
+        TreeNode root = new TreeNode(nums[midIdx]);
+        root.left = sortedArrayToBST(nums, left, midIdx - 1);
+        root.right = sortedArrayToBST(nums, midIdx + 1, right);
+        return root;
+    }
+
+
+    public boolean isBalanced(TreeNode root) {
+        if (null == root) {
+            return true;
+        }
+        int leftDepth = maxDepth1(root.left);
+        int rightDepth = maxDepth1(root.right);
+        return Math.abs(leftDepth - rightDepth) < 2 && isBalanced(root.left) && isBalanced(root.right);
+    }
+
+    public int maxDepth1(TreeNode root) {
+        if (root == null) {
+            return 0;                                   // return 0 for null node
+        }
+        int leftDepth = maxDepth(root.left);
+        int rightDepth = maxDepth(root.right);
+        return Math.max(leftDepth, rightDepth) + 1;    // return depth of the subtree rooted at root
+    }
+
+    public static boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+        if (k == 0 || k == 10000) {
+            return false;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = 1; j <= k; j++) {
+                if (i + j < nums.length && Math.abs((long) nums[i] - (long) nums[i + j]) <= t) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     class KthLargest {
@@ -1790,7 +2134,9 @@ public class Leetcodes {
                 private TreeNode left;
                 private TreeNode right;
 
-                TreeNode(int x) { val = x; }
+                TreeNode(int x) {
+                    val = x;
+                }
             }
 
             private TreeNode root;
@@ -1824,7 +2170,7 @@ public class Leetcodes {
                 int leftNodeCount = node.left != null ? node.left.count : 0;
                 int rightNodeCount = node.right != null ? node.right.count : 0;
                 int currNodeCount = node.count - leftNodeCount - rightNodeCount;
-                if (k > currNodeCount + rightNodeCount ) {
+                if (k > currNodeCount + rightNodeCount) {
                     // k > 当前结点数加右子树的结点数，则搜索左子树
                     return search(node.left, k - currNodeCount - rightNodeCount);
                 } else if (k <= rightNodeCount) {
@@ -1876,6 +2222,7 @@ public class Leetcodes {
             }
             return cache.peek();
         }
+
     }
 
 

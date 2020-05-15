@@ -44,11 +44,23 @@ public class Test {
     }
 
     public static void main(String[] args) {
-        Executors.newFixedThreadPool(2);
-        ReentrantLock r;
-        Executors.newWorkStealingPool();
-        new Thread().start();
-        int[] a = {1,7,3,6,5,9};
-        plusOne(a);
+//        Executors.newFixedThreadPool(2);
+//        ReentrantLock r;
+//        Executors.newWorkStealingPool();
+//        new Thread().start();
+//        int[] a = {1,7,3,6,5,9};
+//        plusOne(a);
+        invoke(null, 1);
+        invoke(null, 1, 2);
+        invoke(null, new Object[]{1});
     }
+
+    static void invoke(Object obj, Object... args) {
+        System.out.println(1);
+    }
+
+    static void invoke(String s, Object obj, Object... args) {
+        System.out.println(2);
+    }
+
 }
