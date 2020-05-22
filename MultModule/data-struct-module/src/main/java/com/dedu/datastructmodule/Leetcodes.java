@@ -7,7 +7,208 @@ import java.util.regex.Pattern;
 public class Leetcodes {
 
     public static void main(String[] args) {
-        lengthOfLastWord("a");
+        int[] time = {3,3,6,5,-2,2,5,1,-9,4};
+        divisorGame(4);
+    }
+
+    public static boolean divisorGame(int N) {
+        if (N == 1) { //爱丽丝先手，爱丽丝找不到一个数x如何题目要求
+            return false;
+        }
+        boolean[] dp = new boolean[N + 1];
+        dp[1] = false;
+        dp[2] = true;
+        for (int i = 3; i <= N; i++) { //依次寻找N前面的数i，并计算结果结果直到推算到N结束。
+            dp[i] = false; //首先置为false;
+            for (int x = 1; x < i; x++) {
+                if (i % x == 0 && (dp[i - x] == false)) { //对于当前数i，如果找到一个i的约数x且当前玩家操作完i之后，另一个玩家的无法继续操作，即为false，则当前玩家操作结果为true
+                    dp[i] = true;
+                    break; //只需要找到那么一个数x即可
+                }
+            }
+        }
+        return dp[N];
+    }
+
+    public static boolean canThreePartsEqualSum(int[] A) {
+        int totalNum = 0;
+        for (int num : A) {
+            totalNum += num;
+        }
+        if (totalNum % 3 != 0) {
+            return false;
+        }
+        int subTotalNum = resetSubTotalNum();
+        int trisection = totalNum / 3;
+        int trisectionNum = 0;
+        for (int num : A) {
+            subTotalNum += num;
+            if (subTotalNum == trisection) {
+                subTotalNum = resetSubTotalNum();
+                trisectionNum++;
+                if (trisectionNum > 2) {
+                    return true;
+                }
+            }
+        }
+        if (subTotalNum == 0) {
+            return trisectionNum > 2;
+        } else {
+            return false;
+        }
+    }
+
+    private static int resetSubTotalNum() {
+        return 0;
+    }
+
+    public static int numPairsDivisibleBy60(int[] time) {
+        int result = 0;
+        int[] cache = new int[60];
+        for (int t : time) {
+            int temp = t % 60;
+            cache[temp] += 1;
+        }
+        for (int i : time) {
+            int temp = i % 60;
+            if (temp != 30) {
+                if (temp != 0) {
+                    result += cache[60 - temp];
+                } else {
+                    result += (cache[0] - 1);
+                }
+            } else {
+                if (cache[30] != 1) {
+                    result += cache[30] - 1;
+                }
+            }
+        }
+        return result / 2;
+//        for (int i = 0; i < time.length; i++) {
+//            for (int j = i + 1; j < time.length; j++) {
+//                if ((time[i] + time[j]) % 60 == 0) {
+//                    result++;
+//                }
+//            }
+//        }
+//        return result;
+    }
+
+    public int numPairsDivisibleBy601(int[] time) {
+        int result = 0;
+        for (int i = 0; i < time.length; i++) {
+            for (int j = i + 1; j < time.length; j++) {
+                if ((time[i] + time[j]) % 60 == 0) {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
+    public static void merge(int[] nums1, int m, int[] nums2, int n) {
+        if (null == nums1 || nums1.length < (m + n)) {
+            return;
+        }
+        Queue<Integer> cacheQueue = new LinkedList<>();
+        for (int i = 0; i < m; i++) {
+            cacheQueue.offer(nums1[i]);
+        }
+        int nums2Idx = 0;
+        for (int j = 0; j < nums1.length; j++) {
+            Integer num1 = cacheQueue.peek();
+            if (nums2Idx < n) {
+                int num2 = nums2[nums2Idx];
+                if (num1 == null || num1 > num2) {
+                    nums1[j] = num2;
+                    nums2Idx++;
+                } else {
+                    nums1[j] = cacheQueue.poll();
+                }
+            } else {
+                nums1[j] = cacheQueue.poll();
+            }
+        }
+    }
+
+    // 1 1 1 1 2
+    // 1 2 3 3 4 5
+    // 1 2 3 4 4
+    // 1->2->3->3->4->4->5
+    public static ListNode deleteDuplicates(ListNode head) {
+        if (null == head) {
+            return null;
+        }
+        ListNode cur = head;
+        Stack<ListNode> stack = new Stack<>();
+        while (cur != null) {
+            if (cur != null && cur.next != null && cur.val != cur.next.val) {
+                stack.push(cur);
+                cur = cur.next;
+            } else if (cur != null && cur.next != null && cur.val == cur.next.val) {
+                while (null != cur && null != cur.next && cur.val == cur.next.val) {
+                    cur = cur.next;
+                }
+                ListNode fatherListNode = null;
+                if (!stack.isEmpty()) {
+                    fatherListNode = stack.peek();
+                    fatherListNode.next = cur.next;
+                    cur = cur.next;
+                } else {
+                    head = cur.next;
+                    cur = head;
+                }
+            } else {
+                cur = cur.next;
+            }
+        }
+        return head;
+    }
+
+    public ListNode deleteDuplicates2(ListNode head) {
+        if (null == head) {
+            return null;
+        }
+        HashSet<Integer> cache = new HashSet<>();
+        ListNode cur = head;
+        ListNode curNext = head.next;
+        cache.add(cur.val);
+        while (curNext != null) {
+            Integer curNextNum = curNext.val;
+            if (cache.contains(curNextNum)) {
+                cur.next = curNext.next;
+                curNext = cur.next;
+            } else {
+                cur = cur.next;
+                curNext = cur.next;
+                cache.add(curNextNum);
+            }
+        }
+        return head;
+    }
+
+    public static int climbStairs(int n) {
+        int[] dp = new int[n + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        dp[2] = 2;
+        for (int i = 2; i < n + 1; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        return dp[n];
+    }
+
+    public static int climbStairs1(int n) {
+        if (n == 0) {
+            return 0;
+        } else if (n == 1) {
+            return 1;
+        } else if (n == 2) {
+            return 2;
+        }
+        int result1 = climbStairs1(n - 1);
+        int result2 = climbStairs1(n - 2);
+        return result1 + result2;
     }
 
     public static int lengthOfLastWord(String s) {
