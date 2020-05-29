@@ -7,8 +7,359 @@ import java.util.regex.Pattern;
 public class Leetcodes {
 
     public static void main(String[] args) {
-        int[] time = {3,3,6,5,-2,2,5,1,-9,4};
-        divisorGame(4);
+        int[] nums = {1,5,1};
+        nextPermutation(nums);
+    }
+
+    public static void nextPermutation(int[] nums) {
+        if (null == nums || nums.length < 2) {
+            return;
+        }
+        int idx = nums.length - 1;
+        while (idx > 0) {
+            if (nums[idx] > nums[idx - 1]) {
+                break;
+            }
+            idx--;
+        }
+        if (idx == 0) {
+            Arrays.sort(nums);
+            return;
+        }
+        int i = nums.length - 1;
+        while (nums[i] <= nums[idx - 1]) {
+            i--;
+        }
+        int temp = nums[idx - 1];
+        nums[idx - 1] = nums[i];
+        nums[i] = temp;
+        Arrays.sort(nums, idx, nums.length);
+    }
+
+    public List<String> generateParenthesis(int n) {
+        List<String> result = new ArrayList<>();
+        if (n == 0) {
+            return result;
+        }
+        StringBuilder sb = new StringBuilder();
+        backtrack(sb, n, n, result);
+        return result;
+    }
+
+    private void backtrack(StringBuilder sb, int left, int right, List<String> result) {
+        if (left == 0 && right == 0) {
+            result.add(sb.toString());
+        }
+
+        if (left > right) {//正常生成顺序来讲，右括号都是比左括号多
+            return;
+        }
+
+        if (left > 0) {
+            sb.append("(");
+            int curLength = sb.length();
+            backtrack(sb, left - 1, right, result);
+            sb.deleteCharAt(curLength - 1);
+        }
+        if (right > 0) {
+            sb.append(")");
+            int curLength = sb.length();
+            backtrack(sb, left, right - 1, result);
+            sb.deleteCharAt(curLength - 1);
+        }
+    }
+
+    public List<String> generateParenthesis1(int n) {
+        List<String> result = new ArrayList<>();
+        if (n == 0) {
+            return result;
+        }
+        int left = n, right = n;
+        dfs1("", left, right, result);
+        return result;
+    }
+
+    private void dfs1(String curString, int left, int right, List<String> result) {
+        if (left == 0 && right == 0) { //如果可用左括号和右括号都为0，则添加结果
+            result.add(curString);
+            return;
+        }
+        if (left > right) { //如果可用的左括号比右括号多，则进行剪枝，因为可用的右括号永远比左括号少即right>left，第一个符号就是左括号
+            return;
+        }
+        if (left > 0) { //如果还有可用的左括号，则这个是结果集分支之一
+            dfs1(curString + "(", left - 1, right, result);
+        }
+        if (right > left) { //如果可用的右括号比左括号多，则添加一个右括号为结果集之一，注意，如果左括号和右括号相等，不能添加，因为总是以左括号开始。
+            dfs1(curString + ")", left, right - 1, result);
+        }
+    }
+
+    public static List<String> letterCombinations(String digits) {
+        List<String> result = new LinkedList<>(); //结果队列
+        if (null == digits || digits.length() == 0) {
+            return result;
+        }
+        Map<Character, char[]> nums = new HashMap<>();
+        nums.put('2', new char[]{'a', 'b', 'c'});
+        nums.put('3', new char[]{'d', 'e', 'f'});
+        nums.put('4', new char[]{'g', 'h', 'i'});
+        nums.put('5', new char[]{'j', 'k', 'l'});
+        nums.put('6', new char[]{'m', 'n', 'o'});
+        nums.put('7', new char[]{'p', 'q', 'r', 's'});
+        nums.put('8', new char[]{'t', 'u', 'v'});
+        nums.put('9', new char[]{'w', 'x', 'y', 'z'});
+        result.add(""); //使得第一次循环可进行
+        for (int i = 0; i < digits.length(); i++) {
+            char[] chooses = nums.get(digits.charAt(i)); //每一轮的可选择项
+            int queueSize = result.size();
+            for (int j = 0; j < queueSize; j++) {
+                String tmp = result.remove(0);
+                for (int k = 0; k < chooses.length; k++) {
+                    result.add(tmp + chooses[k]);
+                }
+            }
+        }
+        return result;
+    }
+
+    class Solution {
+        List<String> result = new ArrayList<>();
+
+        public List<String> letterCombinations(String digits) {
+            if (null == digits || digits.length() == 0) {
+                return result;
+            }
+            Map<Character, char[]> nums = new HashMap<>();
+            nums.put('2', new char[]{'a', 'b', 'c'});
+            nums.put('3', new char[]{'d', 'e', 'f'});
+            nums.put('4', new char[]{'g', 'h', 'i'});
+            nums.put('5', new char[]{'j', 'k', 'l'});
+            nums.put('6', new char[]{'m', 'n', 'o'});
+            nums.put('7', new char[]{'p', 'q', 'r', 's'});
+            nums.put('8', new char[]{'t', 'u', 'v'});
+            nums.put('9', new char[]{'w', 'x', 'y', 'z'});
+            List<Character> track = new LinkedList<>(); //用于追踪路径
+            backtrack(nums, digits, track);
+            return result;
+        }
+
+        private void backtrack(Map<Character, char[]> nums, String digits, List<Character> track) {
+            if (track.size() == digits.length()) { //如果追踪的路径等于目标的深度，则停止追踪
+                StringBuilder sb = new StringBuilder();
+                for (Character c : track) {
+                    sb.append(c);
+                }
+                result.add(sb.toString());
+                return;
+            }
+            char digit = digits.charAt(track.size()); //获取选择列表
+            char[] chooses = nums.get(digit);
+            for (int i = 0; i < chooses.length; i++) {
+                track.add(chooses[i]);//针对每一种选择，添加进结果集，并继续追踪
+                backtrack(nums, digits, track);//继续追踪
+                track.remove(track.size() - 1);//追踪完后，为了当前选择不影响下一个选择，去除掉当前选择
+            }
+        }
+    }
+
+    public static List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (null == nums || nums.length < 3) {
+            return result;
+        }
+        Arrays.sort(nums);//先进行排序，方便双指针查找
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] > 0) {
+                break; //如果当前数大于0，则后面的所有组合一定大于0
+            }
+            if (i != 0 && nums[i - 1] == nums[i]) { //排序后，遍历时去重
+                continue;
+            }
+            int left = i + 1;
+            int right = nums.length - 1;
+            while (left < right) {
+                int sum = nums[left] + nums[right] + nums[i];
+                if (sum > 0) {
+                    right--;
+                } else if (sum < 0) {
+                    left++;
+                } else { //sum==0
+                    result.add(Arrays.asList(nums[i], nums[left], nums[right]));
+                    while (left < right && nums[left] == nums[left + 1]) {//这里不会越界，因为不会超过right
+                        left++;//这里是去重
+                    }
+                    while (left < right && nums[right] == nums[right - 1]) {
+                        right--;
+                    }
+                    left++;//移动指针
+                    right--;
+                }
+            }
+        }
+        return result;
+    }
+
+    public static List<List<Integer>> threeSum1(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (null == nums || nums.length < 3) {
+            return result;
+        }
+        Set<Integer> cache = new HashSet<>();
+        List<Integer> zeroIdxList = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) { //对0进行单独处理
+                zeroIdxList.add(i);
+            }
+            cache.add(nums[i]);
+        }
+        Set<String> addCache = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = i + 1; j < nums.length; j++) {
+                int target = 0 - (nums[i] + nums[j]);
+                //如果缓存中有目标值，且目标值不等于本身（因为缓存中存了本身），且之前没有被添加过，则是结果之一
+                if (cache.contains(target) && target != nums[i] && target != nums[j] && !isAdded(addCache, nums[i], nums[j], target)) {
+                    List<Integer> tmp = new ArrayList<>();
+                    tmp.add(nums[i]);
+                    tmp.add(nums[j]);
+                    tmp.add(target);
+                    result.add(tmp);
+                }
+            }
+        }
+        //上面循环中的目标值不等于本身判断把0这种特殊情况给排除了，这里进行补偿
+        if (zeroIdxList.size() >= 3) {
+            List<Integer> tmp = new ArrayList<>();
+            tmp.add(0);
+            tmp.add(0);
+            tmp.add(0);
+            result.add(tmp);
+        }
+        return result;
+    }
+
+    private static boolean isAdded(Set<String> addCache, int num, int num1, int num2) {
+        int middleMax = Math.max(num, num1);
+        int max = Math.max(middleMax, num2);
+        int middleMin = Math.min(num, num1);
+        int min = Math.min(middleMin, num2);
+        String cache = min + "#" + max;
+        if (addCache.contains(cache)) {
+            return true;
+        }
+        addCache.add(cache);
+        return false;
+    }
+
+    public static String longestPalindrome(String s) {
+        if (null == s || s.length() < 2) {
+            return s;
+        }
+        int startIdx = 0; //定义最长回文串的开始索引
+        int maxLength = 1; //定义最长回文串的长度，则这个串为s.subString(startIdx, startIdx + maxLength)，这里maxLength至少为一个字符
+
+        boolean[][] dp = new boolean[s.length()][s.length()]; //定义（i,j）即为s的subString(i,j)是否为回文串
+
+        for (int i = 0; i < s.length(); i++) {
+            dp[i][i] = true; //单个字符肯定是回文串
+        }
+
+        for (int i = 1; i < s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (s.charAt(i) != s.charAt(j)) {
+                    dp[j][i] = false;
+                } else {
+                    if (((i - 1) - (j + 1) + 1) < 2) { //如果子串长度小于2，且两边两个字符相等，则该字符串为回文串
+                        dp[j][i] = true;
+                    } else {
+                        dp[j][i] = dp[j + 1][i - 1]; //如果子串长度大于2，且两边两个字符相等，则该字符串取决于子串是否为回文串
+                        //这里的dp[j+1][i-1]已经被赋值过，可将dp看成矩阵，i为x轴，j为y轴，x从0开始，每次查询时，x轴固定，y轴遍历所有，所以(j,i)的左下角元素(j+1,i-1)已赋值。
+                    }
+                }
+                if (dp[j][i] && (i - j + 1) > maxLength) { //如果该串为回文串，则看是否是最大回文串
+                    maxLength = i - j + 1;
+                    startIdx = j;
+                }
+            }
+        }
+        return s.substring(startIdx, startIdx + maxLength);
+    }
+
+    public static String longestPalindrome1(String s) {
+        if (null == s || s.length() < 2) {
+            return s;
+        }
+        String result = "";
+        int maxLength = 0;
+        for (int i = 0; i < s.length(); i++) { //从第一个字符开始
+            for (int j = i + 1; j <= s.length(); j++) { //开始后，从上面字符的下一个字符开始到整个字符串长度，每次遍历所有子串，看是否满足回文判断
+                String subString = s.substring(i, j);
+                if (subString.length() > maxLength && isPalindrome(subString)) { //这里可以做一个优化，对于长度不符合的字串，不用校验了，原版是 isPalindrome(subString) && subString.length() > maxLength
+                    result = subString;
+                    maxLength = subString.length();
+                }
+            }
+        }
+        return result;
+    }
+
+    private static boolean isPalindrome(String subString) {
+        int start = 0;
+        int end = subString.length() - 1;
+        while (start < end) {
+            if (subString.charAt(start) != subString.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+
+    public boolean checkSubarraySum(int[] nums, int k) {
+        if (null == nums || nums.length < 2) {
+            return false;
+        }
+        Map<Integer, Integer> cache = new HashMap<>(); //Map缓存sum对k的余数与对应的索引（因为(sum[j]−sum[i])%k==0, 所以sum[j]%k=sum[i]%k且j-i大于等于2即可）
+        int sum = 0;
+        cache.put(0, -1);
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            if (k != 0) {
+                sum = sum % k;
+            }
+            if (cache.containsKey(sum)) {
+                if ((i - cache.get(sum)) >= 2) {
+                    return true;
+                } else {
+                    continue;
+                }
+            } else {
+                cache.put(sum, i);
+            }
+        }
+        return false;
+    }
+
+    public boolean checkSubarraySum1(int[] nums, int k) {
+        if (null == nums || nums.length < 2) {
+            return false;
+        }
+        int sum = 0;
+        int[] preSum = new int[nums.length + 1];//nums中对应idx的前缀和，不包含idx元素
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            preSum[i + 1] = sum;
+        }
+        for (int i = 0; i < preSum.length; i++) {
+            for (int j = i + 2; j < preSum.length; j++) {
+                int temp = preSum[j] - preSum[i];//对于任意两个前缀和a与b，a-b即为中间连续子数组和，所以遍历子数组大小为2及以上所有子数组，看是否满足条件
+                if ((k == 0 && temp == 0) || (k != 0 && temp % k == 0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static boolean divisorGame(int N) {
