@@ -7,8 +7,235 @@ import java.util.regex.Pattern;
 public class Leetcodes {
 
     public static void main(String[] args) {
-        int[] nums = {1,5,1};
-        nextPermutation(nums);
+        monotoneIncreasingDigits(777616726);
+    }
+
+    public static int monotoneIncreasingDigits(int N) {
+        if (N < 10) {
+            return N;
+        }
+        char[] chars = String.valueOf(N).toCharArray();
+        for (int i = chars.length - 2; i >= 0; i--) {
+            if (chars[i] > chars[i + 1]) {
+                chars[i]--;
+                for (int j=i+1; j<chars.length; j++) {
+                    chars[j] = '9';
+                }
+            }
+        }
+        return Integer.parseInt(String.valueOf(chars));
+    }
+
+    private static boolean isMonotoneIncreasingDigits(int t) {
+        if (t < 10) {
+            return true;
+        }
+        int i = t % 10;
+        t = (t - i) / 10;
+        while (t > 0) {
+            int j = t % 10;
+            t = (t - j) / 10;
+            if (i < j) {
+                return false;
+            }
+            i = j;
+        }
+        return true;
+    }
+
+    public static String removeKdigits(String num, int k) {
+        if (isEmptyString(num)) {
+            return "0";
+        }
+        if (num.length() == k) { //如果移除所有位，则返回0
+            return "0";
+        }
+        Deque<Character> deque = new LinkedList<>();
+        for (char c : num.toCharArray()) {
+            while (!deque.isEmpty() && k > 0 && deque.getLast() > c) { //这里去除较大的，使用队列的原因在于防止当前比下一位小，但比下一位的后面大的情况，如9989去除两位，使用队列可以有效去除前两个9，而使用遍历只能去除第二个和最后一个9，结果是98则不对
+                k--;
+                deque.removeLast();
+            }
+            deque.addLast(c);
+        }
+        while (k > 0 && !deque.isEmpty()) {
+            deque.removeLast();
+            k--;
+        }
+        while (!deque.isEmpty() && deque.getFirst() == '0') {
+            deque.removeFirst();
+        }
+        if (deque.isEmpty()) {
+            return "0";
+        }
+        StringBuilder sb = new StringBuilder();
+        int resultSize = deque.size();
+        for (int i = 0; i < resultSize; i++) {
+            sb.append(deque.removeFirst());
+        }
+        return sb.toString();
+    }
+
+    public static String removeKdigits1(String num, int k) {
+        if (isEmptyString(num)) {
+            return "0";
+        }
+        if (num.length() == k) { //如果移除所有位，则返回0
+            return "0";
+        }
+        char[] numArray = num.toCharArray();
+        int removeTime = k;
+        for (int i = 0; i < numArray.length - 1; i++) {
+            if (removeTime == 0) {
+                break;
+            }
+            if (numArray[i] > numArray[i + 1]) { //如果呈下一位比当前位小，呈下降趋势，则去除掉这一位
+                numArray[i] = ' ';
+                removeTime--;
+            }
+        }
+        int i = numArray.length - 1;
+        while (i >= 0 && removeTime > 0) {
+            while (i >= 0 && (numArray[i] == ' ' || numArray[i] == '0')) {
+                i--;
+            }
+            if (i >= 0) {
+                removeTime--;
+                numArray[i] = ' ';
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        int t = 0;
+        while (numArray[t] == '0' || numArray[t] == ' ') {
+            t++;
+            if (t == numArray.length) {
+                break;
+            }
+        }
+        for (int j = t; j < numArray.length; j++) {
+            if (numArray[j] != ' ') {
+                sb.append(numArray[j]);
+            }
+        }
+        if (sb.toString().equals("")) {
+            return "0";
+        }
+        return sb.toString();
+    }
+
+    public static boolean isSubsequence(String s, String t) {
+        if (isEmptyString(s)) {
+            return true;
+        }
+        if (isEmptyString(t)) {
+            return false;
+        }
+        int j = 0;
+        for (int i = 0; i < t.length(); i++) {
+            int k = i;
+            if (t.charAt(k) == s.charAt(j)) {
+                k++;
+                j++;
+            }
+            if (j == s.length()) {
+                return true;
+            }
+        }
+        return j == s.length();
+    }
+
+    public static boolean isEmptyString(String t) {
+        return null == t || t.length() == 0;
+    }
+
+    public static int jump(int[] nums) {
+        if (isEmptyOrOneItemArray(nums)) {
+            return 0;
+        }
+        int nextIdx = 0;
+        int farthestIdx = nums[0]; //初始最远距离为第一个位置上的步数，隐含条件是farthestDistance既是最远距离也是索引值
+        int step = 0;
+        for (int i = 0; i < nums.length - 1; i++) {
+            farthestIdx = Math.max(farthestIdx, i + nums[i]); //这里持续从上一个nextIdx开始的计算最远距离
+            if (i == nextIdx) {//这里如果到达了下一个最远距离，则更新当前最远距离，且更新步数
+                nextIdx = farthestIdx;
+                step++;
+            }
+        }
+        return step;
+    }
+
+    private static boolean isEmptyOrOneItemArray(int[] nums) {
+        return null == nums || nums.length <= 1;
+    }
+
+    public static boolean canJump(int[] nums) {
+        int max = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0 && max <= i && i != (nums.length - 1)) { ////当前数为0，则判断最远距离是否可跨过当前位置，当前数不为0则更新最远距离
+                return false;
+            }
+            int farthest = i + nums[i];
+            max = Math.max(max, farthest);
+        }
+        return max >= nums.length - 1;
+    }
+
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> result = new LinkedList<>();
+        if (isEmptyArray(nums)) {
+            return result;
+        }
+        List<Integer> cache = new LinkedList<>();
+        backtrack(0, nums, cache, result);
+        return result;
+    }
+
+    public void backtrack(int start, int[] nums, List<Integer> cache, List<List<Integer>> result) {
+        if (nums.length == cache.size()) {
+            result.add(new ArrayList<>(cache));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (cache.contains(nums[i])) {
+                continue;
+            }
+            cache.add(nums[i]);
+            int size = cache.size();
+            backtrack(i, nums, cache, result);
+            cache.remove(size - 1);
+        }
+    }
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (isEmptyArray(candidates)) {
+            return result;
+        }
+        List<Integer> cache = new ArrayList<>();
+        int sum = 0;
+        backtrack(candidates, cache, 0, sum, target, result);
+        return result;
+    }
+
+    private void backtrack(int[] candidates, List<Integer> cache, int start, int sum, int target, List<List<Integer>> result) {
+        if (sum == target) {
+            result.add(new ArrayList<>(cache));
+        } else if (sum > target) {
+            return;
+        }
+        for (int i = start; i < candidates.length; i++) { //这里如果每次i都从0开始，则所有数字都会遍历一遍，则会出现重复组合如target=7,结果为2,2,3和3,2,2     所以这里每次只需从当前开始即可，对于当前数之前的组合，会在前面筛选
+            cache.add(candidates[i]);
+            int cacheSize = cache.size();
+            sum += candidates[i];
+            backtrack(candidates, cache, i, sum, target, result);
+            cache.remove(cacheSize - 1);
+            sum -= candidates[i];
+        }
+    }
+
+    private boolean isEmptyArray(int[] candidates) {
+        return null == candidates || candidates.length == 0;
     }
 
     public static void nextPermutation(int[] nums) {
