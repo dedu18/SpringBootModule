@@ -7,7 +7,379 @@ import java.util.regex.Pattern;
 public class Leetcodes {
 
     public static void main(String[] args) {
-        monotoneIncreasingDigits(777616726);
+        LRUCache cache = new LRUCache(2);
+        cache.put(1, 1);
+        cache.put(2, 2);
+        cache.get(1);
+        cache.put(3, 3);
+        cache.get(2);
+        cache.put(4, 4);
+        cache.get(1);
+        cache.get(3);
+        cache.get(4);
+    }
+
+    static class LRUCache {
+
+        private List<Item> innerCacheList;
+
+        private Map<Integer, Integer> innnerIndexCacheMap;
+
+        private int size;
+
+        private class Item {
+            private Integer key;
+            private Integer value;
+
+            public Item(Integer key, Integer value) {
+                this.key = key;
+                this.value = value;
+            }
+
+            public Integer getKey() {
+                return key;
+            }
+
+            public void setValue(Integer value) {
+                this.value = value;
+            }
+
+            public Integer getValue() {
+                return this.value;
+            }
+        }
+
+        public LRUCache(int capacity) {
+            size = capacity;
+            innerCacheList = new LinkedList<>();
+            innnerIndexCacheMap = new HashMap<>();
+        }
+
+        public int get(int key) {
+            if (innnerIndexCacheMap.containsKey(key)) {
+                putIndexItemToFirst(innnerIndexCacheMap.get(key));
+                return innerCacheList.get(innnerIndexCacheMap.get(key)).getValue();
+            }
+            return -1;
+        }
+
+        public void put(int key, int value) {
+            if (get(key) != -1) {
+                innerCacheList.get(innnerIndexCacheMap.get(key)).setValue(value);
+            } else {
+                if (size == innerCacheList.size()) {
+                    innerCacheList.remove(size - 1);
+                    innerCacheList.add(0, new Item(key, value));
+                } else {
+                    innerCacheList.add(0, new Item(key, value));
+                }
+                resetCacheMap();
+            }
+        }
+
+        private void putIndexItemToFirst(int resultIndex) {
+            Item curItem = innerCacheList.get(resultIndex);
+            innerCacheList.remove(resultIndex);
+            innerCacheList.add(0, curItem);
+            resetCacheMap();
+        }
+
+        private void resetCacheMap() {
+            innnerIndexCacheMap.clear();
+            for (int i = 0; i < innerCacheList.size(); i++) {
+                innnerIndexCacheMap.put(innerCacheList.get(i).getKey(), i);
+            }
+        }
+    }
+
+    public boolean wordBreak(String s, List<String> wordDict) {
+        HashSet<String> wordDictSet = new HashSet<>(wordDict);
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        for (int i = 1; i < s.length(); i++) {
+            for (int j = 0; j < i; j++) {
+                if (dp[j] && wordDictSet.contains(s.substring(j + 1, i))) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+
+    public static void flatten(TreeNode root) {
+        if (null == root) {
+            return;
+        }
+        flatten(root.left);//扁平化左子节点
+        flatten(root.right);//扁平化右子节点
+        TreeNode rootRawRight = root.right;
+        root.right = root.left;
+        root.left = null;
+        TreeNode cur = root;
+        while (cur.right != null) {
+            cur = cur.right;
+        }
+        cur.right = rootRawRight;
+    }
+
+    private static void flattenToRight(TreeNode root) {
+        TreeNode left = root.left;
+        if (null != left && (null != left.left || null != left.right)) { //扁平化左子节点
+            flattenToRight(root.left);
+        }
+        TreeNode right = root.right;
+        if (null != right && (null != right.left || null != right.right)) { //扁平化右子节点
+            flattenToRight(root.right);
+        }
+        if (null == left) {
+            return;
+        }
+        left.right = right;
+        root.right = left;
+        root.left = null;
+    }
+
+    public int numTrees(int n) {
+        if (n <= 1) {
+            return 1;
+        }
+        int[] dp = new int[n + 1]; //dp[i]表示n为i时的二叉树个数
+        dp[0] = 1;
+        for (int i = 1; i <= n; i++) { //f(n) = f(0)*f(n-1)+f(1)*f(n-2)+...+f(n-1)*f(0) ，所以对于每个dp[i]由公式可得
+            int fx = 0;
+            for (int j = 0; j <= i - 1; j++) {
+                fx += dp[j] * dp[i - j - 1];
+            }
+            dp[i] = fx;
+        }
+        return dp[n];
+    }
+
+    public static boolean exist(char[][] board, String word) {
+        int m = board.length;
+        int n = board[0].length;
+        boolean[][] visited = new boolean[m][n];
+        char[] words = word.toCharArray();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (backtrack(board, i, j, visited, words, 0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean backtrack(char[][] board, int i, int j, boolean[][] visited, char[] words, int wordsIdx) {
+        if (wordsIdx >= words.length) { //结束条件1 当前字符匹配完毕
+            return true;
+        }
+        if (visited[i][j] || board[i][j] != words[wordsIdx]) { //结束条件2 当前字符不是目标字符
+            return false;
+        }
+        if ((i - 1) >= 0 && !visited[i][j]) { //上
+            visited[i][j] = true;
+            if (backtrack(board, i - 1, j, visited, words, wordsIdx + 1)) {
+                return true;
+            }
+            visited[i][j] = false;
+        }
+        if ((i + 1) < board.length && !visited[i][j]) { //下
+            visited[i][j] = true;
+            if (backtrack(board, i + 1, j, visited, words, wordsIdx + 1)) {
+                return true;
+            }
+            visited[i][j] = false;
+        }
+        if ((j - 1) >= 0 && !visited[i][j]) { //左
+            visited[i][j] = true;
+            if (backtrack(board, i, j - 1, visited, words, wordsIdx + 1)) {
+                return true;
+            }
+            visited[i][j] = false;
+        }
+        if ((j + 1) < board[0].length && !visited[i][j]) { //右
+            visited[i][j] = true;
+            if (backtrack(board, i, j + 1, visited, words, wordsIdx + 1)) {
+                return true;
+            }
+            visited[i][j] = false;
+        }
+        return wordsIdx == words.length - 1;
+    }
+
+
+    public static List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> result = new LinkedList<>();
+        if (nums == null || nums.length == 0) {
+            return result;
+        }
+        List<Integer> currentList = new LinkedList<>();
+        backtrack(0, currentList, nums, result);
+        return result;
+    }
+
+    private static void backtrack(int start, List<Integer> cur, int[] nums, List result) {
+        result.add(new ArrayList(cur));
+        for (int i = start; i < nums.length; i++) {
+            cur.add(nums[i]);
+            int size = cur.size();
+            backtrack(i + 1, cur, nums, result);
+            cur.remove(size - 1);
+        }
+    }
+
+    public static void sortColors(int[] nums) {
+        if (null == nums || nums.length <= 1) {
+            return;
+        }
+
+        int i = 0, j = nums.length - 1;
+        while (i < nums.length && nums[i] == 0) {
+            i++;
+        }
+        while (j > -1 && nums[j] == 2) {
+            j--;
+        }
+        if (i >= nums.length || j <= -1) {
+            return;
+        }
+        int k = i;
+        while (k <= j) {
+            if (nums[k] == 0) {
+                swap(k, i, nums);
+                i++;
+                if (nums[k] == 2) {
+                    continue;
+                }
+            } else if (nums[k] == 2) {
+                swap(k, j, nums);
+                j--;
+                if (nums[k] == 0 || nums[k] == 2) {
+                    continue;
+                }
+            }
+            k++;
+        }
+    }
+
+    private static void swap(int i, int j, int[] nums) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    public int minPathSum(int[][] grid) {
+        if (null == grid || grid.length == 0) {
+            return 0;
+        }
+        int m = grid.length;
+        int n = grid[0].length;
+        int[][] dp = new int[m][n];
+        dp[0][0] = grid[0][0];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 && j == 0) {
+                    continue;
+                }
+                if (i == 0 && j != 0) { //上边界
+                    dp[i][j] = dp[i][j - 1] + grid[i][j];
+                } else if (j == 0 && i != 0) { //左边界
+                    dp[i][j] = dp[i - 1][j] + grid[i][j];
+                } else {
+                    int temp = dp[i][j - 1] < dp[i - 1][j] ? dp[i][j - 1] : dp[i - 1][j];
+                    dp[i][j] = temp + grid[i][j];
+                }
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+
+    public static int uniquePaths(int m, int n) {
+        int[][] dp = new int[n][m];
+        dp[0][0] = 1;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (i == 0 && j == 0) {
+                    continue;
+                }
+                int total = 0;
+                if (i != 0) {
+                    total += dp[i - 1][j]; //头上一格
+                }
+                if (j != 0) {
+                    total += dp[i][j - 1]; //左边一格
+                }
+                dp[i][j] = total;
+            }
+        }
+        return dp[n - 1][m - 1];
+    }
+
+    public int bsearch7(int[] a, int n, int value) {
+        int low = 0;
+        int high = n - 1;
+        while (low <= high) {
+            int mid = low + ((high - low) >> 1);
+            if (a[mid] > value) {
+                high = mid - 1;
+            } else {
+                if ((mid == n - 1) || (a[mid + 1] > value)) return mid;
+                else low = mid + 1;
+            }
+        }
+        return -1;
+    }
+
+    public static int[][] merge(int[][] intervals) {
+        if (null == intervals || intervals.length == 0) {
+            return intervals;
+        }
+        Arrays.sort(intervals, (a, b) -> a[0] - b[0]); //先按照每个区间的起点排序
+        Deque<Integer> deque = new LinkedList(); //队列只能有两个元素，负责维护最新最大的区间范围
+        deque.offer(intervals[0][0]); //初始化开始区间范围为intervals的第一个元素
+        deque.offer(intervals[0][1]);
+        List<List<Integer>> result = new ArrayList<>();
+        for (int i = 1; i < intervals.length; i++) {
+            if (deque.size() > 0) {
+                Integer last = deque.getLast();
+                if (last < intervals[i][0]) {
+                    addDequeToMergeResultAndClearDeque(deque, result);
+                    deque.add(intervals[i][0]);
+                    deque.add(intervals[i][1]);
+                } else { //新元素在队列范围内
+                    Integer end = deque.removeLast();
+                    Integer newEnd = end >= intervals[i][1] ? end : intervals[i][1];
+                    deque.add(newEnd);
+                }
+            } else {
+                deque.add(intervals[i][0]);
+                deque.add(intervals[i][1]);
+            }
+        }
+        if (!deque.isEmpty()) {
+            addDequeToMergeResultAndClearDeque(deque, result);
+        }
+        return buildArrayResultByListResult(result);
+    }
+
+    private static int[][] buildArrayResultByListResult(List<List<Integer>> listResult) {
+        int[][] arrayResult = new int[listResult.size()][2];
+        for (int i = 0; i < listResult.size(); i++) {
+            arrayResult[i][0] = listResult.get(i).get(0);
+            arrayResult[i][1] = listResult.get(i).get(1);
+        }
+        return arrayResult;
+    }
+
+    private static void addDequeToMergeResultAndClearDeque(Deque<Integer> deque, List<List<Integer>> result) {
+        Integer start = deque.remove();
+        Integer end = deque.remove();
+        List<Integer> resultItem = new ArrayList<>(2);
+        resultItem.add(start);
+        resultItem.add(end);
+        result.add(resultItem);
     }
 
     public static int monotoneIncreasingDigits(int N) {
@@ -18,7 +390,7 @@ public class Leetcodes {
         for (int i = chars.length - 2; i >= 0; i--) {
             if (chars[i] > chars[i + 1]) {
                 chars[i]--;
-                for (int j=i+1; j<chars.length; j++) {
+                for (int j = i + 1; j < chars.length; j++) {
                     chars[j] = '9';
                 }
             }
