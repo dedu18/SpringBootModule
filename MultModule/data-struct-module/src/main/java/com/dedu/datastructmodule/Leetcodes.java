@@ -7,16 +7,67 @@ import java.util.regex.Pattern;
 public class Leetcodes {
 
     public static void main(String[] args) {
-        LRUCache cache = new LRUCache(2);
-        cache.put(1, 1);
-        cache.put(2, 2);
-        cache.get(1);
-        cache.put(3, 3);
-        cache.get(2);
-        cache.put(4, 4);
-        cache.get(1);
-        cache.get(3);
-        cache.get(4);
+        TreeNode root = new TreeNode(5);
+        root.left = new TreeNode(4);
+        root.right = new TreeNode(8);
+        root.right.right = new TreeNode(4);
+        root.right.left = new TreeNode(13);
+        root.right.right.left = new TreeNode(5);
+        root.right.right.right = new TreeNode(1);
+        root.left.left = new TreeNode(11);
+        root.left.left.left = new TreeNode(7);
+        root.left.left.right = new TreeNode(2);
+        pathSum(root, 22);
+    }
+
+    public static List<List<Integer>> pathSum(TreeNode root, int sum) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        List<Integer> collection = new ArrayList();
+        pathSumFromCurrentNode(root, sum, result, collection);
+        return result;
+    }
+
+
+    private static void pathSumFromCurrentNode(TreeNode root, int sum, List<List<Integer>> result, List<Integer> collection) {
+        if (null == root) {
+            return;
+        }
+        sum -= root.val;
+        collection.add(root.val);
+        if (sum == 0) {
+            result.add(new ArrayList(collection));
+        }
+        pathSumFromCurrentNode(root.left, sum, result, collection);
+        pathSumFromCurrentNode(root.right, sum, result, collection);
+        if (collection.size() != 0)
+            collection.remove(collection.size() - 1);
+    }
+
+    public static int pathSum1(TreeNode root, int sum) {
+        if (root == null) {
+            return 0;
+        }
+        int case1 = pathSum1(root.left, sum);
+        int case2 = pathSum1(root.right, sum);
+        int case3 = pathSumFromCurrentNode(root, sum);
+        return case1 + case2 + case3;
+    }
+
+    private static int pathSumFromCurrentNode(TreeNode root, int sum) {
+        if (null == root) {
+            return 0;
+        }
+        sum -= root.val;
+        int result = 0;
+        if (sum == 0) {
+            result++;
+        }
+        result += pathSumFromCurrentNode(root.left, sum);
+        result += pathSumFromCurrentNode(root.right, sum);
+        return result;
     }
 
     static class LRUCache {

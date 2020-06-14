@@ -213,7 +213,6 @@ public class MyCollections {
         }
     }
 
-    @org.jetbrains.annotations.NotNull
     public static String addBinary(String a, String b) {
         StringBuffer asb = new StringBuffer(a);
         StringBuffer areverse = asb.reverse();
