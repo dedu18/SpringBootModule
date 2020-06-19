@@ -7,18 +7,242 @@ import java.util.regex.Pattern;
 public class Leetcodes {
 
     public static void main(String[] args) {
-        TreeNode root = new TreeNode(5);
-        root.left = new TreeNode(4);
-        root.right = new TreeNode(8);
-        root.right.right = new TreeNode(4);
-        root.right.left = new TreeNode(13);
-        root.right.right.left = new TreeNode(5);
-        root.right.right.right = new TreeNode(1);
-        root.left.left = new TreeNode(11);
-        root.left.left.left = new TreeNode(7);
-        root.left.left.right = new TreeNode(2);
-        pathSum(root, 22);
+        int[] nums = {1};
+        System.out.println(lengthOfLIS(nums));
     }
+
+    public static int lengthOfLIS(int[] nums) {
+        int result = 0;
+        if (null == nums || nums.length == 0) {
+            return result;
+        }
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, 1);
+        result = 1;
+        for (int i=0; i<nums.length; i++) {
+            for (int j=0; j<i; j++) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                    result = Math.max(result, dp[i]);
+                }
+            }
+        }
+        return result;
+    }
+
+    public static boolean searchMatrixII(int[][] matrix, int target) {
+        if (null == matrix || matrix.length == 0 || matrix[0].length == 0) {
+            return false;
+        }
+        int rowStart = 0;
+        int rowEnd = matrix.length; //行数
+        int colStart = 0;
+        int colEnd = matrix[0].length; //列数
+        //对行数和列数进行剪枝
+        int rowEndTemp = rowEnd - 1; //从尾行开始剪枝
+        while (rowEndTemp >= rowStart && matrix[rowEndTemp][colStart] > target) {
+            rowEnd--;
+            rowEndTemp--;
+        }
+        int rowStartTemp = 0; //从首行开始剪枝
+        while (rowStartTemp < rowEnd && matrix[rowStartTemp][colEnd - 1] < target) {
+            rowStartTemp++;
+            rowStart++;
+        }
+        if (rowStart >= rowEnd) {
+            return false;
+        }
+        int colEndTemp = colEnd - 1; //从列尾开始剪枝
+        while (colEndTemp >= colStart && matrix[rowStart][colEndTemp] > target) {
+            colEnd--;
+            colEndTemp--;
+        }
+        int colStartTemp = 0; //从列首开始剪枝
+        while (colStartTemp < colEnd && matrix[rowEnd - 1][colStartTemp] < target) {
+            colStart++;
+            colStartTemp++;
+        }
+        for (int i = rowStart; i < rowEnd; i++) {
+            for (int j = colStart; j < colEnd; j++) {
+                if (matrix[i][j] == target) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean searchMatrix(int[][] matrix, int target) {
+        if (null == matrix || matrix.length == 0) {
+            return false;
+        }
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int colStart = 0;
+        int colEnd = m - 1;
+        int targetRow = 0;
+        while (colStart <= colEnd) {
+            int mid = colStart + (colEnd - colStart) / 2;
+            if (matrix[mid][0] < target && matrix[mid][n - 1] >= target) {
+                targetRow = mid;
+                break;
+            } else if (matrix[mid][0] > target) {
+                colEnd = mid - 1;
+            } else if (matrix[mid][0] == target) {
+                return true;
+            } else {
+                colStart = mid + 1;
+            }
+        }
+        int rowStart = 0;
+        int rowEnd = n - 1;
+        while (rowStart <= rowEnd) {
+            int mid = rowStart + (rowEnd - rowStart) / 2;
+            if (matrix[targetRow][mid] < target) {
+                rowStart = mid + 1;
+            } else if (matrix[targetRow][mid] == target) {
+                return true;
+            } else {
+                rowEnd = mid - 1;
+            }
+        }
+        return false;
+    }
+
+    public static int[] productExceptSelf(int[] nums) {
+        int length = nums.length;
+        int[] left = new int[length];
+        int[] right = new int[length];
+        left[0] = 1;
+        for (int i = 1; i < length; i++) {
+            left[i] = left[i - 1] * nums[i - 1];
+        }
+        right[length - 1] = 1;
+        for (int j = length - 2; j > -1; j--) {
+            right[j] = right[j + 1] * nums[j + 1];
+        }
+        int[] result = new int[length];
+        for (int m = 0; m < length; m++) {
+            result[m] = left[m] * right[m];
+        }
+        return result;
+    }
+
+    public static int maximalSquare(char[][] matrix) {
+        int result = 0;
+        if (null == matrix || matrix.length == 0) {
+            return result;
+        }
+        //dp表示以当前(i,j)为右下角的最大正方形边长
+        int[][] dp = new int[matrix.length + 1][matrix[0].length + 1]; //dp的第一行和第一列相当于正方形上面和左面都加了一面0
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] == '1') {
+                    dp[i + 1][j + 1] = min(dp[i][j + 1], dp[i + 1][j], dp[i][j]) + 1; // dp[i][j] = min(上, 左, 左上) + 1
+                    result = Math.max(result, dp[i + 1][j + 1]);
+                }
+            }
+        }
+        return result * result;
+    }
+
+    private static int min(int a, int b, int c) {
+        return Math.min(Math.min(a, b), c);
+    }
+
+    public static int maximalSquare1(char[][] matrix) {
+        int result = 0;
+        if (null == matrix || matrix.length == 0) {
+            return result;
+        }
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] == '1') {
+                    int curMaximalSquare = checkSquareByLayer(matrix, i, j);
+                    result = result > curMaximalSquare ? result : curMaximalSquare;
+                }
+            }
+        }
+        return result * result;
+    }
+
+    private static int checkSquareByLayer(char[][] matrix, int i, int j) {
+        int result = 0;
+        int layer = 0;
+        boolean isSquare = true;
+        while (isSquare) {
+            if (i + layer >= matrix.length || j + layer >= matrix[0].length) {
+                break;
+            }
+            //新增的一列判断
+            for (int n = i; n <= i + layer; n++) {
+                if (matrix[n][j + layer] != '1') {
+                    isSquare = false;
+                    break;
+                }
+            }
+            if (!isSquare) {
+                break;
+            }
+            //新增的一行判断
+            for (int m = j; m <= j + layer; m++) {
+                if (matrix[i + layer][m] != '1') {
+                    isSquare = false;
+                    break;
+                }
+            }
+            if (!isSquare) {
+                break;
+            }
+            layer++;
+            result++;
+        }
+        return result;
+    }
+
+    public static ListNode sortList(ListNode head) {
+        //空链表或者只有一个节点
+        if (null == head || null == head.next) {
+            return head;
+        }
+        //将链表截断成两截，通过快慢指针法寻找链表的中间节点，通过将preSlow.next置空进行截断
+        ListNode preSlow = null;
+        ListNode slow = head;
+        ListNode quick = head;
+        while (quick != null && quick.next != null) {
+            preSlow = slow;
+            slow = slow.next;
+            quick = quick.next.next;
+        }
+        //找到了中间节点，进行截断
+        preSlow.next = null;
+        //递归进行截断，并拿到分割好的链表，再进行排序
+        ListNode left = sortList(head);
+        ListNode right = sortList(slow);
+        //这里拿到的其实是空链表或者只有一个节点或者是执行过下面逻辑以后排序好的链表
+        //进行两个已排序链表的排序，先创建一个头指针引用，最后返回头指针的next节点
+        ListNode root = new ListNode(0);
+        ListNode cur = root;
+        while (left != null && right != null) {
+            if (left.val < right.val) {
+                cur.next = left;
+                left = left.next;
+            } else {
+                cur.next = right;
+                right = right.next;
+            }
+            cur = cur.next;
+        }
+        //对于长短链表中的长链表剩余节点单独处理
+        if (left != null) {
+            cur.next = left;
+        }
+        if (right != null) {
+            cur.next = right;
+        }
+        return root.next;
+    }
+
 
     public static List<List<Integer>> pathSum(TreeNode root, int sum) {
         List<List<Integer>> result = new ArrayList<>();
