@@ -7,8 +7,89 @@ import java.util.regex.Pattern;
 public class Leetcodes {
 
     public static void main(String[] args) {
-        int[] nums = {1};
-        System.out.println(lengthOfLIS(nums));
+        int[] nums = {1, 2, 3, 1};
+        System.out.println(countBits(2));
+    }
+
+    public static int[] countBits(int num) {
+        int[] dp = new int[num + 1];
+        dp[0] = 0;
+        for (int i = 1; i <= num; i++) {
+            if ((i % 2) == 0) { //偶数，二进制中1的个数等同于除以2后的二进制1个数，因为除以2相当于去除了最后一位0
+                dp[i] = dp[i / 2];
+            } else { //奇数，二进制中1的个数比偶数多1个
+                dp[i] = dp[i - 1] + 1;
+            }
+        }
+        return dp;
+    }
+
+    public int[] countBits1(int num) {
+        int[] result = new int[num + 1];
+        result[0] = 0;
+        for (int i = 1; i <= num; i++) {
+            result[i] = getBitNum(i);
+        }
+        return result;
+    }
+
+    private int getBitNum(int num) {
+        String numString = Integer.toBinaryString(num);
+        int result = 0;
+        for (int i = 0; i < numString.length(); i++) {
+            result += numString.charAt(i) == '1' ? 1 : 0;
+        }
+        return result;
+    }
+
+    public static int rob(int[] nums) {
+        if (null == nums || nums.length == 0) {
+            return 0;
+        }
+        int length = nums.length;
+        int[][] dp = new int[length + 1][2]; //保存当日可偷盗的最大金额数，
+        dp[0][0] = 0;
+        dp[0][1] = 0;
+        dp[1][0] = 0;//其中dp[i][0]表示没有偷nums的第一家
+        dp[1][1] = nums[0];//其中dp[i][1]表示偷了nums的第一家
+        for (int i = 2; i < length; i++) { //最后一家特殊处理
+            dp[i][0] = Math.max(dp[i - 1][0], dp[i - 2][0] + nums[i - 1]);
+            dp[i][1] = Math.max(dp[i - 1][1], dp[i - 2][1] + nums[i - 1]);
+        }
+        if (length > 1) {
+            dp[length][0] = Math.max(dp[length - 1][0], dp[length - 2][0] + nums[length - 1]);
+            ;
+            dp[length][1] = Math.max(dp[length - 1][1], dp[length - 2][1]);
+        }
+        int result = dp[length][0] > dp[length][1] ? dp[length][0] : dp[length][1];
+        return result;
+    }
+
+    public static int coinChange(int[] coins, int amount) {
+        if (null == coins || coins.length == 0 || amount <= 0) {
+            if (amount == 0) {
+                return 0;
+            }
+            return -1;
+        }
+        int[] dp = new int[amount + 1];
+        dp[0] = 0;
+        for (int i = 1; i <= amount; i++) {
+            int curResult = -1;
+            for (int j = 0; j < coins.length; j++) {
+                if (i - coins[j] >= 0) {
+                    if (dp[i - coins[j]] == -1) {
+
+                    } else if (curResult == -1) {
+                        curResult = dp[i - coins[j]] + 1;
+                    } else {
+                        curResult = Math.min(curResult, dp[i - coins[j]] + 1);
+                    }
+                }
+            }
+            dp[i] = curResult;
+        }
+        return dp[amount];
     }
 
     public static int lengthOfLIS(int[] nums) {
@@ -19,8 +100,8 @@ public class Leetcodes {
         int[] dp = new int[nums.length];
         Arrays.fill(dp, 1);
         result = 1;
-        for (int i=0; i<nums.length; i++) {
-            for (int j=0; j<i; j++) {
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = 0; j < i; j++) {
                 if (nums[i] > nums[j]) {
                     dp[i] = Math.max(dp[i], dp[j] + 1);
                     result = Math.max(result, dp[i]);
