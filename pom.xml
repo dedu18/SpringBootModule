@@ -9,9 +9,7 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>MultModule</module>
         <module>LayUIModule</module>
-        <module>design-pattern-module</module>
         <module>activiti-module</module>
         <module>consul-client-module</module>
         <module>consul-consumer-module</module>
