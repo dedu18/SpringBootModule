@@ -7,8 +7,477 @@ import java.util.regex.Pattern;
 public class Leetcodes {
 
     public static void main(String[] args) {
-        int[] nums = {1, 2, 3, 1};
-        System.out.println(countBits(2));
+        int[] a = {0};
+        System.out.println(fib(45));
+    }
+
+    public static int fib(int n) {
+        if (n == 0 || n == 1) {
+            return n;
+        }
+        int n1 = 0;
+        int n2 = 1;
+        for (int i=0; i<n; i++) {
+            int sum = (n1 + n2) % 1000000007;
+            n1 = n2;
+            n2 = sum;
+        }
+        return n2;
+    }
+
+    public static int missingNumber(int[] nums) {
+        if (null == nums || nums.length == 0) {
+            return -1;
+        }
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != i) {
+                return i;
+            }
+        }
+        return nums.length;
+    }
+
+    public class Solution1 {
+
+        private int[] nums;
+
+        private int[] original;
+
+        private Random random;
+
+        public Solution1(int[] nums) {
+            this.nums = nums;
+            this.original = nums.clone();
+            random = new Random();
+        }
+
+        /**
+         * Resets the array to its original configuration and return it.
+         */
+        public int[] reset() {
+            this.nums = this.original;
+            this.original = this.original.clone();
+            return this.nums;
+        }
+
+        /**
+         * Returns a random shuffling of the array.
+         */
+        public int[] shuffle() {
+            if (this.nums == null || this.nums.length == 0) {
+                return this.nums;
+            }
+            int length = this.nums.length;
+            int[] result = new int[length];
+            for (int i = 0; i < length; i++) {
+                int randomIdx = nextRandomArrayIndex(length, i);
+                result[i] = this.nums[randomIdx];
+                swap(i, randomIdx);
+            }
+            return result;
+        }
+
+        private int nextRandomArrayIndex(int length, int i) {
+            int result = i - 1;
+            while (result < i) {
+                result = random.nextInt(length);
+            }
+            return result;
+        }
+
+        private void swap(int i, int j) {
+            int temp = this.nums[i];
+            this.nums[i] = this.nums[j];
+            this.nums[j] = temp;
+        }
+    }
+
+    public static boolean isPowerOfTwo(int n) {
+        return n > 0 && (n & (n - 1)) == 0;
+    }
+
+    public static String longestCommonPrefix(String[] strs) {
+        if (null == strs || strs.length < 2) {
+            return (null == strs || strs.length == 0) ? "" : strs[0];
+        }
+        int longestIdx = 0;
+        char curChar = ' ';
+        for (int i = 0; i < strs[0].length(); i++) {
+            if (strs[0] == "") {
+                break;
+            }
+            curChar = strs[0].charAt(i);
+            for (int j = 1; j < strs.length; j++) {
+                if (strs[j].length() <= longestIdx || strs[j].charAt(longestIdx) != curChar) {
+                    return strs[0].substring(0, longestIdx);
+                }
+            }
+            longestIdx++;
+        }
+        return strs[0].substring(0, longestIdx);
+    }
+
+    public static String countAndSay(int n) {
+        String root = "1";
+        if (n <= 1) {
+            return root;
+        }
+        StringBuffer sb = null;
+        for (int i = 0; i < n - 1; i++) {
+            sb = new StringBuffer();
+            int size = root.length();
+            int count = 1;
+            char temp = root.charAt(0);
+            if (size == 1) {
+                sb.append(count);
+                sb.append(temp);
+            }
+            for (int j = 1; j < size; j++) {
+                if (root.charAt(j) == temp) {
+                    count++;
+                } else {
+                    sb.append(count);
+                    sb.append(temp);
+                    count = 1;
+                    temp = root.charAt(j);
+                }
+                if (j == size - 1) {
+                    sb.append(count);
+                    sb.append(temp);
+                }
+            }
+            root = sb.toString();
+        }
+        return root;
+    }
+
+    public static int myAtoi(String str) {
+        if (null == str || str.length() == 0) {
+            return 0;
+        }
+        int length = str.length();
+        int firstCharIdx = 0;
+        while (firstCharIdx < length && isASpace(str, firstCharIdx)) {
+            firstCharIdx++;
+        }
+        if (firstCharIdx == length) {
+            return 0;
+        }
+        if (!isNumberOrSignNot(str, firstCharIdx)) {
+            return 0;
+        }
+        boolean isPositive = true;
+        Integer result = 0;
+        if (isSign(str, firstCharIdx)) {
+            if (str.charAt(firstCharIdx) == '-') {
+                isPositive = false;
+            }
+            firstCharIdx++;
+        }
+        while (firstCharIdx < length && Character.isDigit(str.charAt(firstCharIdx))) {
+            int temp = str.charAt(firstCharIdx) - '0';
+            if (isPositive && (result > Integer.MAX_VALUE / 10 || (result == Integer.MAX_VALUE / 10 && temp > Integer.MAX_VALUE % 10))) {
+                return Integer.MAX_VALUE;
+            } else if (!isPositive && (-result < Integer.MIN_VALUE / 10 || (-result == Integer.MIN_VALUE / 10 && -temp < Integer.MIN_VALUE % 10))) {
+                return Integer.MIN_VALUE;
+            }
+            result = result * 10 + temp;
+            firstCharIdx++;
+        }
+        return result * (isPositive ? 1 : -1);
+    }
+
+    private static boolean isASpace(String str, int firstCharIdx) {
+        return str.charAt(firstCharIdx) == ' ';
+    }
+
+    private static boolean isSign(String str, int firstCharIdx) {
+        return str.charAt(firstCharIdx) == '+' || str.charAt(firstCharIdx) == '-';
+    }
+
+    private static boolean isNumberOrSignNot(String str, int firstCharIdx) {
+        return isSign(str, firstCharIdx) || (str.charAt(firstCharIdx) >= '0' && str.charAt(firstCharIdx) <= '9');
+    }
+
+    public static int findUnsortedSubarray(int[] nums) {
+        if (null == nums || nums.length < 2) {
+            return 0;
+        }
+        int left = 0;
+        for (int i = 1; i < nums.length; i++) {
+            if (nums[i] < nums[i - 1]) {
+                left = i;
+                break;
+            }
+        }
+        for (int j = 0; j < left; j++) {
+            if (nums[j] > nums[left]) {
+                left = j;
+                break;
+            }
+        }
+        int right = 0;
+        for (int k = nums.length - 1; k > 0; ) {
+            if (nums[k - 1] > nums[k]) {
+                right = k;
+                break;
+            }
+            if (nums[k - 1] == nums[k]) {
+                int v = k - 1;
+                while (v >= 0 && nums[v] == nums[k]) {
+                    v--;
+                }
+                if (v >= 0 && nums[v] > nums[k]) {
+                    right = k;
+                    break;
+                } else {
+                    k = v;
+                }
+            } else {
+                k--;
+            }
+        }
+        return left == right ? 0 : right - left + 1;
+    }
+
+    public static int subarraySum(int[] nums, int k) {
+        Map<Integer, Integer> preSumCache = new HashMap<>(); //(k, v)是包含元素nums[k]的前缀和
+        int sum = nums[0];
+        preSumCache.put(0, nums[0]);
+        int result = 0;
+        for (int i = 1; i < nums.length; i++) {
+            sum += nums[i];
+            preSumCache.put(i, sum);
+            if (sum == k) { //当前元素的前缀和为目标值k
+                result++;
+            }
+            for (int j = 0; j < i; j++) { //当前元素前面元素组成的子数组
+                if (preSumCache.get(i) - preSumCache.get(j) == k) {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
+    public static TreeNode convertBST(TreeNode root) {
+        if (null == root) {
+            return root;
+        }
+        TreeNode right = convertBST(root.right);
+        if (null != right) {
+            root.val += right.val;
+        }
+        TreeNode left = convertBST(root.left);
+        if (null != root.left) {
+            root.left.val += root.val;
+        }
+        return root;
+    }
+
+    public static int findTargetSumWays222(int[] nums, int s) {
+        int sum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+        }
+        // 绝对值范围超过了sum的绝对值范围则无法得到
+        if (Math.abs(s) > Math.abs(sum)) return 0;
+
+        int len = nums.length;
+        // - 0 +
+        int t = sum * 2 + 1;
+        int[][] dp = new int[len][t];
+        // 初始化
+        if (nums[0] == 0) {
+            dp[0][sum] = 2;
+        } else {
+            dp[0][sum + nums[0]] = 1;
+            dp[0][sum - nums[0]] = 1;
+        }
+
+        for (int i = 1; i < len; i++) {
+            for (int j = 0; j < t; j++) {
+                // 边界
+                int l = (j - nums[i]) >= 0 ? j - nums[i] : 0;
+                int r = (j + nums[i]) < t ? j + nums[i] : 0;
+                dp[i][j] = dp[i - 1][l] + dp[i - 1][r];
+            }
+        }
+        return dp[len - 1][sum + s];
+    }
+
+    public static int findTargetSumWaysByDP(int[] nums, int S) {
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int sum = 0;
+        for (int num : nums) {
+            sum += num;
+        }
+        //超过范围了
+        if (Math.abs(S) > sum) {
+            return 0;
+        }
+        int range = 2 * Math.abs(sum) + 1; //这里的范围为-sum和sum的总和，再加上0的位置，就是两倍的sum+1，其中dp[i][sum] 相当于0的位置
+        int[][] dp = new int[nums.length][range];
+
+        //初始化表格的第一行
+        dp[0][sum + nums[0]] += 1; //这里加上sum的原因是数组索引不可能为负数，所以+sum则不会越界，即使是所有数都取负号，则加上sum之后也为0
+        dp[0][sum - nums[0]] += 1;
+
+        for (int i = 1; i < nums.length; i++) { //表格的每一行
+            for (int j = 0; j < range; j++) { //表格的每一列
+                //每一个状态都等于上一个状态加上当前值或者减去当前值
+                if (j - nums[i] >= 0) { //由于会越界，所以这里使用条件累加来操作
+                    dp[i][j] += dp[i - 1][j - nums[i]];
+                }
+                if (j + nums[i] < range) {
+                    dp[i][j] += dp[i - 1][j + nums[i]];
+                }
+            }
+        }
+        return dp[nums.length - 1][sum + S];
+    }
+
+    public static int findTargetSumWays(int[] nums, int S) {
+        return dfs(nums, 0, 0, S);
+    }
+
+    private static int dfs(int[] nums, int start, int sum, int target) {
+        if (start == nums.length) {
+            return sum == target ? 1 : 0;
+        }
+        //这里回溯直接做出选择
+        int r1 = dfs(nums, start + 1, sum + nums[start], target);
+        int r2 = dfs(nums, start + 1, sum - nums[start], target);
+        return r1 + r2;
+    }
+
+    private static int resulta = 0;
+
+    private static List<List<Integer>> traces = new ArrayList<>();
+
+    public static int findTargetSumWays1(int[] nums, int S) {
+        backtrack(nums, 0, 0, S, new LinkedList<>());
+        return resulta;
+    }
+
+    private static void backtrack(int[] nums, int start, int sum, int target, LinkedList<Integer> trace) {
+        if (trace.size() == nums.length) { //这里是trace的大小，而不是start == nums.length，因为可能是1+1+1-1+1=3，此时trace为1,1,1
+            if (sum == target) {
+                traces.add(new ArrayList<>(trace));
+                resulta += 1;
+            }
+            return;
+        }
+        for (int i = start; i < nums.length; i++) {
+            //做出+nums[start]的选择
+            sum += nums[start];
+            trace.add(nums[start]);
+            backtrack(nums, i + 1, sum, target, trace);
+            //撤销选择
+            sum -= nums[start];
+            trace.removeLast();
+
+            //做出-nums[start]的选择
+            sum -= nums[start];
+            trace.add(-nums[start]);
+            backtrack(nums, i + 1, sum, target, trace);
+            //撤销选择
+            sum += nums[start];
+            trace.removeLast();
+        }
+    }
+
+    public int hammingDistance(int x, int y) {
+        String resultString = Integer.toBinaryString(x ^ y);
+        int result = 0;
+        for (int i = 0; i < resultString.length(); i++) {
+            if (resultString.charAt(i) == '1') {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    public static List<Integer> findDisappearedNumbers(int[] nums) {
+        int n = nums.length;
+        int i = 0;
+        while (i < n) {
+            if (nums[i] == i + 1) {
+                i++;
+            } else {
+                if (nums[i] == 0) {
+                    i++;
+                } else {
+                    int idx = nums[i];
+                    int temp = nums[idx - 1];
+                    if (temp == idx) {
+                        nums[i] = 0;
+                    } else {
+                        nums[idx - 1] = idx;
+                        nums[i] = temp;
+                    }
+                }
+            }
+        }
+        List<Integer> result = new ArrayList<>();
+        for (int j = 0; j < n; j++) {
+            if (nums[j] == 0) {
+                result.add(j + 1);
+            }
+        }
+        return result;
+    }
+
+    public static List<Integer> findAnagrams(String s, String p) {
+        List<Integer> result = new ArrayList<>();
+        if (null == s || s.length() == 0 || s.length() < p.length()) {
+            return result;
+        }
+        for (int i = 0; i <= s.length() - p.length(); i++) {
+            if (s.substring(i, i + p.length()).hashCode() != p.hashCode()) {
+                continue;
+            }
+            if (isAnagrams(s, i, p)) {
+                result.add(i);
+            }
+        }
+        return result;
+    }
+
+    private static boolean isAnagrams(String s, int startIdx, String p) {
+        char[] pChars = p.toCharArray();
+        char[] sChars = s.substring(startIdx, startIdx + p.length()).toCharArray();
+        Arrays.sort(pChars);
+        Arrays.sort(sChars);
+        int i = 0;
+        while (i < pChars.length) {
+            if (pChars[i] != sChars[i]) {
+                return false;
+            }
+            i++;
+        }
+        return true;
+    }
+
+    public int[][] reconstructQueue(int[][] people) {
+        if (null == people || people.length <= 1) {
+            return people;
+        }
+        Arrays.sort(people, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] == o2[0] ? o1[1] - o2[1] : o2[0] - o1[0]; //原始Arrays.sort是升序排序，现在h降序排序，然后按照k升序
+            }
+        });
+        List<int[]> result = new ArrayList<>();
+        for (int[] p : people) {
+            result.add(p[1], p);
+        }
+
+        return result.toArray(new int[people.length][2]);
     }
 
     public static int[] countBits(int num) {
