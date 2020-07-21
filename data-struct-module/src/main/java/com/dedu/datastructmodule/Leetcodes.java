@@ -6,9 +6,76 @@ import java.util.regex.Pattern;
 
 public class Leetcodes {
 
+
     public static void main(String[] args) {
-        int[] a = {0};
-        System.out.println(fib(45));
+        char[][] a = {
+                {'A','B','C','E'},
+                {'S','F','C','S'},
+                {'A','D','E','E'}
+        };
+        Leetcodes l = new Leetcodes();
+        System.out.println(l.exist1(a, "ABCB"));
+    }
+
+    private int[][] xy = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+    public boolean exist1(char[][] board, String word) {
+        int m = board.length;
+        int n = board[0].length;
+        boolean[][] visited = new boolean[m][n];
+        char[] words = word.toCharArray();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (backtrack1(board, i, j, visited, words, 0)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean backtrack1(char[][] board, int i, int j, boolean[][] visited, char[] words, int wordsIdx) {
+        if (wordsIdx >= words.length) {
+            return true;
+        }
+        if (visited[i][j] || board[i][j] != words[wordsIdx]) {
+            return false;
+        }
+        for (int t = 0; t < xy.length; t++) {
+            int[] xyItem = xy[t];
+            int newI = i + xyItem[0];
+            int newJ = j + xyItem[1];
+            if (newI >= 0 && newI < board.length && newJ >= 0 && newJ < board[0].length && !visited[i][j]) {
+                visited[i][j] = true;
+                if (backtrack1(board, newI, newJ, visited, words, wordsIdx + 1)) {
+                    return true;
+                }
+                visited[i][j] = false;
+            }
+        }
+        return wordsIdx == words.length - 1;
+    }
+
+    public static int minArray(int[] numbers) {
+        if (null == numbers || numbers.length == 0) {
+            return -1;
+        }
+        int start = 0;
+        int end = numbers.length - 1;
+        while (end >= start) {
+            int mid = start + (end - start) / 2;
+            if (numbers[mid] > numbers[start]) {
+                start = mid + 1;
+            } else if (numbers[mid] < numbers[start]) {
+                end = mid;
+            } else {
+                if (mid == 0 || numbers[mid - 1] > numbers[mid]) {
+                    return numbers[mid];
+                }
+                end = mid;
+            }
+        }
+        return -1;
     }
 
     public static int fib(int n) {
@@ -17,7 +84,7 @@ public class Leetcodes {
         }
         int n1 = 0;
         int n2 = 1;
-        for (int i=0; i<n; i++) {
+        for (int i = 0; i < n; i++) {
             int sum = (n1 + n2) % 1000000007;
             n1 = n2;
             n2 = sum;
