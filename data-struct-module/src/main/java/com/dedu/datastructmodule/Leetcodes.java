@@ -13,8 +13,59 @@ public class Leetcodes {
                 {'S','F','C','S'},
                 {'A','D','E','E'}
         };
-        Leetcodes l = new Leetcodes();
-        System.out.println(l.exist1(a, "ABCB"));
+        System.out.println(myPow1(2.0, -2147483648));
+    }
+
+    public int[] exchange(int[] nums) {
+        if (null == nums || nums.length == 0) {
+            return nums;
+        }
+        int[] result = new int[nums.length];
+        int start = 0;
+        int end = nums.length - 1;
+        for (int i=0; i<nums.length; i++) {
+            if ((nums[i] & 1) == 1) { // 奇数
+                result[end--] = nums[i];
+            } else {
+                result[start++] = nums[i];
+            }
+        }
+        return result;
+    }
+
+    public static double myPow1(double x, int n) {
+        if (x == 0 || x == 1) {
+            return x;
+        }
+        if (n > 0) {
+            double result = 1;
+            for (long i = 0; i < n; i++) {
+                result = result * x;
+            }
+            return result;
+        } else {
+            double result = 1;
+            long turn = -1 * Long.valueOf(n);
+            System.out.println(turn);
+            for (long i = 0; i < turn; i++) {
+                result = result / x;
+            }
+            return result;
+        }
+    }
+
+    public static int cuttingRope(int n) {
+        if (n <= 3) {
+            return n-1;
+        }
+        long result = 1;
+        while (n > 4) { //直接取全部分成3
+            result *= 3;
+            result %= 1000000007;
+            n -= 3;
+        }
+        //上面循环结束时 n=1/2/3/4，当为1/2/3时，不应再分否则变小，当为4时，即便时分成2*2还是为4，所以直接result*n即可
+        return Long.valueOf((result * n) % 1000000007).intValue();
     }
 
     private int[][] xy = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
