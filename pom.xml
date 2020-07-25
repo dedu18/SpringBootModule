@@ -25,7 +25,6 @@
         <module>vue-module</module>
         <module>feign-client-module</module>
         <module>docker-module</module>
-        <module>scala-learn-module</module>
     </modules>
 
 
