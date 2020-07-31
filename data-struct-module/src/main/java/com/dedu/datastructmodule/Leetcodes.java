@@ -8,12 +8,140 @@ public class Leetcodes {
 
 
     public static void main(String[] args) {
-        char[][] a = {
-                {'A','B','C','E'},
-                {'S','F','C','S'},
-                {'A','D','E','E'}
-        };
-        System.out.println(myPow1(2.0, -2147483648));
+        Leetcodes l = new Leetcodes();
+        Node n = new Node(1);
+        l.treeToDoublyList(n);
+    }
+
+    private Node result1 = new Node(-1);;
+
+    private Node cur;
+
+    public Node treeToDoublyList(Node root) {
+        if (null == root || (root.left == null && root.right == null)) {
+            return root;
+        }
+        cur = result1;
+        inOrderVisitNode(root);
+        modifyLeftIdxOfNode(result1);
+        return result1.right;
+    }
+
+    private void modifyLeftIdxOfNode(Node cur) {
+        while (cur.right != null) {
+            cur.right.left = cur;
+            cur = cur.right;
+        }
+        result1.right.left = cur;
+        cur.right = result1.right;
+    }
+
+    private void inOrderVisitNode(Node root) {
+        if (null == root) {
+            return ;
+        }
+        //遍历左节点
+        inOrderVisitNode(root.left);
+        //遍历当前节点
+        cur.right = root;
+        cur = cur.right;
+        //遍历右节点
+        inOrderVisitNode(root.right);
+    }
+
+    public int[] levelOrder1(TreeNode root) {
+        if (null == root) {
+            return new int[0];
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        List<Integer> result = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            TreeNode curNode = queue.poll();
+            result.add(curNode.val);
+            if (null != curNode.left) {
+                queue.add(curNode.left);
+            }
+            if (null != curNode.right) {
+                queue.add(curNode.right);
+            }
+        }
+        return convertListToArray(result);
+    }
+
+    private int[] convertListToArray(List<Integer> list) {
+        int[] result = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            result[i] = list.get(i);
+        }
+        return result;
+    }
+
+    public static boolean validateStackSequences(int[] pushed, int[] popped) {
+        if (isEmptyArray(pushed) || isEmptyArray(popped)) {
+            return true;
+        }
+        if (pushed.length != popped.length) {
+            return false;
+        }
+        Stack<Integer> pushedStack = new Stack<>();
+        Stack<Integer> poppedStack = new Stack<>();
+        //popped全部入栈
+        for (int i = popped.length - 1; i >= 0; i--) {
+            poppedStack.add(popped[i]);
+        }
+        //循环pushed依次入栈，此时如果pushed栈顶元素和popped一致，则两个都出栈
+        for (int j = 0; j < pushed.length; j++) {
+            pushedStack.push(pushed[j]);
+            System.out.println(poppedStack.peek());
+            while (!pushedStack.isEmpty() && pushedStack.peek().equals(poppedStack.peek())) {
+                pushedStack.pop();
+                poppedStack.pop();
+            }
+        }
+        return poppedStack.isEmpty();
+    }
+
+    class MinStack {
+
+        private List<Integer> cache;
+        private int size;
+        private TreeMap<Integer, Object> heap;
+        private final Object obj;
+
+        /**
+         * initialize your data structure here.
+         */
+        public MinStack() {
+            cache = new ArrayList<>();
+            size = 0;
+            heap = new TreeMap<>();
+            obj = new Object();
+        }
+
+        public void push(int x) {
+            cache.add(x);
+            size++;
+            heap.put(x, obj);
+        }
+
+        public void pop() {
+            if (size > 0) {
+                Integer old = cache.remove(size - 1);
+                if (cache.indexOf(old) == -1) {
+                    heap.remove(old);
+                }
+                size--;
+            }
+        }
+
+        public int top() {
+            return cache.get(size - 1);
+        }
+
+        public int min() {
+            return heap.firstKey();
+        }
     }
 
     public int[] exchange(int[] nums) {
@@ -23,7 +151,7 @@ public class Leetcodes {
         int[] result = new int[nums.length];
         int start = 0;
         int end = nums.length - 1;
-        for (int i=0; i<nums.length; i++) {
+        for (int i = 0; i < nums.length; i++) {
             if ((nums[i] & 1) == 1) { // 奇数
                 result[end--] = nums[i];
             } else {
@@ -56,7 +184,7 @@ public class Leetcodes {
 
     public static int cuttingRope(int n) {
         if (n <= 3) {
-            return n-1;
+            return n - 1;
         }
         long result = 1;
         while (n > 4) { //直接取全部分成3
@@ -1549,7 +1677,7 @@ public class Leetcodes {
         }
     }
 
-    private boolean isEmptyArray(int[] candidates) {
+    private static boolean isEmptyArray(int[] candidates) {
         return null == candidates || candidates.length == 0;
     }
 
@@ -2222,6 +2350,7 @@ public class Leetcodes {
         }
 
         public Node(int integer) {
+            this.val = integer;
         }
 
         public Node(int _val, Node _prev, Node _next, Node _child) {
@@ -4122,6 +4251,7 @@ public class Leetcodes {
                     queue.addAll(levelItem.children);
                 }
             }
+            Collections.reverse(result.get(level));
             level++;
         }
         return result;
