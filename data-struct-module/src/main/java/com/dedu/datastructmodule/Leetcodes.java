@@ -9,11 +9,282 @@ public class Leetcodes {
 
     public static void main(String[] args) {
         Leetcodes l = new Leetcodes();
-        Node n = new Node(1);
-        l.treeToDoublyList(n);
+
+        int[] nums = {9, 10, 9, -7, -4, -8, 2, -6};
+        System.out.println(l.twoSum1(2));
+
+
     }
 
-    private Node result1 = new Node(-1);;
+    public double[] twoSum1(int n) {
+        if (n <= 0) {
+            return new double[0];
+        }
+        int[][] dp = new int[n+1][6 * n + 1];//dp[i][j]表示第i个骰子掷出后，前i个骰子总点数j对应的次数
+        for (int i = 1; i <= 6; i++) {
+            dp[1][i] = 1;//这里表示第1个骰子掷出后出现的次数都是1，虽然dp[1][6] - dp[1][6 * n + 1]之后都是0
+        }
+        for (int j = 2; j <= n; j++) {//表示n个骰子分别掷出
+            for (int m = j; m <= 6 * j; m++) {//表示前j个骰子可能出现的点数，这里至少为j，因为每个骰子至少为1，这里之多为6*j
+                for (int p = 1; p <= 6; p++) {//表示当前骰子出现的点数
+                    if (m - p < j - 1) {//这里前j-1个骰子的总点数至少为j-1
+                        break;
+                    }
+                    dp[j][m] += dp[j - 1][m - p];//前j个骰子的总点数为前j-1个骰子的总点数加上当前骰子数总和
+                }
+            }
+        }
+        double total = (double) Math.pow(6.0, (double) n);
+        double[] result = new double[5 * n + 1];//一共点数有6*n种，除去每个骰子至少为1，则为6n-n+1种可能。
+        for (int k = n; k <= 6 * n; k++) {
+            result[k - n] = ((double) dp[n][k]) / total;
+        }
+        return result;
+    }
+
+//    private Map<Integer, Double> cache = new HashMap<>();
+//
+//    public double[] twoSum(int n) {
+//        if (n <= 0) {
+//            return new double[0];
+//        }
+//        int sum = 0;
+//        double total = 1.0;
+//        backtrack(sum, total, n);
+//        return buildResult();
+//    }
+//
+//    private void backtrack(int sum, double total, int n) {
+//        if (n == 0) {
+//            if (cache.containsKey(sum)) {
+//                cache.put(sum, cache.get(sum) + total);
+//            } else {
+//                cache.put(sum, total);
+//            }
+//            return;
+//        }
+//        for (int i = 1; i <= 6; i++) {
+//            backtrack(sum + i, total * 0.16667, n - 1);
+//        }
+//    }
+
+//    private double[] buildResult() {
+//        double[] result = new double[cache.size()];
+//        Integer[] sums = new Integer[cache.size()];
+//        cache.keySet().toArray(sums);
+//        Arrays.sort(sums);
+//        for (int i = 0; i < sums.length; i++) {
+//            result[i] = cache.get(sums[i]);
+//        }
+//        return result;
+//    }
+
+    public int[] maxSlidingWindow(int[] nums, int k) {
+//        //构建k大小的大顶堆优先队列缓存窗口大小
+//        PriorityQueue<Integer> queue = new PriorityQueue<>((a, b) -> a == b ? 0 : a > b ? -1 : 1);
+//        Map<Integer, Integer> itemSizeMap = new HashMap<>();
+//        for (int i = 0; i < k; i++) {
+//            if (!queue.contains(nums[i]))queue.add(nums[i]);
+//            itemSizeMap.put(nums[i], itemSizeMap.getOrDefault(nums[i], 0) + 1);
+//        }
+//        //构建结果集并添加第一个元素
+//        int[] result = new int[nums.length - k + 1];
+//        int rstIdx = 0;
+//        result[rstIdx++] = queue.peek();
+//        //依次入队新元素并移除最先入队元素
+//        for (int i = k; i < nums.length; i++) {
+//            if (!queue.contains(nums[i]))queue.add(nums[i]);
+//            itemSizeMap.put(nums[i], itemSizeMap.getOrDefault(nums[i], 0) + 1);
+//            if (itemSizeMap.getOrDefault(nums[i - k], 0) == 1) {
+//                queue.remove(nums[i - k]);
+//            }
+//            itemSizeMap.put(nums[i - k], itemSizeMap.getOrDefault(nums[i - k], 0) - 1);
+//            result[rstIdx++] = queue.peek();
+//        }
+//        return result;
+        if (null == nums || nums.length == 0 || k <= 0) {
+            return new int[0];
+        }
+        if (k == 1) {
+            return nums;
+        }
+        Deque<Integer> deque = new ArrayDeque<>();
+        int[] result = new int[nums.length - k + 1];
+        int resultIndex = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (i >= k) {
+                if (deque.peekFirst() == nums[i - k]) { //双端队列中维护的是最大元素
+                    // 所以这里移除时需判断下是否是要移除的元素
+                    deque.removeFirst();
+                }
+            }
+            while (!deque.isEmpty() && nums[i] > deque.peekLast()) { //每次新增元素时，进行队列的维护
+                deque.removeLast();
+            }
+            deque.addLast(nums[i]);
+            if (i >= k - 1) {
+                result[resultIndex++] = deque.peekFirst();
+            }
+        }
+        return result;
+    }
+
+    public int[][] findContinuousSequence(int target) {
+        int i = 1;//滑动窗口的左边界
+        int j = 1;//滑动窗口的右边界
+        int sum = 0;//滑动窗口的总值
+        List<int[]> result = new ArrayList<>();
+        while (i <= target / 2) {
+            if (sum < target) {
+                sum += j;
+                j++;//窗口右界向右扩大
+            } else if (sum > target) {
+                sum -= i;
+                i++;//窗口左界向右缩小
+            } else {
+                int size = j - i + 1;
+                int[] temp = new int[size];
+                for (int t = 0; t < size; t++) {
+                    temp[t] = t + i;
+                }
+                result.add(temp);
+                sum -= i;
+                i++;//窗口左界向右收缩继续查找下一个结果值
+            }
+        }
+        return result.toArray(new int[result.size()][]);
+    }
+
+    public String reverseWords(String s) {
+        if (null == s || "".equals(s.trim())) {
+            return "";
+        }
+        s = s.trim();
+        int length = s.length();
+        StringBuffer sb = new StringBuffer();
+        int quick = length - 1;
+        int slow = quick;
+        while (quick >= 0) {
+            while (quick >= 0 && s.charAt(quick) != ' ') { //这里定位到第一个单词开头处的前一个空格
+                quick--;
+            }
+            sb.append(s.substring(quick + 1, slow + 1)).append(" ");
+            while (quick >= 0 && s.charAt(quick) == ' ') { //这里定位到下一个单词结尾处
+                quick--;
+            }
+            slow = quick; //指向下一个单词结尾
+        }
+        return sb.toString().trim();
+    }
+
+    public int singleNumber1(int[] nums) {
+        if (null == nums || nums.length == 0) {
+            return -1;
+        }
+        int[] bitSum = new int[32];
+        for (int num : nums) {
+            int bit = 1;
+            for (int i = 0; i < 32; i++) {
+//                System.out.println(Integer.toBinaryString(num));
+//                System.out.println(Integer.toBinaryString(bit));
+                if ((num & bit) != 0) {
+                    bitSum[i]++;
+                }
+                bit <<= 1;
+            }
+        }
+        int result = 0;
+        for (int j = 0; j < 32; j++) {
+            result <<= 1;
+            System.out.println(Integer.toBinaryString(result));
+            result |= bitSum[31 - j] % 3;
+        }
+
+        return result;
+    }
+
+    public int[] singleNumbers(int[] nums) {
+        if (null == nums || nums.length == 0) {
+            return new int[0];
+        }
+        int orResult = 0;
+        for (int num : nums) {
+            orResult ^= num;
+        }
+        System.out.println(Integer.toBinaryString(orResult));
+        int lowestBitOfOrResult = orResult & -orResult;
+        System.out.println(Integer.toBinaryString(lowestBitOfOrResult));
+        int a = 0, b = 0;
+        for (int num : nums) {
+            if ((num & lowestBitOfOrResult) == lowestBitOfOrResult) {
+                a ^= num;
+            } else {
+                b ^= num;
+            }
+        }
+        int[] result = new int[2];
+        result[0] = a;
+        result[1] = b;
+        return result;
+    }
+
+    public char firstUniqChar1(String s) {
+        if (null == s || s.trim().length() == 0) {
+            return ' ';
+        }
+        for (char c : s.toCharArray()) {
+            if (s.indexOf(c) == s.lastIndexOf(c)) {
+                return c;
+            }
+        }
+        return ' ';
+    }
+
+    public int translateNum(int num) {
+        String numStr = Integer.valueOf(num).toString();
+        int length = numStr.length();
+        int[] dp = new int[length + 1];
+        dp[0] = 1;
+        dp[1] = 1;
+        for (int i = 2; i <= length; i++) {
+            String temp = numStr.substring(i - 2, i);
+            if (temp.compareTo("10") >= 0 && temp.compareTo("25") <= 0) {
+                dp[i] = dp[i - 1] + dp[i - 2];
+            } else {
+                dp[i] = dp[i - 1];
+            }
+        }
+        return dp[length];
+    }
+
+    public int[] getLeastNumbers(int[] arr, int k) {
+        TreeMap<Integer, Integer> treeCache = new TreeMap<>();
+        int size = 0;
+        for (int num : arr) {
+            if (treeCache.containsKey(num)) {
+                treeCache.put(num, treeCache.get(num) + 1);
+            } else {
+                treeCache.put(num, 1);
+            }
+            if (treeCache.size() > k) {
+                treeCache.remove(treeCache.lastKey());
+            }
+        }
+        int[] result = new int[k];
+        int idx = 0;
+        for (int num : treeCache.keySet()) {
+            for (int i = 0; i < treeCache.get(num); i++) {
+                if (idx == k) {
+                    return result;
+                }
+                result[idx++] = num;
+            }
+        }
+        return result;
+    }
+
+    private Node result1 = new Node(-1);
+    ;
 
     private Node cur;
 
@@ -38,7 +309,7 @@ public class Leetcodes {
 
     private void inOrderVisitNode(Node root) {
         if (null == root) {
-            return ;
+            return;
         }
         //遍历左节点
         inOrderVisitNode(root.left);
