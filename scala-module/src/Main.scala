@@ -1,5 +1,5 @@
-object Greet {
+object Main {
   def main(args: Array[String]): Unit = {
-    print("hello world scala")
+    print("scala object learn")
   }
 }
