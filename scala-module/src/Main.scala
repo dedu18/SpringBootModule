@@ -1,10 +1,12 @@
 object Main {
   def main(args: Array[String]): Unit = {
-    println("scala object learn")
-    print(hello("scala method"))
+    println("hello scala")
+    print(hello("hello method"))
   }
 
-  def hello(name: String): String = {
-    name
+  def hello(name: String) : Int = {
+    println(name)
+    5
   }
+
 }

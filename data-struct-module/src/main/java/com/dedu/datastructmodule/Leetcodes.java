@@ -1,5 +1,6 @@
 package com.dedu.datastructmodule;
 
+import java.lang.ref.SoftReference;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -7,20 +8,176 @@ import java.util.regex.Pattern;
 public class Leetcodes {
 
 
-    public static void main(String[] args) {
-        Leetcodes l = new Leetcodes();
 
-        int[] nums = {9, 10, 9, -7, -4, -8, 2, -6};
-        System.out.println(l.twoSum1(2));
+    class Proxy {
+        // 自己设置的线程终止标志位
+        volatile boolean terminated = false;
+        boolean started = false;
+        // 采集线程
+        Thread rptThread;
 
+        // 启动采集功能
+        synchronized void start() {
+            // 不允许同时启动多个采集线程
+            if (started) {
+                return;
+            }
+            started = true;
+            terminated = false;
+            rptThread = new Thread(() -> {
+                while (!terminated) {
+                    // 省略采集、回传实现
+//                report();
+                    // 每隔两秒钟采集、回传一次数据
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        // 重新设置线程中断状态
+                        Thread.currentThread().interrupt();
+                    }
+                }
+                // 执行到此处说明线程马上终止
+                started = false;
+            });
+            rptThread.start();
+        }
 
+        // 终止采集功能
+        synchronized void stop() {
+            // 设置中断标志位
+            terminated = true;
+            // 中断线程 rptThread
+            rptThread.interrupt();
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        List<Object> cache = new LinkedList<>();
+        int size = 0;
+        while (true) {
+            if (size > 1) {
+                cache.add(new SoftReference<>(new Byte[1000 * 1024]));
+            } else {
+                cache.add(new Byte[1000 * 1024]);
+            }
+            size++;
+            Thread.sleep(1000);
+        }
+    }
+
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        int m = nums1.length;
+        int n = nums2.length;
+        int total = m + n;
+        int midx = 0;
+        int nidx = 0;
+        int temp = 0;
+        int pretemp = 0; //用来保存上一个元素值
+        for (int i = 0; i < total / 2 + 1; i++) {
+            pretemp = temp; //保存当前值
+            if (midx < m && nidx < n) { //如果两个都未越界
+                if (nums1[midx] < nums2[nidx]) {
+                    temp = nums1[midx++]; //更新当前值
+                } else {
+                    temp = nums2[nidx++];
+                }
+            } else if (midx < m) { //如果数组1未越界
+                temp = nums1[midx++];
+            } else if (nidx < n) { //如果数组2未越界
+                temp = nums2[nidx++];
+            }
+        }
+        if ((total & 1) == 1) {
+            System.out.print(1);
+            return temp;
+        } else {
+            return (temp + pretemp) / 2.0;
+        }
+    }
+
+    class SolutionA {
+        public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+            Thread s;
+            int m = nums1.length;
+            int n = nums2.length;
+            int[] nums = new int[m + n];
+            if (m == 0) {
+                if ((n & 1) == 1) { //奇数
+                    return nums2[n / 2];
+                } else { //偶数
+                    return (nums2[n / 2 - 1] + nums2[n / 2]) / 2.0;
+                }
+            }
+            if (n == 0) {
+                if ((m & 1) == 1) { //奇数
+                    return nums1[m / 2];
+                } else { //偶数
+                    return (nums1[m / 2 - 1] + nums1[m / 2]) / 2.0;
+                }
+            }
+            int i = m;
+            int j = n;
+            int k = 0;
+            while (i != m && j != n) {
+                if (nums1[i] < nums2[j]) {
+                    nums[k++] = nums1[i++];
+                } else {
+                    nums[k++] = nums2[j++];
+                }
+            }
+            while (i != m) {
+                nums[k++] = nums1[i++];
+            }
+            while (j != n) {
+                nums[k++] = nums2[j++];
+            }
+            if ((k & 1) == 1) {
+                return nums[k / 2];
+            } else {
+                return (nums[k / 2 - 1] + nums[k / 2]) / 2.0;
+            }
+        }
+    }
+
+    public int strToInt(String str) {
+        if (null == str || str.length() == 0) {
+            return 0;
+        }
+        int firstCharIdx = 0;
+        int length = str.length();
+        while (firstCharIdx < length && str.charAt(firstCharIdx) == ' ') {//寻找第一个字符
+            firstCharIdx++;
+        }
+        if (firstCharIdx == length || !(str.charAt(firstCharIdx) == '+' || str.charAt(firstCharIdx) == '-' || str.charAt(firstCharIdx) >= '0' && str.charAt(firstCharIdx) <= '9')) {//判断是否存在第一个字符且该字符是否合法
+            return 0;
+        }
+        boolean positive = true;
+        if (str.charAt(firstCharIdx) == '-') {//判断第一个字符是否是符号位
+            firstCharIdx++;
+            positive = false;
+        } else if (str.charAt(firstCharIdx) == '+') {
+            firstCharIdx++;
+        }
+        int result = 0;
+        while (firstCharIdx < length && Character.isDigit(str.charAt(firstCharIdx))) {
+            int temp = str.charAt(firstCharIdx) - '0';
+            if (positive && (result > Integer.MAX_VALUE / 10 || (result == Integer.MAX_VALUE / 10 && temp > Integer.MAX_VALUE % 10))) { //正数超范围
+                return Integer.MAX_VALUE;
+            } else if (!positive && (-result < Integer.MIN_VALUE / 10 || (-result == Integer.MIN_VALUE / 10 && -temp < Integer.MIN_VALUE % 10))) { //负数超范围
+                return Integer.MIN_VALUE;
+            }
+            result *= 10;
+            result += temp;
+            firstCharIdx++;
+        }
+        return result * (positive ? 1 : -1);
     }
 
     public double[] twoSum1(int n) {
         if (n <= 0) {
             return new double[0];
         }
-        int[][] dp = new int[n+1][6 * n + 1];//dp[i][j]表示第i个骰子掷出后，前i个骰子总点数j对应的次数
+        int[][] dp = new int[n + 1][6 * n + 1];//dp[i][j]表示第i个骰子掷出后，前i个骰子总点数j对应的次数
         for (int i = 1; i <= 6; i++) {
             dp[1][i] = 1;//这里表示第1个骰子掷出后出现的次数都是1，虽然dp[1][6] - dp[1][6 * n + 1]之后都是0
         }
