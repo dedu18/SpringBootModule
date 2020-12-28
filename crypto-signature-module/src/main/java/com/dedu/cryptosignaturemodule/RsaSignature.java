@@ -1,7 +1,6 @@
 package com.dedu.cryptosignaturemodule;
 
 
-import jdk.nashorn.internal.ir.annotations.Immutable;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.security.*;
@@ -11,7 +10,7 @@ import java.util.Base64;
 import java.util.UUID;
 
 /**
- * 加签验签
+ * RSA加签验签
  */
 public class RsaSignature {
 
@@ -29,6 +28,8 @@ public class RsaSignature {
 
         //生成RSA密钥对
         ImmutablePair<String, String> keyPair = generateKeyPair(KEYSIZE);
+        //使用现有RSA密钥对
+//        ImmutablePair<String, String> keyPair = new ImmutablePair<>(PUBLICKEY, PRIVATEKEY);
         System.out.println("公钥：" + keyPair.getLeft());
         System.out.println("私钥：" + keyPair.getRight());
         // 签名原文
@@ -43,7 +44,6 @@ public class RsaSignature {
     }
 
     /**
-     *
      * @param keysize 长度
      * @return <left,right> left为Base64编码后的公钥，right为编码后的私钥
      * @throws Exception
@@ -59,7 +59,6 @@ public class RsaSignature {
     }
 
     /**
-     *
      * @param keysize 长度
      * @return <left,right> left为Base64编码后的公钥，right为编码后的私钥
      * @throws Exception
@@ -73,9 +72,10 @@ public class RsaSignature {
 
     /**
      * 加签
-     * @param data 需要验签的原始数据字符数组
+     *
+     * @param data       需要验签的原始数据字符数组
      * @param privateKey 进行Base64解码后的私钥
-     * @param algorithm 算法 RSA为SHA1WithRSA、RSA2为SHA256WithRSA
+     * @param algorithm  算法 RSA为SHA1WithRSA、RSA2为SHA256WithRSA
      * @return 加签字符串
      * @throws Exception
      */
@@ -91,9 +91,10 @@ public class RsaSignature {
 
     /**
      * 验签
-     * @param data 需要验签的原始数据字符数组
+     *
+     * @param data      需要验签的原始数据字符数组
      * @param publicKey 进行Base64解码后的公钥
-     * @param sign 需对比的签名
+     * @param sign      需对比的签名
      * @param algorithm 算法 RSA为SHA1WithRSA、RSA2为SHA256WithRSA
      * @return 验签结果
      * @throws Exception
