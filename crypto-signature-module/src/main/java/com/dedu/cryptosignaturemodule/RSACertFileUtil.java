@@ -54,6 +54,11 @@ public class RSACertFileUtil {
         //openssl rsa -in rsakey.pem -out rsakey.key
         //获取公钥
         //openssl x509 -in rsakey.pem -out rsakey.crt
+
+        //将私钥转换成Java识别的pkcs8格式，输出显示
+        //pkcs8 -topk8 -inform PEM -in rsakey.pem  -outform PEM -nocrypt
+        //生成对应的公钥
+        //rsa -in rsakey.pem -pubout -out rsa_public_key.pem
     }
 
     /**
