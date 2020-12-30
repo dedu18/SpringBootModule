@@ -23,8 +23,7 @@ public class RSACertFileUtil {
     public static void main(String[] args) {
 //        //使用jdk的keytool生成秘钥库
 //        //keytool -genkey -alias rsakeyalia -keyalg RSA -keystore f:/rsakeystore.keystore -keysize 1024 -validity 3650
-//        //keytool -export -alias rsakeyalia -keystore f:/rsakeystore.keystore -file  f:/rsakey.cer
-//
+
         //生成.pfx证书文件
         String keyStoreFilePath = "f:/rsakeystore.keystore";
         String keyStorePasswd = "12345678";
@@ -33,6 +32,8 @@ public class RSACertFileUtil {
         String cerFilePath = "f:/rsakey.cer";
         System.out.println("1.转换keystore文件为PFX文件：");
         coverKeystoreToPfx(keyStoreFilePath, keyStorePasswd, keyAlias, pfxFilePath);
+
+        //keytool -export -alias rsakeyalia -keystore f:/rsakeystore.keystore -file  f:/rsakey.cer
         System.out.println("2.提取.cer中的公钥字符串：");
         String publickeyOfCer = getPubkeyFromCetFile(cerFilePath);
         System.out.println("3.提取.cer文件中的公钥字符串：");
@@ -41,12 +42,12 @@ public class RSACertFileUtil {
 //        从pfx证书文件中提取私钥
 //        String keyStorefile = "F:\\rsakey.pfx";
 //        String keyPassword = "12345678";
-//        getPublicKeyFormPfxFile(keyStorefile,keyPassword);
+//        getPrivateKeyFormPfxFile(keyStorefile,keyPassword);
 //
 //        从pfx证书文件中提取私钥
 //        String keyStorefile = "F:\\acp_test_sign.pfx";
 //        String keyPassword = "000000";
-//        getPublicKeyFormPfxFile(keyStorefile,keyPassword);
+//        getPrivateKeyFormPfxFile(keyStorefile,keyPassword);
 
 //        //使用openssl工具从pfx证书中提取公私钥
         //openssl pkcs12 -in rsakey.pfx -nodes -out rsakey.pem
@@ -56,9 +57,9 @@ public class RSACertFileUtil {
         //openssl x509 -in rsakey.pem -out rsakey.crt
 
         //将私钥转换成Java识别的pkcs8格式，输出显示
-        //pkcs8 -topk8 -inform PEM -in rsakey.pem  -outform PEM -nocrypt
+        //openssl pkcs8 -topk8 -inform PEM -in rsakey.pem  -outform PEM -nocrypt
         //生成对应的公钥
-        //rsa -in rsakey.pem -pubout -out rsa_public_key.pem
+        //openssl rsa -in rsakey.pem -pubout -out rsa_public_key.pem
     }
 
     /**
@@ -126,7 +127,7 @@ public class RSACertFileUtil {
      * @param strPfx      文件存储目录
      * @param strPassword PFX密码
      */
-    private static PrivateKey getPublicKeyFormPfxFile(String strPfx, String strPassword) {
+    private static PrivateKey getPrivateKeyFormPfxFile(String strPfx, String strPassword) {
         try {
             FileInputStream fis = new FileInputStream(strPfx);
             //密码处理
