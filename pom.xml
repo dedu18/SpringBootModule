@@ -26,6 +26,7 @@
         <module>feign-client-module</module>
         <module>docker-module</module>
         <module>flink-module</module>
+        <module>es-module</module>
     </modules>
 
 
