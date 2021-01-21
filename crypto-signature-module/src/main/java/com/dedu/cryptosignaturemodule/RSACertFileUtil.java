@@ -24,7 +24,7 @@ public class RSACertFileUtil {
 
     public static void main(String[] args) {
 //        //使用jdk的keytool生成秘钥库
-//        //keytool -genkey -alias rsakeyalia -keyalg RSA -keystore f:/rsakeystore.keystore -keysize 1024 -validity 3650
+        //keytool -genkey -alias rsakeyalia -keyalg RSA -keystore f:/rsakeystore.keystore -keysize 1024 -validity 3650
         //相比于 Java6，在 Java7 中 keytool 工具改动-genkey 选项改名为 -genkeypair
         //生成一对非对称密钥以及一个自签发证书，其中私钥和证书以别名 TEST_ROOT 存储在 test_root.jks 文件中
         //keytool -genkeypair -alias TEST_ROOT -keystore test_root.jks
