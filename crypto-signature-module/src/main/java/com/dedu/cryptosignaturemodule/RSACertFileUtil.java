@@ -14,6 +14,8 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.Enumeration;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * RSA证书工具类
@@ -23,6 +25,9 @@ public class RSACertFileUtil {
     public static void main(String[] args) {
 //        //使用jdk的keytool生成秘钥库
 //        //keytool -genkey -alias rsakeyalia -keyalg RSA -keystore f:/rsakeystore.keystore -keysize 1024 -validity 3650
+        //相比于 Java6，在 Java7 中 keytool 工具改动-genkey 选项改名为 -genkeypair
+        //生成一对非对称密钥以及一个自签发证书，其中私钥和证书以别名 TEST_ROOT 存储在 test_root.jks 文件中
+        //keytool -genkeypair -alias TEST_ROOT -keystore test_root.jks
 
         //生成.pfx证书文件
         String keyStoreFilePath = "f:/rsakeystore.keystore";
@@ -35,19 +40,19 @@ public class RSACertFileUtil {
 
         //keytool -export -alias rsakeyalia -keystore f:/rsakeystore.keystore -file  f:/rsakey.cer
         System.out.println("2.提取.cer中的公钥字符串：");
-        String publickeyOfCer = getPubkeyFromCetFile(cerFilePath);
+        String publickeyOfCer = getPubkeyFromCerFile(cerFilePath);
         System.out.println("3.提取.cer文件中的公钥字符串：");
         System.out.println(publickeyOfCer);
 
 //        从pfx证书文件中提取私钥
-//        String keyStorefile = "F:\\rsakey.pfx";
-//        String keyPassword = "12345678";
-//        getPrivateKeyFormPfxFile(keyStorefile,keyPassword);
+        String keyStorefile = "F:\\rsakey.pfx";
+        String keyPassword = "12345678";
+        getPrivateKeyFromPfxFile(keyStorefile,keyPassword);
 //
 //        从pfx证书文件中提取私钥
 //        String keyStorefile = "F:\\acp_test_sign.pfx";
 //        String keyPassword = "000000";
-//        getPrivateKeyFormPfxFile(keyStorefile,keyPassword);
+//        getPrivateKeyFromPfxFile(keyStorefile,keyPassword);
 
 //        //使用openssl工具从pfx证书中提取公私钥
         //openssl pkcs12 -in rsakey.pfx -nodes -out rsakey.pem
@@ -105,7 +110,7 @@ public class RSACertFileUtil {
      * @param cerFile
      * @return
      */
-    public static String getPubkeyFromCetFile(String cerFile) {
+    public static String getPubkeyFromCerFile(String cerFile) {
         String key = "";
         try {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
@@ -127,7 +132,7 @@ public class RSACertFileUtil {
      * @param strPfx      文件存储目录
      * @param strPassword PFX密码
      */
-    private static PrivateKey getPrivateKeyFormPfxFile(String strPfx, String strPassword) {
+    private static PrivateKey getPrivateKeyFromPfxFile(String strPfx, String strPassword) {
         try {
             FileInputStream fis = new FileInputStream(strPfx);
             //密码处理

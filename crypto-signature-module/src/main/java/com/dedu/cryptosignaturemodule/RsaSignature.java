@@ -25,7 +25,6 @@ public class RsaSignature {
     public static final int KEYSIZE = 1024;
 
     public static void main(String[] args) throws Exception {
-
         //生成RSA密钥对
         ImmutablePair<String, String> keyPair = generateKeyPair(KEYSIZE);
         //使用现有RSA密钥对
@@ -34,6 +33,7 @@ public class RsaSignature {
         System.out.println("私钥：" + keyPair.getRight());
         // 签名原文
         String originalData = "key1=value1&key2=value2";
+        System.out.println("加签前字符串：" + originalData);
         // 进行加签
         String sign = sign(originalData.getBytes(CHARSET), Base64.getDecoder().decode(keyPair.getRight()), ALGORITHM);
         System.out.println("加签字符串：" + sign);
