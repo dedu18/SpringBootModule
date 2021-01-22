@@ -14,8 +14,6 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.Enumeration;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * RSA证书工具类
@@ -23,48 +21,48 @@ import java.util.TreeSet;
 public class RSACertFileUtil {
 
     public static void main(String[] args) {
-//        //使用jdk的keytool生成秘钥库
-        //keytool -genkey -alias rsakeyalia -keyalg RSA -keystore f:/rsakeystore.keystore -keysize 1024 -validity 3650
-        //相比于 Java6，在 Java7 中 keytool 工具改动-genkey 选项改名为 -genkeypair
-        //生成一对非对称密钥以及一个自签发证书，其中私钥和证书以别名 TEST_ROOT 存储在 test_root.jks 文件中
-        //keytool -genkeypair -alias TEST_ROOT -keystore test_root.jks
-
-        //生成.pfx证书文件
-        String keyStoreFilePath = "f:/rsakeystore.keystore";
-        String keyStorePasswd = "12345678";
-        String keyAlias = "rsakeyalia";
-        String pfxFilePath = "f:/rsakey.pfx";
-        String cerFilePath = "f:/rsakey.cer";
-        System.out.println("1.转换keystore文件为PFX文件：");
-        coverKeystoreToPfx(keyStoreFilePath, keyStorePasswd, keyAlias, pfxFilePath);
-
-        //keytool -export -alias rsakeyalia -keystore f:/rsakeystore.keystore -file  f:/rsakey.cer
-        System.out.println("2.提取.cer中的公钥字符串：");
-        String publickeyOfCer = getPubkeyFromCerFile(cerFilePath);
-        System.out.println("3.提取.cer文件中的公钥字符串：");
-        System.out.println(publickeyOfCer);
-
-//        从pfx证书文件中提取私钥
-        String keyStorefile = "F:\\rsakey.pfx";
-        String keyPassword = "12345678";
-        getPrivateKeyFromPfxFile(keyStorefile,keyPassword);
+//        使用jdk的keytool生成秘钥库
+//        keytool -genkey -alias rsakeyalia -keyalg RSA -keystore f:/rsakeystore.keystore -keysize 1024 -validity 3650
+//        相比于 Java6，在 Java7 中 keytool 工具改动-genkey 选项改名为 -genkeypair
+//        生成一对非对称密钥以及一个自签发证书，其中私钥和证书以别名 TEST_ROOT 存储在 test_root.jks 文件中
+//        keytool -genkeypair -alias TEST_ROOT -keystore test_root.jks
 //
-//        从pfx证书文件中提取私钥
+//        生成.pfx证书文件
+//        String keyStoreFilePath = "f:/rsakeystore.keystore";
+//        String keyStorePasswd = "12345678";
+//        String keyAlias = "rsakeyalia";
+//        String pfxFilePath = "f:/rsakey.pfx";
+//        System.out.println("1.转换keystore文件为PFX文件：");
+//        coverKeystoreToPfx(keyStoreFilePath, keyStorePasswd, keyAlias, pfxFilePath);
+
+//        keytool -export -alias rsakeyalia -keystore f:/rsakeystore.keystore -file  f:/rsakey.cer
+//        String cerFilePath = "f:/rsakey.cer";
+//        System.out.println("2.提取.cer中的公钥字符串：");
+//        String publickeyOfCer = getPubkeyFromCerFile(cerFilePath);
+//        System.out.println("3.提取.cer文件中的公钥字符串：");
+//        System.out.println(publickeyOfCer);
+
+//        从pfx证书文件中提取pkcs#8格式私钥
+//        String keyStorefile = "E:\\QWQW.pfx";
+//        String keyPassword = "12345678";
+//        getPrivateKeyFromPfxFile(keyStorefile, keyPassword);
+
+//        从pfx证书文件中提取pkcs#8格式私钥
 //        String keyStorefile = "F:\\acp_test_sign.pfx";
 //        String keyPassword = "000000";
 //        getPrivateKeyFromPfxFile(keyStorefile,keyPassword);
 
-//        //使用openssl工具从pfx证书中提取公私钥
-        //openssl pkcs12 -in rsakey.pfx -nodes -out rsakey.pem
-        //获取私钥
-        //openssl rsa -in rsakey.pem -out rsakey.key
-        //获取公钥
-        //openssl x509 -in rsakey.pem -out rsakey.crt
+//        使用openssl工具从pfx证书中提取pem格式公私钥
+//        openssl pkcs12 -in rsakey.pfx -nodes -out rsakey.pem
+//        获取私钥，pem格式
+//        openssl rsa -in rsakey.pem -out rsakey.key
+//        获取公钥，pem格式
+//        openssl x509 -in rsakey.pem -out rsakey.crt
 
-        //将私钥转换成Java识别的pkcs8格式，输出显示
-        //openssl pkcs8 -topk8 -inform PEM -in rsakey.pem  -outform PEM -nocrypt
-        //生成对应的公钥
-        //openssl rsa -in rsakey.pem -pubout -out rsa_public_key.pem
+//        将pem格式私钥转换成Java识别的pkcs8格式，输出显示
+//        openssl pkcs8 -topk8 -inform PEM -in rsakey.pem  -outform PEM -nocrypt
+//        生成对应pkcs#8格式的公钥
+//        openssl rsa -in rsakey.pem -pubout -out rsa_public_key.pem
     }
 
     /**
@@ -107,6 +105,7 @@ public class RSACertFileUtil {
 
     /**
      * 从.cet证书中获取公钥字符串
+     *
      * @param cerFile
      * @return
      */
