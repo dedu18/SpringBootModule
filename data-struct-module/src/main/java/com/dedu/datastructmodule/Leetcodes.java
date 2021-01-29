@@ -7,8 +7,32 @@ import java.util.Queue;
 public class Leetcodes {
     public static void main(String[] args) throws InterruptedException {
         Leetcodes l = new Leetcodes();
-        int[] arr = {4,9,6,2,3,1,5,7,8};
-        l.findKthLargest(arr, 4);
+        int[] arr = {2,1,2};
+        System.out.println(l.findDuplicate(arr));
+    }
+
+    public int findDuplicate(int[] nums) {
+        // length = n+1
+        int length = nums.length;
+        // nums为1至n，
+        for (int i = 0; i < length; ) {
+            // 如果num[i]不在位置上，则交换位置
+            if (nums[i] != (i+1)) {
+                // 如果位置nums[nums[i]]上的数等于nums[i]，则说明原位置有人了
+                if (nums[nums[i] - 1] == nums[i]) {
+                    return nums[i];
+                }
+                if (nums[nums[i]] == nums[i]) {
+                    return nums[i];
+                }
+                int tmp = nums[nums[i]];
+                nums[nums[i]] = nums[i];
+                nums[i] = tmp;
+            } else {
+                i++;
+            }
+        }
+        return -1;
     }
 
     public int findKthLargest(int[] nums, int k) {
