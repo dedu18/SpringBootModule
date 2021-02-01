@@ -10,6 +10,7 @@ public class A {
 
     public A() {
         System.out.println("A()..");
+        System.out.println(b);
     }
 
     @Override
@@ -17,5 +18,13 @@ public class A {
         return "A{" +
                 "b=" + b +
                 '}';
+    }
+
+    public B getB() {
+        return b;
+    }
+
+    public void setB(B b) {
+        this.b = b;
     }
 }
